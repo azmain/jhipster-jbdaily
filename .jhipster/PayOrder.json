@@ -1,0 +1,52 @@
+{
+  "applications": "*",
+  "changelogDate": "20231002181703",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "pay_order",
+  "fields": [
+    {
+      "fieldName": "payOrderNumber",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "payOrderDate",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "amount",
+      "fieldType": "BigDecimal",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "slipNo",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "controllingNo",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "PayOrder",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "fertilizer",
+      "relationshipName": "fertilizer",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "dealer",
+      "relationshipName": "dealer",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

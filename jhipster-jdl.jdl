@@ -1,0 +1,49 @@
+
+entity Division {
+	name String required
+  	bnName String required
+}
+
+entity District {
+	name String required
+    bnName String required
+}
+
+entity Upazila {
+	name String required
+    bnName String required
+}
+
+/** not an ignored comment */
+entity Dealer {
+	name String required
+	bnName String required
+	shortName String required
+	mobile String
+}
+
+entity Fertilizer {
+	name String required
+    bnName String required
+    accountNo String required
+    accountTitle String required
+}
+
+entity PayOrder {
+	payOrderNumber Long required
+	payOrderDate LocalDate required
+    amount BigDecimal required
+    slipNo Long required
+    controllingNo Long required
+}
+
+relationship OneToMany {
+	Division to District{division}
+    District to Upazila{district}
+    Upazila to Dealer{upazila}
+}
+
+relationship ManyToOne {
+	PayOrder{fertilizer} to Fertilizer
+    PayOrder{dealer} to Dealer
+}

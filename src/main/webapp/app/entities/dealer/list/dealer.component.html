@@ -1,0 +1,110 @@
+<div>
+  <h2 id="page-heading" data-cy="DealerHeading">
+    <span jhiTranslate="jbdailyApp.dealer.home.title">Dealers</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="jbdailyApp.dealer.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-dealer"
+        [routerLink]="['/dealer/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="jbdailyApp.dealer.home.createLabel"> Create a new Dealer </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="dealers?.length === 0">
+    <span jhiTranslate="jbdailyApp.dealer.home.notFound">No Dealers found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="dealers && dealers.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.name">Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="bnName">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.bnName">Bn Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="shortName">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.shortName">Short Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="mobile">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.mobile">Mobile</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="upazila.id">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.upazila">Upazila</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dealer of dealers; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/dealer', dealer.id, 'view']">{{ dealer.id }}</a>
+          </td>
+          <td>{{ dealer.name }}</td>
+          <td>{{ dealer.bnName }}</td>
+          <td>{{ dealer.shortName }}</td>
+          <td>{{ dealer.mobile }}</td>
+          <td>
+            <div *ngIf="dealer.upazila">
+              <a [routerLink]="['/upazila', dealer.upazila.id, 'view']">{{ dealer.upazila.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/dealer', dealer.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/dealer', dealer.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(dealer)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

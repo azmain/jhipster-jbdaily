@@ -1,0 +1,27 @@
+{
+  "jbdailyApp": {
+    "upazila": {
+      "home": {
+        "title": "Upazilas",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Upazila",
+        "createOrEditLabel": "Create or edit a Upazila",
+        "notFound": "No Upazilas found"
+      },
+      "created": "A new Upazila is created with identifier {{ param }}",
+      "updated": "A Upazila is updated with identifier {{ param }}",
+      "deleted": "A Upazila is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Upazila {{ id }}?"
+      },
+      "detail": {
+        "title": "Upazila"
+      },
+      "id": "ID",
+      "name": "Name",
+      "bnName": "Bn Name",
+      "dealer": "Dealer",
+      "district": "District"
+    }
+  }
+}

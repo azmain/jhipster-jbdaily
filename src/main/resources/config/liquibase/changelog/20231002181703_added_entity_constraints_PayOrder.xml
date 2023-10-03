@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity PayOrder.
+    -->
+    <changeSet id="20231002181703-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="fertilizer_id"
+                                 baseTableName="pay_order"
+                                 constraintName="fk_pay_order__fertilizer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="fertilizer"/>
+
+        <addForeignKeyConstraint baseColumnNames="dealer_id"
+                                 baseTableName="pay_order"
+                                 constraintName="fk_pay_order__dealer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="dealer"/>
+    </changeSet>
+</databaseChangeLog>

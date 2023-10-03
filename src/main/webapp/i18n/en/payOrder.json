@@ -1,0 +1,30 @@
+{
+  "jbdailyApp": {
+    "payOrder": {
+      "home": {
+        "title": "Pay Orders",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Pay Order",
+        "createOrEditLabel": "Create or edit a Pay Order",
+        "notFound": "No Pay Orders found"
+      },
+      "created": "A new Pay Order is created with identifier {{ param }}",
+      "updated": "A Pay Order is updated with identifier {{ param }}",
+      "deleted": "A Pay Order is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Pay Order {{ id }}?"
+      },
+      "detail": {
+        "title": "Pay Order"
+      },
+      "id": "ID",
+      "payOrderNumber": "Pay Order Number",
+      "payOrderDate": "Pay Order Date",
+      "amount": "Amount",
+      "slipNo": "Slip No",
+      "controllingNo": "Controlling No",
+      "fertilizer": "Fertilizer",
+      "dealer": "Dealer"
+    }
+  }
+}

@@ -1,0 +1,186 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-pay-order-heading" data-cy="PayOrderCreateUpdateHeading" jhiTranslate="jbdailyApp.payOrder.home.createOrEditLabel">
+        Create or edit a Pay Order
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.payOrderNumber" for="field_payOrderNumber">Pay Order Number</label>
+          <input
+            type="number"
+            class="form-control"
+            name="payOrderNumber"
+            id="field_payOrderNumber"
+            data-cy="payOrderNumber"
+            formControlName="payOrderNumber"
+          />
+          <div
+            *ngIf="
+              editForm.get('payOrderNumber')!.invalid && (editForm.get('payOrderNumber')!.dirty || editForm.get('payOrderNumber')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('payOrderNumber')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('payOrderNumber')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.payOrderDate" for="field_payOrderDate">Pay Order Date</label>
+          <div class="input-group">
+            <input
+              id="field_payOrderDate"
+              data-cy="payOrderDate"
+              type="text"
+              class="form-control"
+              name="payOrderDate"
+              ngbDatepicker
+              #payOrderDateDp="ngbDatepicker"
+              formControlName="payOrderDate"
+            />
+            <button type="button" class="btn btn-secondary" (click)="payOrderDateDp.toggle()">
+              <fa-icon icon="calendar-alt"></fa-icon>
+            </button>
+          </div>
+          <div
+            *ngIf="editForm.get('payOrderDate')!.invalid && (editForm.get('payOrderDate')!.dirty || editForm.get('payOrderDate')!.touched)"
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('payOrderDate')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.amount" for="field_amount">Amount</label>
+          <input type="number" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
+          <div *ngIf="editForm.get('amount')!.invalid && (editForm.get('amount')!.dirty || editForm.get('amount')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('amount')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('amount')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.slipNo" for="field_slipNo">Slip No</label>
+          <input type="number" class="form-control" name="slipNo" id="field_slipNo" data-cy="slipNo" formControlName="slipNo" />
+          <div *ngIf="editForm.get('slipNo')!.invalid && (editForm.get('slipNo')!.dirty || editForm.get('slipNo')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('slipNo')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+            <small class="form-text text-danger" [hidden]="!editForm.get('slipNo')?.errors?.number" jhiTranslate="entity.validation.number">
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.controllingNo" for="field_controllingNo">Controlling No</label>
+          <input
+            type="number"
+            class="form-control"
+            name="controllingNo"
+            id="field_controllingNo"
+            data-cy="controllingNo"
+            formControlName="controllingNo"
+          />
+          <div
+            *ngIf="
+              editForm.get('controllingNo')!.invalid && (editForm.get('controllingNo')!.dirty || editForm.get('controllingNo')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('controllingNo')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('controllingNo')?.errors?.number"
+              jhiTranslate="entity.validation.number"
+            >
+              This field should be a number.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.fertilizer" for="field_fertilizer">Fertilizer</label>
+          <select
+            class="form-control"
+            id="field_fertilizer"
+            data-cy="fertilizer"
+            name="fertilizer"
+            formControlName="fertilizer"
+            [compareWith]="compareFertilizer"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="fertilizerOption" *ngFor="let fertilizerOption of fertilizersSharedCollection">
+              {{ fertilizerOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="jbdailyApp.payOrder.dealer" for="field_dealer">Dealer</label>
+          <select
+            class="form-control"
+            id="field_dealer"
+            data-cy="dealer"
+            name="dealer"
+            formControlName="dealer"
+            [compareWith]="compareDealer"
+          >
+            <option [ngValue]="null"></option>
+            <option [ngValue]="dealerOption" *ngFor="let dealerOption of dealersSharedCollection">{{ dealerOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

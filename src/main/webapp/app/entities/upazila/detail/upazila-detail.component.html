@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="upazila">
+      <h2 data-cy="upazilaDetailsHeading"><span jhiTranslate="jbdailyApp.upazila.detail.title">Upazila</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ upazila.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.name">Name</span></dt>
+        <dd>
+          <span>{{ upazila.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.bnName">Bn Name</span></dt>
+        <dd>
+          <span>{{ upazila.bnName }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.district">District</span></dt>
+        <dd>
+          <div *ngIf="upazila.district">
+            <a [routerLink]="['/district', upazila.district.id, 'view']">{{ upazila.district.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/upazila', upazila.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="dealer">
+      <h2 data-cy="dealerDetailsHeading"><span jhiTranslate="jbdailyApp.dealer.detail.title">Dealer</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ dealer.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.name">Name</span></dt>
+        <dd>
+          <span>{{ dealer.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.bnName">Bn Name</span></dt>
+        <dd>
+          <span>{{ dealer.bnName }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.shortName">Short Name</span></dt>
+        <dd>
+          <span>{{ dealer.shortName }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.mobile">Mobile</span></dt>
+        <dd>
+          <span>{{ dealer.mobile }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.upazila">Upazila</span></dt>
+        <dd>
+          <div *ngIf="dealer.upazila">
+            <a [routerLink]="['/upazila', dealer.upazila.id, 'view']">{{ dealer.upazila.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/dealer', dealer.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

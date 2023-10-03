@@ -1,0 +1,43 @@
+{
+  "applications": "*",
+  "changelogDate": "20231002181701",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "dealer",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "bnName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "shortName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "mobile",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "javadoc": "not an ignored comment",
+  "jpaMetamodelFiltering": false,
+  "name": "Dealer",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "upazila",
+      "otherEntityRelationshipName": "dealer",
+      "relationshipName": "upazila",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

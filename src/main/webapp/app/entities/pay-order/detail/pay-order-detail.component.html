@@ -1,0 +1,60 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="payOrder">
+      <h2 data-cy="payOrderDetailsHeading"><span jhiTranslate="jbdailyApp.payOrder.detail.title">Pay Order</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ payOrder.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.payOrderNumber">Pay Order Number</span></dt>
+        <dd>
+          <span>{{ payOrder.payOrderNumber }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.payOrderDate">Pay Order Date</span></dt>
+        <dd>
+          <span>{{ payOrder.payOrderDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.amount">Amount</span></dt>
+        <dd>
+          <span>{{ payOrder.amount }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.slipNo">Slip No</span></dt>
+        <dd>
+          <span>{{ payOrder.slipNo }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.controllingNo">Controlling No</span></dt>
+        <dd>
+          <span>{{ payOrder.controllingNo }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.fertilizer">Fertilizer</span></dt>
+        <dd>
+          <div *ngIf="payOrder.fertilizer">
+            <a [routerLink]="['/fertilizer', payOrder.fertilizer.id, 'view']">{{ payOrder.fertilizer.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.dealer">Dealer</span></dt>
+        <dd>
+          <div *ngIf="payOrder.dealer">
+            <a [routerLink]="['/dealer', payOrder.dealer.id, 'view']">{{ payOrder.dealer.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/pay-order', payOrder.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

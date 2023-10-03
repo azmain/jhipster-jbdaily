@@ -1,0 +1,138 @@
+<div>
+  <h2 id="page-heading" data-cy="PayOrderHeading">
+    <span jhiTranslate="jbdailyApp.payOrder.home.title">Pay Orders</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="jbdailyApp.payOrder.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-pay-order"
+        [routerLink]="['/pay-order/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="jbdailyApp.payOrder.home.createLabel"> Create a new Pay Order </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="payOrders?.length === 0">
+    <span jhiTranslate="jbdailyApp.payOrder.home.notFound">No Pay Orders found</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="payOrders && payOrders.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="payOrderNumber">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.payOrderNumber">Pay Order Number</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="payOrderDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.payOrderDate">Pay Order Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="amount">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.amount">Amount</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="slipNo">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.slipNo">Slip No</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="controllingNo">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.controllingNo">Controlling No</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="fertilizer.id">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.fertilizer">Fertilizer</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="dealer.id">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.dealer">Dealer</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payOrder of payOrders; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/pay-order', payOrder.id, 'view']">{{ payOrder.id }}</a>
+          </td>
+          <td>{{ payOrder.payOrderNumber }}</td>
+          <td>{{ payOrder.payOrderDate | formatMediumDate }}</td>
+          <td>{{ payOrder.amount }}</td>
+          <td>{{ payOrder.slipNo }}</td>
+          <td>{{ payOrder.controllingNo }}</td>
+          <td>
+            <div *ngIf="payOrder.fertilizer">
+              <a [routerLink]="['/fertilizer', payOrder.fertilizer.id, 'view']">{{ payOrder.fertilizer.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="payOrder.dealer">
+              <a [routerLink]="['/dealer', payOrder.dealer.id, 'view']">{{ payOrder.dealer.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/pay-order', payOrder.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/pay-order', payOrder.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(payOrder)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
