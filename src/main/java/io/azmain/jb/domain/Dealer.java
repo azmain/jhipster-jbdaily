@@ -1,7 +1,6 @@
 package io.azmain.jb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -9,7 +8,6 @@ import javax.validation.constraints.*;
 /**
  * not an ignored comment
  */
-@Schema(description = "not an ignored comment")
 @Entity
 @Table(name = "dealer")
 @SuppressWarnings("common-java:DuplicatedBlocks")

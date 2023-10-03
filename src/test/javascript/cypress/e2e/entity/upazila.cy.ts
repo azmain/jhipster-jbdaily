@@ -91,6 +91,9 @@ describe('Upazila e2e test', () => {
             },
             {
               statusCode: 200,
+              headers: {
+                link: '<http://localhost/api/upazilas?page=0&size=20>; rel="last",<http://localhost/api/upazilas?page=0&size=20>; rel="first"',
+              },
               body: [upazila],
             }
           ).as('entitiesRequestInternal');

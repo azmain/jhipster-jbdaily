@@ -1,7 +1,7 @@
 {
   "applications": "*",
   "changelogDate": "20231002181700",
-  "dto": "no",
+  "dto": "mapstruct",
   "embedded": false,
   "entityTableName": "upazila",
   "fields": [
@@ -19,7 +19,7 @@
   "fluentMethods": true,
   "jpaMetamodelFiltering": false,
   "name": "Upazila",
-  "pagination": "no",
+  "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
@@ -35,5 +35,5 @@
       "relationshipType": "many-to-one"
     }
   ],
-  "service": "no"
+  "service": "serviceImpl"
 }

@@ -1,7 +1,7 @@
 {
   "applications": "*",
   "changelogDate": "20231002181658",
-  "dto": "no",
+  "dto": "mapstruct",
   "embedded": false,
   "entityTableName": "division",
   "fields": [
@@ -19,7 +19,7 @@
   "fluentMethods": true,
   "jpaMetamodelFiltering": false,
   "name": "Division",
-  "pagination": "no",
+  "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
@@ -29,5 +29,5 @@
       "relationshipType": "one-to-many"
     }
   ],
-  "service": "no"
+  "service": "serviceImpl"
 }

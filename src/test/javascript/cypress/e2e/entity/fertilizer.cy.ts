@@ -96,6 +96,9 @@ describe('Fertilizer e2e test', () => {
             },
             {
               statusCode: 200,
+              headers: {
+                link: '<http://localhost/api/fertilizers?page=0&size=20>; rel="last",<http://localhost/api/fertilizers?page=0&size=20>; rel="first"',
+              },
               body: [fertilizer],
             }
           ).as('entitiesRequestInternal');

@@ -1,7 +1,7 @@
 {
   "applications": "*",
   "changelogDate": "20231002181702",
-  "dto": "no",
+  "dto": "mapstruct",
   "embedded": false,
   "entityTableName": "fertilizer",
   "fields": [
@@ -29,8 +29,8 @@
   "fluentMethods": true,
   "jpaMetamodelFiltering": false,
   "name": "Fertilizer",
-  "pagination": "no",
+  "pagination": "pagination",
   "readOnly": false,
   "relationships": [],
-  "service": "no"
+  "service": "serviceImpl"
 }

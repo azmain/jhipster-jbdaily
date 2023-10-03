@@ -91,6 +91,9 @@ describe('District e2e test', () => {
             },
             {
               statusCode: 200,
+              headers: {
+                link: '<http://localhost/api/districts?page=0&size=20>; rel="last",<http://localhost/api/districts?page=0&size=20>; rel="first"',
+              },
               body: [district],
             }
           ).as('entitiesRequestInternal');

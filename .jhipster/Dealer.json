@@ -1,7 +1,7 @@
 {
   "applications": "*",
   "changelogDate": "20231002181701",
-  "dto": "no",
+  "dto": "mapstruct",
   "embedded": false,
   "entityTableName": "dealer",
   "fields": [
@@ -29,7 +29,7 @@
   "javadoc": "not an ignored comment",
   "jpaMetamodelFiltering": false,
   "name": "Dealer",
-  "pagination": "no",
+  "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
@@ -39,5 +39,5 @@
       "relationshipType": "many-to-one"
     }
   ],
-  "service": "no"
+  "service": "serviceImpl"
 }

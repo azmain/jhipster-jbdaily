@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.azmain.jb.IntegrationTest;
 import io.azmain.jb.domain.Fertilizer;
 import io.azmain.jb.repository.FertilizerRepository;
+import io.azmain.jb.service.dto.FertilizerDTO;
+import io.azmain.jb.service.mapper.FertilizerMapper;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -49,6 +51,9 @@ class FertilizerResourceIT {
 
     @Autowired
     private FertilizerRepository fertilizerRepository;
+
+    @Autowired
+    private FertilizerMapper fertilizerMapper;
 
     @Autowired
     private EntityManager em;
@@ -98,8 +103,9 @@ class FertilizerResourceIT {
     void createFertilizer() throws Exception {
         int databaseSizeBeforeCreate = fertilizerRepository.findAll().size();
         // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
         restFertilizerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Fertilizer in the database
@@ -117,12 +123,13 @@ class FertilizerResourceIT {
     void createFertilizerWithExistingId() throws Exception {
         // Create the Fertilizer with an existing ID
         fertilizer.setId(1L);
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
 
         int databaseSizeBeforeCreate = fertilizerRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restFertilizerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Fertilizer in the database
@@ -138,9 +145,10 @@ class FertilizerResourceIT {
         fertilizer.setName(null);
 
         // Create the Fertilizer, which fails.
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
 
         restFertilizerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Fertilizer> fertilizerList = fertilizerRepository.findAll();
@@ -155,9 +163,10 @@ class FertilizerResourceIT {
         fertilizer.setBnName(null);
 
         // Create the Fertilizer, which fails.
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
 
         restFertilizerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Fertilizer> fertilizerList = fertilizerRepository.findAll();
@@ -172,9 +181,10 @@ class FertilizerResourceIT {
         fertilizer.setAccountNo(null);
 
         // Create the Fertilizer, which fails.
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
 
         restFertilizerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Fertilizer> fertilizerList = fertilizerRepository.findAll();
@@ -189,9 +199,10 @@ class FertilizerResourceIT {
         fertilizer.setAccountTitle(null);
 
         // Create the Fertilizer, which fails.
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
 
         restFertilizerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Fertilizer> fertilizerList = fertilizerRepository.findAll();
@@ -254,12 +265,13 @@ class FertilizerResourceIT {
         // Disconnect from session so that the updates on updatedFertilizer are not directly saved in db
         em.detach(updatedFertilizer);
         updatedFertilizer.name(UPDATED_NAME).bnName(UPDATED_BN_NAME).accountNo(UPDATED_ACCOUNT_NO).accountTitle(UPDATED_ACCOUNT_TITLE);
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(updatedFertilizer);
 
         restFertilizerMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedFertilizer.getId())
+                put(ENTITY_API_URL_ID, fertilizerDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedFertilizer))
+                    .content(TestUtil.convertObjectToJsonBytes(fertilizerDTO))
             )
             .andExpect(status().isOk());
 
@@ -279,12 +291,15 @@ class FertilizerResourceIT {
         int databaseSizeBeforeUpdate = fertilizerRepository.findAll().size();
         fertilizer.setId(count.incrementAndGet());
 
+        // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restFertilizerMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, fertilizer.getId())
+                put(ENTITY_API_URL_ID, fertilizerDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(fertilizer))
+                    .content(TestUtil.convertObjectToJsonBytes(fertilizerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -299,12 +314,15 @@ class FertilizerResourceIT {
         int databaseSizeBeforeUpdate = fertilizerRepository.findAll().size();
         fertilizer.setId(count.incrementAndGet());
 
+        // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFertilizerMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(fertilizer))
+                    .content(TestUtil.convertObjectToJsonBytes(fertilizerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -319,9 +337,12 @@ class FertilizerResourceIT {
         int databaseSizeBeforeUpdate = fertilizerRepository.findAll().size();
         fertilizer.setId(count.incrementAndGet());
 
+        // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFertilizerMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizer)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Fertilizer in the database
@@ -403,12 +424,15 @@ class FertilizerResourceIT {
         int databaseSizeBeforeUpdate = fertilizerRepository.findAll().size();
         fertilizer.setId(count.incrementAndGet());
 
+        // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restFertilizerMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, fertilizer.getId())
+                patch(ENTITY_API_URL_ID, fertilizerDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(fertilizer))
+                    .content(TestUtil.convertObjectToJsonBytes(fertilizerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -423,12 +447,15 @@ class FertilizerResourceIT {
         int databaseSizeBeforeUpdate = fertilizerRepository.findAll().size();
         fertilizer.setId(count.incrementAndGet());
 
+        // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFertilizerMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(fertilizer))
+                    .content(TestUtil.convertObjectToJsonBytes(fertilizerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -443,10 +470,13 @@ class FertilizerResourceIT {
         int databaseSizeBeforeUpdate = fertilizerRepository.findAll().size();
         fertilizer.setId(count.incrementAndGet());
 
+        // Create the Fertilizer
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restFertilizerMockMvc
             .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(fertilizer))
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(fertilizerDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 

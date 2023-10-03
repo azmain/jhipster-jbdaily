@@ -91,6 +91,9 @@ describe('Division e2e test', () => {
             },
             {
               statusCode: 200,
+              headers: {
+                link: '<http://localhost/api/divisions?page=0&size=20>; rel="last",<http://localhost/api/divisions?page=0&size=20>; rel="first"',
+              },
               body: [division],
             }
           ).as('entitiesRequestInternal');

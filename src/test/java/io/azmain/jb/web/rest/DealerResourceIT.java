@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.azmain.jb.IntegrationTest;
 import io.azmain.jb.domain.Dealer;
 import io.azmain.jb.repository.DealerRepository;
+import io.azmain.jb.service.dto.DealerDTO;
+import io.azmain.jb.service.mapper.DealerMapper;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,6 +53,9 @@ class DealerResourceIT {
     private DealerRepository dealerRepository;
 
     @Autowired
+    private DealerMapper dealerMapper;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -90,8 +95,9 @@ class DealerResourceIT {
     void createDealer() throws Exception {
         int databaseSizeBeforeCreate = dealerRepository.findAll().size();
         // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
         restDealerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealerDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Dealer in the database
@@ -109,12 +115,13 @@ class DealerResourceIT {
     void createDealerWithExistingId() throws Exception {
         // Create the Dealer with an existing ID
         dealer.setId(1L);
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
 
         int databaseSizeBeforeCreate = dealerRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restDealerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealerDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Dealer in the database
@@ -130,9 +137,10 @@ class DealerResourceIT {
         dealer.setName(null);
 
         // Create the Dealer, which fails.
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
 
         restDealerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Dealer> dealerList = dealerRepository.findAll();
@@ -147,9 +155,10 @@ class DealerResourceIT {
         dealer.setBnName(null);
 
         // Create the Dealer, which fails.
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
 
         restDealerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Dealer> dealerList = dealerRepository.findAll();
@@ -164,9 +173,10 @@ class DealerResourceIT {
         dealer.setShortName(null);
 
         // Create the Dealer, which fails.
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
 
         restDealerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealerDTO)))
             .andExpect(status().isBadRequest());
 
         List<Dealer> dealerList = dealerRepository.findAll();
@@ -229,12 +239,13 @@ class DealerResourceIT {
         // Disconnect from session so that the updates on updatedDealer are not directly saved in db
         em.detach(updatedDealer);
         updatedDealer.name(UPDATED_NAME).bnName(UPDATED_BN_NAME).shortName(UPDATED_SHORT_NAME).mobile(UPDATED_MOBILE);
+        DealerDTO dealerDTO = dealerMapper.toDto(updatedDealer);
 
         restDealerMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedDealer.getId())
+                put(ENTITY_API_URL_ID, dealerDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedDealer))
+                    .content(TestUtil.convertObjectToJsonBytes(dealerDTO))
             )
             .andExpect(status().isOk());
 
@@ -254,12 +265,15 @@ class DealerResourceIT {
         int databaseSizeBeforeUpdate = dealerRepository.findAll().size();
         dealer.setId(count.incrementAndGet());
 
+        // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDealerMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, dealer.getId())
+                put(ENTITY_API_URL_ID, dealerDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(dealer))
+                    .content(TestUtil.convertObjectToJsonBytes(dealerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -274,12 +288,15 @@ class DealerResourceIT {
         int databaseSizeBeforeUpdate = dealerRepository.findAll().size();
         dealer.setId(count.incrementAndGet());
 
+        // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDealerMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(dealer))
+                    .content(TestUtil.convertObjectToJsonBytes(dealerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -294,9 +311,12 @@ class DealerResourceIT {
         int databaseSizeBeforeUpdate = dealerRepository.findAll().size();
         dealer.setId(count.incrementAndGet());
 
+        // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDealerMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(dealerDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Dealer in the database
@@ -374,12 +394,15 @@ class DealerResourceIT {
         int databaseSizeBeforeUpdate = dealerRepository.findAll().size();
         dealer.setId(count.incrementAndGet());
 
+        // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDealerMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, dealer.getId())
+                patch(ENTITY_API_URL_ID, dealerDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(dealer))
+                    .content(TestUtil.convertObjectToJsonBytes(dealerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -394,12 +417,15 @@ class DealerResourceIT {
         int databaseSizeBeforeUpdate = dealerRepository.findAll().size();
         dealer.setId(count.incrementAndGet());
 
+        // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDealerMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(dealer))
+                    .content(TestUtil.convertObjectToJsonBytes(dealerDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -414,9 +440,14 @@ class DealerResourceIT {
         int databaseSizeBeforeUpdate = dealerRepository.findAll().size();
         dealer.setId(count.incrementAndGet());
 
+        // Create the Dealer
+        DealerDTO dealerDTO = dealerMapper.toDto(dealer);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDealerMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(dealer)))
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(dealerDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Dealer in the database

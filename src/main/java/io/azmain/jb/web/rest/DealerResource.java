@@ -1,7 +1,8 @@
 package io.azmain.jb.web.rest;
 
-import io.azmain.jb.domain.Dealer;
 import io.azmain.jb.repository.DealerRepository;
+import io.azmain.jb.service.DealerService;
+import io.azmain.jb.service.dto.DealerDTO;
 import io.azmain.jb.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,10 +14,15 @@ import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -24,7 +30,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class DealerResource {
 
     private final Logger log = LoggerFactory.getLogger(DealerResource.class);
@@ -34,26 +39,29 @@ public class DealerResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final DealerService dealerService;
+
     private final DealerRepository dealerRepository;
 
-    public DealerResource(DealerRepository dealerRepository) {
+    public DealerResource(DealerService dealerService, DealerRepository dealerRepository) {
+        this.dealerService = dealerService;
         this.dealerRepository = dealerRepository;
     }
 
     /**
      * {@code POST  /dealers} : Create a new dealer.
      *
-     * @param dealer the dealer to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new dealer, or with status {@code 400 (Bad Request)} if the dealer has already an ID.
+     * @param dealerDTO the dealerDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new dealerDTO, or with status {@code 400 (Bad Request)} if the dealer has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/dealers")
-    public ResponseEntity<Dealer> createDealer(@Valid @RequestBody Dealer dealer) throws URISyntaxException {
-        log.debug("REST request to save Dealer : {}", dealer);
-        if (dealer.getId() != null) {
+    public ResponseEntity<DealerDTO> createDealer(@Valid @RequestBody DealerDTO dealerDTO) throws URISyntaxException {
+        log.debug("REST request to save Dealer : {}", dealerDTO);
+        if (dealerDTO.getId() != null) {
             throw new BadRequestAlertException("A new dealer cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Dealer result = dealerRepository.save(dealer);
+        DealerDTO result = dealerService.save(dealerDTO);
         return ResponseEntity
             .created(new URI("/api/dealers/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -63,23 +71,23 @@ public class DealerResource {
     /**
      * {@code PUT  /dealers/:id} : Updates an existing dealer.
      *
-     * @param id the id of the dealer to save.
-     * @param dealer the dealer to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated dealer,
-     * or with status {@code 400 (Bad Request)} if the dealer is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the dealer couldn't be updated.
+     * @param id the id of the dealerDTO to save.
+     * @param dealerDTO the dealerDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated dealerDTO,
+     * or with status {@code 400 (Bad Request)} if the dealerDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the dealerDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/dealers/{id}")
-    public ResponseEntity<Dealer> updateDealer(
+    public ResponseEntity<DealerDTO> updateDealer(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody Dealer dealer
+        @Valid @RequestBody DealerDTO dealerDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Dealer : {}, {}", id, dealer);
-        if (dealer.getId() == null) {
+        log.debug("REST request to update Dealer : {}, {}", id, dealerDTO);
+        if (dealerDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, dealer.getId())) {
+        if (!Objects.equals(id, dealerDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -87,34 +95,34 @@ public class DealerResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Dealer result = dealerRepository.save(dealer);
+        DealerDTO result = dealerService.update(dealerDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, dealer.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, dealerDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /dealers/:id} : Partial updates given fields of an existing dealer, field will ignore if it is null
      *
-     * @param id the id of the dealer to save.
-     * @param dealer the dealer to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated dealer,
-     * or with status {@code 400 (Bad Request)} if the dealer is not valid,
-     * or with status {@code 404 (Not Found)} if the dealer is not found,
-     * or with status {@code 500 (Internal Server Error)} if the dealer couldn't be updated.
+     * @param id the id of the dealerDTO to save.
+     * @param dealerDTO the dealerDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated dealerDTO,
+     * or with status {@code 400 (Bad Request)} if the dealerDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the dealerDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the dealerDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/dealers/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Dealer> partialUpdateDealer(
+    public ResponseEntity<DealerDTO> partialUpdateDealer(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody Dealer dealer
+        @NotNull @RequestBody DealerDTO dealerDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Dealer partially : {}, {}", id, dealer);
-        if (dealer.getId() == null) {
+        log.debug("REST request to partial update Dealer partially : {}, {}", id, dealerDTO);
+        if (dealerDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, dealer.getId())) {
+        if (!Objects.equals(id, dealerDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -122,66 +130,51 @@ public class DealerResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Dealer> result = dealerRepository
-            .findById(dealer.getId())
-            .map(existingDealer -> {
-                if (dealer.getName() != null) {
-                    existingDealer.setName(dealer.getName());
-                }
-                if (dealer.getBnName() != null) {
-                    existingDealer.setBnName(dealer.getBnName());
-                }
-                if (dealer.getShortName() != null) {
-                    existingDealer.setShortName(dealer.getShortName());
-                }
-                if (dealer.getMobile() != null) {
-                    existingDealer.setMobile(dealer.getMobile());
-                }
-
-                return existingDealer;
-            })
-            .map(dealerRepository::save);
+        Optional<DealerDTO> result = dealerService.partialUpdate(dealerDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, dealer.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, dealerDTO.getId().toString())
         );
     }
 
     /**
      * {@code GET  /dealers} : get all the dealers.
      *
+     * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of dealers in body.
      */
     @GetMapping("/dealers")
-    public List<Dealer> getAllDealers() {
-        log.debug("REST request to get all Dealers");
-        return dealerRepository.findAll();
+    public ResponseEntity<List<DealerDTO>> getAllDealers(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+        log.debug("REST request to get a page of Dealers");
+        Page<DealerDTO> page = dealerService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
      * {@code GET  /dealers/:id} : get the "id" dealer.
      *
-     * @param id the id of the dealer to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the dealer, or with status {@code 404 (Not Found)}.
+     * @param id the id of the dealerDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the dealerDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/dealers/{id}")
-    public ResponseEntity<Dealer> getDealer(@PathVariable Long id) {
+    public ResponseEntity<DealerDTO> getDealer(@PathVariable Long id) {
         log.debug("REST request to get Dealer : {}", id);
-        Optional<Dealer> dealer = dealerRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(dealer);
+        Optional<DealerDTO> dealerDTO = dealerService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(dealerDTO);
     }
 
     /**
      * {@code DELETE  /dealers/:id} : delete the "id" dealer.
      *
-     * @param id the id of the dealer to delete.
+     * @param id the id of the dealerDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/dealers/{id}")
     public ResponseEntity<Void> deleteDealer(@PathVariable Long id) {
         log.debug("REST request to delete Dealer : {}", id);
-        dealerRepository.deleteById(id);
+        dealerService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

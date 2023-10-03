@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.azmain.jb.IntegrationTest;
 import io.azmain.jb.domain.Division;
 import io.azmain.jb.repository.DivisionRepository;
+import io.azmain.jb.service.dto.DivisionDTO;
+import io.azmain.jb.service.mapper.DivisionMapper;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,6 +45,9 @@ class DivisionResourceIT {
 
     @Autowired
     private DivisionRepository divisionRepository;
+
+    @Autowired
+    private DivisionMapper divisionMapper;
 
     @Autowired
     private EntityManager em;
@@ -84,8 +89,9 @@ class DivisionResourceIT {
     void createDivision() throws Exception {
         int databaseSizeBeforeCreate = divisionRepository.findAll().size();
         // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
         restDivisionMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(division)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
             .andExpect(status().isCreated());
 
         // Validate the Division in the database
@@ -101,12 +107,13 @@ class DivisionResourceIT {
     void createDivisionWithExistingId() throws Exception {
         // Create the Division with an existing ID
         division.setId(1L);
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
 
         int databaseSizeBeforeCreate = divisionRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restDivisionMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(division)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Division in the database
@@ -122,9 +129,10 @@ class DivisionResourceIT {
         division.setName(null);
 
         // Create the Division, which fails.
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
 
         restDivisionMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(division)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
             .andExpect(status().isBadRequest());
 
         List<Division> divisionList = divisionRepository.findAll();
@@ -139,9 +147,10 @@ class DivisionResourceIT {
         division.setBnName(null);
 
         // Create the Division, which fails.
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
 
         restDivisionMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(division)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
             .andExpect(status().isBadRequest());
 
         List<Division> divisionList = divisionRepository.findAll();
@@ -200,12 +209,13 @@ class DivisionResourceIT {
         // Disconnect from session so that the updates on updatedDivision are not directly saved in db
         em.detach(updatedDivision);
         updatedDivision.name(UPDATED_NAME).bnName(UPDATED_BN_NAME);
+        DivisionDTO divisionDTO = divisionMapper.toDto(updatedDivision);
 
         restDivisionMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedDivision.getId())
+                put(ENTITY_API_URL_ID, divisionDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedDivision))
+                    .content(TestUtil.convertObjectToJsonBytes(divisionDTO))
             )
             .andExpect(status().isOk());
 
@@ -223,12 +233,15 @@ class DivisionResourceIT {
         int databaseSizeBeforeUpdate = divisionRepository.findAll().size();
         division.setId(count.incrementAndGet());
 
+        // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDivisionMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, division.getId())
+                put(ENTITY_API_URL_ID, divisionDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(division))
+                    .content(TestUtil.convertObjectToJsonBytes(divisionDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -243,12 +256,15 @@ class DivisionResourceIT {
         int databaseSizeBeforeUpdate = divisionRepository.findAll().size();
         division.setId(count.incrementAndGet());
 
+        // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDivisionMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(division))
+                    .content(TestUtil.convertObjectToJsonBytes(divisionDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -263,9 +279,12 @@ class DivisionResourceIT {
         int databaseSizeBeforeUpdate = divisionRepository.findAll().size();
         division.setId(count.incrementAndGet());
 
+        // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDivisionMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(division)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Division in the database
@@ -339,12 +358,15 @@ class DivisionResourceIT {
         int databaseSizeBeforeUpdate = divisionRepository.findAll().size();
         division.setId(count.incrementAndGet());
 
+        // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDivisionMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, division.getId())
+                patch(ENTITY_API_URL_ID, divisionDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(division))
+                    .content(TestUtil.convertObjectToJsonBytes(divisionDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -359,12 +381,15 @@ class DivisionResourceIT {
         int databaseSizeBeforeUpdate = divisionRepository.findAll().size();
         division.setId(count.incrementAndGet());
 
+        // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDivisionMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(division))
+                    .content(TestUtil.convertObjectToJsonBytes(divisionDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -379,9 +404,14 @@ class DivisionResourceIT {
         int databaseSizeBeforeUpdate = divisionRepository.findAll().size();
         division.setId(count.incrementAndGet());
 
+        // Create the Division
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDivisionMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(division)))
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(divisionDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Division in the database

@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.azmain.jb.IntegrationTest;
 import io.azmain.jb.domain.District;
 import io.azmain.jb.repository.DistrictRepository;
+import io.azmain.jb.service.dto.DistrictDTO;
+import io.azmain.jb.service.mapper.DistrictMapper;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,6 +45,9 @@ class DistrictResourceIT {
 
     @Autowired
     private DistrictRepository districtRepository;
+
+    @Autowired
+    private DistrictMapper districtMapper;
 
     @Autowired
     private EntityManager em;
@@ -84,8 +89,9 @@ class DistrictResourceIT {
     void createDistrict() throws Exception {
         int databaseSizeBeforeCreate = districtRepository.findAll().size();
         // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
         restDistrictMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(district)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(districtDTO)))
             .andExpect(status().isCreated());
 
         // Validate the District in the database
@@ -101,12 +107,13 @@ class DistrictResourceIT {
     void createDistrictWithExistingId() throws Exception {
         // Create the District with an existing ID
         district.setId(1L);
+        DistrictDTO districtDTO = districtMapper.toDto(district);
 
         int databaseSizeBeforeCreate = districtRepository.findAll().size();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restDistrictMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(district)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(districtDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the District in the database
@@ -122,9 +129,10 @@ class DistrictResourceIT {
         district.setName(null);
 
         // Create the District, which fails.
+        DistrictDTO districtDTO = districtMapper.toDto(district);
 
         restDistrictMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(district)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(districtDTO)))
             .andExpect(status().isBadRequest());
 
         List<District> districtList = districtRepository.findAll();
@@ -139,9 +147,10 @@ class DistrictResourceIT {
         district.setBnName(null);
 
         // Create the District, which fails.
+        DistrictDTO districtDTO = districtMapper.toDto(district);
 
         restDistrictMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(district)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(districtDTO)))
             .andExpect(status().isBadRequest());
 
         List<District> districtList = districtRepository.findAll();
@@ -200,12 +209,13 @@ class DistrictResourceIT {
         // Disconnect from session so that the updates on updatedDistrict are not directly saved in db
         em.detach(updatedDistrict);
         updatedDistrict.name(UPDATED_NAME).bnName(UPDATED_BN_NAME);
+        DistrictDTO districtDTO = districtMapper.toDto(updatedDistrict);
 
         restDistrictMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedDistrict.getId())
+                put(ENTITY_API_URL_ID, districtDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedDistrict))
+                    .content(TestUtil.convertObjectToJsonBytes(districtDTO))
             )
             .andExpect(status().isOk());
 
@@ -223,12 +233,15 @@ class DistrictResourceIT {
         int databaseSizeBeforeUpdate = districtRepository.findAll().size();
         district.setId(count.incrementAndGet());
 
+        // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDistrictMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, district.getId())
+                put(ENTITY_API_URL_ID, districtDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(district))
+                    .content(TestUtil.convertObjectToJsonBytes(districtDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -243,12 +256,15 @@ class DistrictResourceIT {
         int databaseSizeBeforeUpdate = districtRepository.findAll().size();
         district.setId(count.incrementAndGet());
 
+        // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDistrictMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(district))
+                    .content(TestUtil.convertObjectToJsonBytes(districtDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -263,9 +279,12 @@ class DistrictResourceIT {
         int databaseSizeBeforeUpdate = districtRepository.findAll().size();
         district.setId(count.incrementAndGet());
 
+        // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDistrictMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(district)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(districtDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the District in the database
@@ -339,12 +358,15 @@ class DistrictResourceIT {
         int databaseSizeBeforeUpdate = districtRepository.findAll().size();
         district.setId(count.incrementAndGet());
 
+        // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restDistrictMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, district.getId())
+                patch(ENTITY_API_URL_ID, districtDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(district))
+                    .content(TestUtil.convertObjectToJsonBytes(districtDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -359,12 +381,15 @@ class DistrictResourceIT {
         int databaseSizeBeforeUpdate = districtRepository.findAll().size();
         district.setId(count.incrementAndGet());
 
+        // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDistrictMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(district))
+                    .content(TestUtil.convertObjectToJsonBytes(districtDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -379,9 +404,14 @@ class DistrictResourceIT {
         int databaseSizeBeforeUpdate = districtRepository.findAll().size();
         district.setId(count.incrementAndGet());
 
+        // Create the District
+        DistrictDTO districtDTO = districtMapper.toDto(district);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restDistrictMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(district)))
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(districtDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the District in the database

@@ -47,3 +47,12 @@ relationship ManyToOne {
 	PayOrder{fertilizer} to Fertilizer
     PayOrder{dealer} to Dealer
 }
+
+
+paginate all with pagination
+
+dto * with mapstruct
+
+service all with serviceImpl
+
+filter PayOrder

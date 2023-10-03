@@ -1,7 +1,7 @@
 {
   "applications": "*",
   "changelogDate": "20231002181659",
-  "dto": "no",
+  "dto": "mapstruct",
   "embedded": false,
   "entityTableName": "district",
   "fields": [
@@ -19,7 +19,7 @@
   "fluentMethods": true,
   "jpaMetamodelFiltering": false,
   "name": "District",
-  "pagination": "no",
+  "pagination": "pagination",
   "readOnly": false,
   "relationships": [
     {
@@ -35,5 +35,5 @@
       "relationshipType": "many-to-one"
     }
   ],
-  "service": "no"
+  "service": "serviceImpl"
 }
