@@ -40,10 +40,10 @@ export class DivisionFormService {
         }
       ),
       name: new FormControl(divisionRawValue.name, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       bnName: new FormControl(divisionRawValue.bnName, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
     });
   }

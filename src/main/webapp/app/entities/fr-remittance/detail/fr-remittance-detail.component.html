@@ -1,0 +1,124 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="frRemittance">
+      <h2 data-cy="frRemittanceDetailsHeading"><span jhiTranslate="jbdailyApp.frRemittance.detail.title">Fr Remittance</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ frRemittance.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.pin">Pin</span></dt>
+        <dd>
+          <span>{{ frRemittance.pin }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.remitersName">Remiters Name</span></dt>
+        <dd>
+          <span>{{ frRemittance.remitersName }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.amount">Amount</span></dt>
+        <dd>
+          <span>{{ frRemittance.amount }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.incentiveAmount">Incentive Amount</span></dt>
+        <dd>
+          <span>{{ frRemittance.incentiveAmount }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.paymentDate">Payment Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.paymentDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.incPaymentDate">Inc Payment Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.incPaymentDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.remiSendingDate">Remi Sending Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.remiSendingDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.remiFrCurrency">Remi Fr Currency</span></dt>
+        <dd>
+          <span>{{ frRemittance.remiFrCurrency }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.currency">Currency</span></dt>
+        <dd>
+          <span>{{ frRemittance.currency }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.country">Country</span></dt>
+        <dd>
+          <span>{{ frRemittance.country }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.exchangeRate">Exchange Rate</span></dt>
+        <dd>
+          <span>{{ frRemittance.exchangeRate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.transactionType">Transaction Type</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'jbdailyApp.TransactionType.' + frRemittance.transactionType }}">{{ frRemittance.transactionType }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.recvMobileNo">Recv Mobile No</span></dt>
+        <dd>
+          <span>{{ frRemittance.recvMobileNo }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.recvName">Recv Name</span></dt>
+        <dd>
+          <span>{{ frRemittance.recvName }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.recvLegalId">Recv Legal Id</span></dt>
+        <dd>
+          <span>{{ frRemittance.recvLegalId }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.moneyExchangeName">Money Exchange Name</span></dt>
+        <dd>
+          <span>{{ frRemittance.moneyExchangeName }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.amountReimDate">Amount Reim Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.amountReimDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.incAmountReimDate">Inc Amount Reim Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.incAmountReimDate | formatMediumDate }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.recvGender">Recv Gender</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'jbdailyApp.Gender.' + frRemittance.recvGender }}">{{ frRemittance.recvGender }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.remiGender">Remi Gender</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'jbdailyApp.Gender.' + frRemittance.remiGender }}">{{ frRemittance.remiGender }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.documentType">Document Type</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'jbdailyApp.DocumentType.' + frRemittance.documentType }}">{{ frRemittance.documentType }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.moneyExchange">Money Exchange</span></dt>
+        <dd>
+          <div *ngIf="frRemittance.moneyExchange">
+            <a [routerLink]="['/money-exchange', frRemittance.moneyExchange.id, 'view']">{{ frRemittance.moneyExchange.id }}</a>
+          </div>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.incPercentage">Inc Percentage</span></dt>
+        <dd>
+          <div *ngIf="frRemittance.incPercentage">
+            <a [routerLink]="['/inc-percentage', frRemittance.incPercentage.id, 'view']">{{ frRemittance.incPercentage.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/fr-remittance', frRemittance.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

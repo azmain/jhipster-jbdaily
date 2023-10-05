@@ -1,0 +1,25 @@
+{
+  "jbdailyApp": {
+    "incPercentage": {
+      "home": {
+        "title": "Inc Percentages",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Inc Percentage",
+        "createOrEditLabel": "Create or edit a Inc Percentage",
+        "notFound": "No Inc Percentages found"
+      },
+      "created": "A new Inc Percentage is created with identifier {{ param }}",
+      "updated": "A Inc Percentage is updated with identifier {{ param }}",
+      "deleted": "A Inc Percentage is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Inc Percentage {{ id }}?"
+      },
+      "detail": {
+        "title": "Inc Percentage"
+      },
+      "id": "ID",
+      "name": "Name",
+      "frRemittance": "Fr Remittance"
+    }
+  }
+}

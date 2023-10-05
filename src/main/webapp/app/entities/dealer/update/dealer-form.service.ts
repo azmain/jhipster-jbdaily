@@ -43,15 +43,17 @@ export class DealerFormService {
         }
       ),
       name: new FormControl(dealerRawValue.name, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       bnName: new FormControl(dealerRawValue.bnName, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       shortName: new FormControl(dealerRawValue.shortName, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
-      mobile: new FormControl(dealerRawValue.mobile),
+      mobile: new FormControl(dealerRawValue.mobile, {
+        validators: [Validators.maxLength(255)],
+      }),
       upazila: new FormControl(dealerRawValue.upazila),
     });
   }

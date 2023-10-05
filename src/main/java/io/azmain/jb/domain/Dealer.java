@@ -21,18 +21,22 @@ public class Dealer implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
     @NotNull
-    @Column(name = "bn_name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "bn_name", length = 255, nullable = false)
     private String bnName;
 
     @NotNull
-    @Column(name = "short_name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "short_name", length = 255, nullable = false)
     private String shortName;
 
-    @Column(name = "mobile")
+    @Size(max = 255)
+    @Column(name = "mobile", length = 255)
     private String mobile;
 
     @ManyToOne

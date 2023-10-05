@@ -1,0 +1,9 @@
+{
+  "jbdailyApp": {
+    "TransactionType": {
+      "null": "",
+      "SPOT": "SPOT",
+      "ACCOUNT": "ACCOUNT"
+    }
+  }
+}

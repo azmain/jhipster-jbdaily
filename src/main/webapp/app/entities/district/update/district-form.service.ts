@@ -41,10 +41,10 @@ export class DistrictFormService {
         }
       ),
       name: new FormControl(districtRawValue.name, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       bnName: new FormControl(districtRawValue.bnName, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       division: new FormControl(districtRawValue.division),
     });

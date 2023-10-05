@@ -13,15 +13,19 @@ public class FertilizerDTO implements Serializable {
     private Long id;
 
     @NotNull
+    @Size(max = 255)
     private String name;
 
     @NotNull
+    @Size(max = 255)
     private String bnName;
 
     @NotNull
+    @Size(max = 255)
     private String accountNo;
 
     @NotNull
+    @Size(max = 255)
     private String accountTitle;
 
     public Long getId() {

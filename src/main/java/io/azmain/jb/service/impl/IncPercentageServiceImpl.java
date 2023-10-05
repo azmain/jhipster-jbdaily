@@ -1,0 +1,84 @@
+package io.azmain.jb.service.impl;
+
+import io.azmain.jb.domain.IncPercentage;
+import io.azmain.jb.repository.IncPercentageRepository;
+import io.azmain.jb.service.IncPercentageService;
+import io.azmain.jb.service.dto.IncPercentageDTO;
+import io.azmain.jb.service.mapper.IncPercentageMapper;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Service Implementation for managing {@link IncPercentage}.
+ */
+@Service
+@Transactional
+public class IncPercentageServiceImpl implements IncPercentageService {
+
+    private final Logger log = LoggerFactory.getLogger(IncPercentageServiceImpl.class);
+
+    private final IncPercentageRepository incPercentageRepository;
+
+    private final IncPercentageMapper incPercentageMapper;
+
+    public IncPercentageServiceImpl(IncPercentageRepository incPercentageRepository, IncPercentageMapper incPercentageMapper) {
+        this.incPercentageRepository = incPercentageRepository;
+        this.incPercentageMapper = incPercentageMapper;
+    }
+
+    @Override
+    public IncPercentageDTO save(IncPercentageDTO incPercentageDTO) {
+        log.debug("Request to save IncPercentage : {}", incPercentageDTO);
+        IncPercentage incPercentage = incPercentageMapper.toEntity(incPercentageDTO);
+        incPercentage = incPercentageRepository.save(incPercentage);
+        return incPercentageMapper.toDto(incPercentage);
+    }
+
+    @Override
+    public IncPercentageDTO update(IncPercentageDTO incPercentageDTO) {
+        log.debug("Request to update IncPercentage : {}", incPercentageDTO);
+        IncPercentage incPercentage = incPercentageMapper.toEntity(incPercentageDTO);
+        incPercentage = incPercentageRepository.save(incPercentage);
+        return incPercentageMapper.toDto(incPercentage);
+    }
+
+    @Override
+    public Optional<IncPercentageDTO> partialUpdate(IncPercentageDTO incPercentageDTO) {
+        log.debug("Request to partially update IncPercentage : {}", incPercentageDTO);
+
+        return incPercentageRepository
+            .findById(incPercentageDTO.getId())
+            .map(existingIncPercentage -> {
+                incPercentageMapper.partialUpdate(existingIncPercentage, incPercentageDTO);
+
+                return existingIncPercentage;
+            })
+            .map(incPercentageRepository::save)
+            .map(incPercentageMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<IncPercentageDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all IncPercentages");
+        return incPercentageRepository.findAll(pageable).map(incPercentageMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<IncPercentageDTO> findOne(Long id) {
+        log.debug("Request to get IncPercentage : {}", id);
+        return incPercentageRepository.findById(id).map(incPercentageMapper::toDto);
+    }
+
+    @Override
+    public void delete(Long id) {
+        log.debug("Request to delete IncPercentage : {}", id);
+        incPercentageRepository.deleteById(id);
+    }
+}

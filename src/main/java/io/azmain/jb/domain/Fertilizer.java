@@ -20,19 +20,23 @@ public class Fertilizer implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
     @NotNull
-    @Column(name = "bn_name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "bn_name", length = 255, nullable = false)
     private String bnName;
 
     @NotNull
-    @Column(name = "account_no", nullable = false)
+    @Size(max = 255)
+    @Column(name = "account_no", length = 255, nullable = false)
     private String accountNo;
 
     @NotNull
-    @Column(name = "account_title", nullable = false)
+    @Size(max = 255)
+    @Column(name = "account_title", length = 255, nullable = false)
     private String accountTitle;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

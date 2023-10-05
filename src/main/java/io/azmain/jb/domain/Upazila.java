@@ -23,11 +23,13 @@ public class Upazila implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "name", length = 255, nullable = false)
     private String name;
 
     @NotNull
-    @Column(name = "bn_name", nullable = false)
+    @Size(max = 255)
+    @Column(name = "bn_name", length = 255, nullable = false)
     private String bnName;
 
     @OneToMany(mappedBy = "upazila")

@@ -15,14 +15,18 @@ public class DealerDTO implements Serializable {
     private Long id;
 
     @NotNull
+    @Size(max = 255)
     private String name;
 
     @NotNull
+    @Size(max = 255)
     private String bnName;
 
     @NotNull
+    @Size(max = 255)
     private String shortName;
 
+    @Size(max = 255)
     private String mobile;
 
     private UpazilaDTO upazila;

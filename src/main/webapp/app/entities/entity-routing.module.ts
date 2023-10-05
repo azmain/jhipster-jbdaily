@@ -34,6 +34,21 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'jbdailyApp.payOrder.home.title' },
         loadChildren: () => import('./pay-order/pay-order.module').then(m => m.PayOrderModule),
       },
+      {
+        path: 'fr-remittance',
+        data: { pageTitle: 'jbdailyApp.frRemittance.home.title' },
+        loadChildren: () => import('./fr-remittance/fr-remittance.module').then(m => m.FrRemittanceModule),
+      },
+      {
+        path: 'inc-percentage',
+        data: { pageTitle: 'jbdailyApp.incPercentage.home.title' },
+        loadChildren: () => import('./inc-percentage/inc-percentage.module').then(m => m.IncPercentageModule),
+      },
+      {
+        path: 'money-exchange',
+        data: { pageTitle: 'jbdailyApp.moneyExchange.home.title' },
+        loadChildren: () => import('./money-exchange/money-exchange.module').then(m => m.MoneyExchangeModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

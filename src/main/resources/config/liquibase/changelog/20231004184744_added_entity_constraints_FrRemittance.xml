@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity FrRemittance.
+    -->
+    <changeSet id="20231004184744-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="money_exchange_id"
+                                 baseTableName="fr_remittance"
+                                 constraintName="fk_fr_remittance__money_exchange_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="money_exchange"/>
+
+        <addForeignKeyConstraint baseColumnNames="inc_percentage_id"
+                                 baseTableName="fr_remittance"
+                                 constraintName="fk_fr_remittance__inc_percentage_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="inc_percentage"/>
+    </changeSet>
+</databaseChangeLog>

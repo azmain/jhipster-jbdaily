@@ -42,16 +42,16 @@ export class FertilizerFormService {
         }
       ),
       name: new FormControl(fertilizerRawValue.name, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       bnName: new FormControl(fertilizerRawValue.bnName, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       accountNo: new FormControl(fertilizerRawValue.accountNo, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       accountTitle: new FormControl(fertilizerRawValue.accountTitle, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
     });
   }

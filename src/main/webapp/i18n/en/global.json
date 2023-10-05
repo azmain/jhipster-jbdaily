@@ -13,6 +13,9 @@
         "dealer": "Dealer",
         "fertilizer": "Fertilizer",
         "payOrder": "Pay Order",
+        "frRemittance": "Fr Remittance",
+        "incPercentage": "Inc Percentage",
+        "moneyExchange": "Money Exchange",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

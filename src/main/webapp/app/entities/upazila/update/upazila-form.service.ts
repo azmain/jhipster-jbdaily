@@ -41,10 +41,10 @@ export class UpazilaFormService {
         }
       ),
       name: new FormControl(upazilaRawValue.name, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       bnName: new FormControl(upazilaRawValue.bnName, {
-        validators: [Validators.required],
+        validators: [Validators.required, Validators.maxLength(255)],
       }),
       district: new FormControl(upazilaRawValue.district),
     });

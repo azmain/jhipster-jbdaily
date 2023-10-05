@@ -20,6 +20,14 @@
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
               This field is required.
             </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('name')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 255 }"
+            >
+              This field cannot be longer than 255 characters.
+            </small>
           </div>
         </div>
 
@@ -29,6 +37,14 @@
           <div *ngIf="editForm.get('bnName')!.invalid && (editForm.get('bnName')!.dirty || editForm.get('bnName')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('bnName')?.errors?.required" jhiTranslate="entity.validation.required">
               This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('bnName')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 255 }"
+            >
+              This field cannot be longer than 255 characters.
             </small>
           </div>
         </div>
@@ -44,12 +60,30 @@
             >
               This field is required.
             </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('shortName')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 255 }"
+            >
+              This field cannot be longer than 255 characters.
+            </small>
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="jbdailyApp.dealer.mobile" for="field_mobile">Mobile</label>
           <input type="text" class="form-control" name="mobile" id="field_mobile" data-cy="mobile" formControlName="mobile" />
+          <div *ngIf="editForm.get('mobile')!.invalid && (editForm.get('mobile')!.dirty || editForm.get('mobile')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('mobile')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 255 }"
+            >
+              This field cannot be longer than 255 characters.
+            </small>
+          </div>
         </div>
 
         <div class="row mb-3">

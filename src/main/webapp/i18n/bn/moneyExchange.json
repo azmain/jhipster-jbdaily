@@ -1,0 +1,28 @@
+{
+  "jbdailyApp": {
+    "moneyExchange": {
+      "home": {
+        "title": "Money Exchanges",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Money Exchange",
+        "createOrEditLabel": "Create or edit a Money Exchange",
+        "notFound": "No Money Exchanges found"
+      },
+      "created": "A new Money Exchange is created with identifier {{ param }}",
+      "updated": "A Money Exchange is updated with identifier {{ param }}",
+      "deleted": "A Money Exchange is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Money Exchange {{ id }}?"
+      },
+      "detail": {
+        "title": "Money Exchange"
+      },
+      "id": "ID",
+      "name": "Name",
+      "digit": "Digit",
+      "link": "Link",
+      "shortName": "Short Name",
+      "frRemittance": "Fr Remittance"
+    }
+  }
+}

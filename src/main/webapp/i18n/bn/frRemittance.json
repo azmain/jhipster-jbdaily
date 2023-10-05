@@ -1,0 +1,46 @@
+{
+  "jbdailyApp": {
+    "frRemittance": {
+      "home": {
+        "title": "Fr Remittances",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Fr Remittance",
+        "createOrEditLabel": "Create or edit a Fr Remittance",
+        "notFound": "No Fr Remittances found"
+      },
+      "created": "A new Fr Remittance is created with identifier {{ param }}",
+      "updated": "A Fr Remittance is updated with identifier {{ param }}",
+      "deleted": "A Fr Remittance is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Fr Remittance {{ id }}?"
+      },
+      "detail": {
+        "title": "Fr Remittance"
+      },
+      "id": "ID",
+      "pin": "Pin",
+      "remitersName": "Remiters Name",
+      "amount": "Amount",
+      "incentiveAmount": "Incentive Amount",
+      "paymentDate": "Payment Date",
+      "incPaymentDate": "Inc Payment Date",
+      "remiSendingDate": "Remi Sending Date",
+      "remiFrCurrency": "Remi Fr Currency",
+      "currency": "Currency",
+      "country": "Country",
+      "exchangeRate": "Exchange Rate",
+      "transactionType": "Transaction Type",
+      "recvMobileNo": "Recv Mobile No",
+      "recvName": "Recv Name",
+      "recvLegalId": "Recv Legal Id",
+      "moneyExchangeName": "Money Exchange Name",
+      "amountReimDate": "Amount Reim Date",
+      "incAmountReimDate": "Inc Amount Reim Date",
+      "recvGender": "Recv Gender",
+      "remiGender": "Remi Gender",
+      "documentType": "Document Type",
+      "moneyExchange": "Money Exchange",
+      "incPercentage": "Inc Percentage"
+    }
+  }
+}

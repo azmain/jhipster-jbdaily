@@ -17,11 +17,15 @@
     <include file="config/liquibase/changelog/20231002181701_added_entity_Dealer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20231002181702_added_entity_Fertilizer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20231002181703_added_entity_PayOrder.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231004184744_added_entity_FrRemittance.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231004184745_added_entity_IncPercentage.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231004184746_added_entity_MoneyExchange.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20231002181659_added_entity_constraints_District.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20231002181700_added_entity_constraints_Upazila.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20231002181701_added_entity_constraints_Dealer.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20231002181703_added_entity_constraints_PayOrder.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20231004184744_added_entity_constraints_FrRemittance.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

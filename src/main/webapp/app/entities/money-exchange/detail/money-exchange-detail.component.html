@@ -1,0 +1,44 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="moneyExchange">
+      <h2 data-cy="moneyExchangeDetailsHeading"><span jhiTranslate="jbdailyApp.moneyExchange.detail.title">Money Exchange</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ moneyExchange.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.moneyExchange.name">Name</span></dt>
+        <dd>
+          <span>{{ moneyExchange.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.moneyExchange.digit">Digit</span></dt>
+        <dd>
+          <span>{{ moneyExchange.digit }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.moneyExchange.link">Link</span></dt>
+        <dd>
+          <span>{{ moneyExchange.link }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.moneyExchange.shortName">Short Name</span></dt>
+        <dd>
+          <span>{{ moneyExchange.shortName }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/money-exchange', moneyExchange.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

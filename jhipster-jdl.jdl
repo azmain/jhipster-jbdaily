@@ -1,32 +1,32 @@
-
 entity Division {
-	name String required
-  	bnName String required
+	name String required maxlength(255)
+  	bnName String required maxlength(255)
+
 }
 
 entity District {
-	name String required
-    bnName String required
+	name String required maxlength(255)
+    bnName String required maxlength(255)
 }
 
 entity Upazila {
-	name String required
-    bnName String required
+	name String required maxlength(255)
+    bnName String required maxlength(255)
 }
 
 /** not an ignored comment */
 entity Dealer {
-	name String required
-	bnName String required
-	shortName String required
-	mobile String
+	name String required maxlength(255)
+	bnName String required maxlength(255)
+	shortName String required maxlength(255)
+	mobile String maxlength(255)
 }
 
 entity Fertilizer {
-	name String required
-    bnName String required
-    accountNo String required
-    accountTitle String required
+	name String required maxlength(255)
+    bnName String required maxlength(255)
+    accountNo String required maxlength(255)
+    accountTitle String required maxlength(255)
 }
 
 entity PayOrder {
@@ -37,10 +37,59 @@ entity PayOrder {
     controllingNo Long required
 }
 
+entity FrRemittance {
+	pin String required maxlength(256)
+    remitersName String required maxlength(256)
+    amount String required maxlength(256)
+    incentiveAmount String required maxlength(256)
+    paymentDate LocalDate required
+    incPaymentDate LocalDate required
+    remiSendingDate LocalDate
+    remiFrCurrency String maxlength(256)
+    currency String maxlength(256)
+    country String maxlength(256)
+    exchangeRate String maxlength(256)
+    transactionType TransactionType required
+    recvMobileNo String required maxlength(256)
+    recvName String required maxlength(255)
+    recvLegalId String required maxlength(255)
+    moneyExchangeName String maxlength(256)
+    amountReimDate LocalDate
+    incAmountReimDate LocalDate
+    recvGender Gender required
+    remiGender Gender required
+    documentType DocumentType required
+    
+}
+
+entity IncPercentage {
+	name String required maxlength(256)
+}
+
+entity MoneyExchange {
+	name String required maxlength(256)
+    digit String required maxlength(26)
+    link String maxlength(256)
+    shortName String maxlength(256)
+}
+
+
+enum TransactionType {
+    SPOT, ACCOUNT
+}
+enum Gender {
+    MALE, FEMALE, OTHERS
+}
+enum DocumentType {
+    NID, PASSPORT, DRIVING_LICENCE, BIRTH_CERTIFICATE
+}
+
 relationship OneToMany {
 	Division to District{division}
     District to Upazila{district}
     Upazila to Dealer{upazila}
+    MoneyExchange to FrRemittance{moneyExchange}
+    IncPercentage to FrRemittance{incPercentage}
 }
 
 relationship ManyToOne {
@@ -55,4 +104,4 @@ dto * with mapstruct
 
 service all with serviceImpl
 
-filter PayOrder
+filter PayOrder, FrRemittance

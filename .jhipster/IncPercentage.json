@@ -1,0 +1,29 @@
+{
+  "applications": "*",
+  "changelogDate": "20231004184745",
+  "dto": "mapstruct",
+  "embedded": false,
+  "entityTableName": "inc_percentage",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "256"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "IncPercentage",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "frRemittance",
+      "otherEntityRelationshipName": "incPercentage",
+      "relationshipName": "frRemittance",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}
