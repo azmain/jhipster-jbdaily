@@ -12,6 +12,8 @@ import { EntityArrayResponseType, PayOrderService } from '../service/pay-order.s
 import { PayOrderDeleteDialogComponent } from '../delete/pay-order-delete-dialog.component';
 import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
 
+import { jsPDF } from 'jspdf';
+
 @Component({
   selector: 'jhi-pay-order',
   templateUrl: './pay-order.component.html',
@@ -148,5 +150,13 @@ export class PayOrderComponent implements OnInit {
     } else {
       return [predicate + ',' + ascendingQueryParam];
     }
+  }
+
+  createPdf(payOrder: IPayOrder): void {
+    console.log(payOrder);
+    const doc = new jsPDF();
+
+    doc.text(payOrder?.dealer?.bnName || 'Hello', 10, 10);
+    doc.save('a4.pdf');
   }
 }

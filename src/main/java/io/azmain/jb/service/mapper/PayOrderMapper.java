@@ -18,12 +18,12 @@ public interface PayOrderMapper extends EntityMapper<PayOrderDTO, PayOrder> {
     PayOrderDTO toDto(PayOrder s);
 
     @Named("fertilizerId")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     FertilizerDTO toDtoFertilizerId(Fertilizer fertilizer);
 
     @Named("dealerId")
-    @BeanMapping(ignoreByDefault = true)
+    // @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     DealerDTO toDtoDealerId(Dealer dealer);
 }

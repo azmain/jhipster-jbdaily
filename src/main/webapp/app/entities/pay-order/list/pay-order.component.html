@@ -107,6 +107,11 @@
           </td>
           <td class="text-end">
             <div class="btn-group">
+              <button type="button" class="btn btn-info btn-sm" data-cy="entityDetailsButton" (click)="createPdf(payOrder)">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Pdf</span>
+              </button>
+
               <button
                 type="submit"
                 [routerLink]="['/pay-order', payOrder.id, 'view']"
