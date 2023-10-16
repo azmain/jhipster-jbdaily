@@ -37,10 +37,6 @@ type PayOrderFormGroupContent = {
   amount: FormControl<PayOrderFormRawValue['amount']>;
   slipNo: FormControl<PayOrderFormRawValue['slipNo']>;
   controllingNo: FormControl<PayOrderFormRawValue['controllingNo']>;
-  createdBy: FormControl<PayOrderFormRawValue['createdBy']>;
-  createdDate: FormControl<PayOrderFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<PayOrderFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<PayOrderFormRawValue['lastModifiedDate']>;
   fertilizer: FormControl<PayOrderFormRawValue['fertilizer']>;
   dealer: FormControl<PayOrderFormRawValue['dealer']>;
 };
@@ -77,16 +73,6 @@ export class PayOrderFormService {
       controllingNo: new FormControl(payOrderRawValue.controllingNo, {
         validators: [Validators.required],
       }),
-      createdBy: new FormControl(payOrderRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(payOrderRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(payOrderRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(payOrderRawValue.lastModifiedDate),
       fertilizer: new FormControl(payOrderRawValue.fertilizer, {
         validators: [Validators.required],
       }),
@@ -115,8 +101,6 @@ export class PayOrderFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 

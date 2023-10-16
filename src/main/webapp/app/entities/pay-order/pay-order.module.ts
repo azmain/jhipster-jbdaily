@@ -7,9 +7,10 @@ import { PayOrderDeleteDialogComponent } from './delete/pay-order-delete-dialog.
 import { PayOrderRoutingModule } from './route/pay-order-routing.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
-  imports: [SharedModule, PayOrderRoutingModule, DropdownModule, CalendarModule],
+  imports: [SharedModule, PayOrderRoutingModule, DropdownModule, CalendarModule, InputTextModule],
   declarations: [PayOrderComponent, PayOrderDetailComponent, PayOrderUpdateComponent, PayOrderDeleteDialogComponent],
 })
 export class PayOrderModule {}

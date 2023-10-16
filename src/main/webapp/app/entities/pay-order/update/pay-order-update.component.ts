@@ -54,7 +54,10 @@ export class PayOrderUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
+    console.log('form ', this.editForm);
     const payOrder = this.payOrderFormService.getPayOrder(this.editForm);
+
+    console.log('payorder ', this.editForm);
     if (payOrder.id !== null) {
       this.subscribeToSaveResponse(this.payOrderService.update(payOrder));
     } else {
