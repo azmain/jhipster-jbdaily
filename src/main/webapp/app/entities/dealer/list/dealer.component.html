@@ -62,7 +62,31 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="upazila.id">
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.createdBy">Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.createdDate">Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.lastModifiedBy">Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.dealer.lastModifiedDate">Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="upazila.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.dealer.upazila">Upazila</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -80,13 +104,32 @@
           <td>{{ dealer.bnName }}</td>
           <td>{{ dealer.shortName }}</td>
           <td>{{ dealer.mobile }}</td>
+          <td>{{ dealer.createdBy }}</td>
+          <td>{{ dealer.createdDate | formatMediumDatetime }}</td>
+          <td>{{ dealer.lastModifiedBy }}</td>
+          <td>{{ dealer.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="dealer.upazila">
-              <a [routerLink]="['/upazila', dealer.upazila.id, 'view']">{{ dealer.upazila.id }}</a>
+              <a [routerLink]="['/upazila', dealer.upazila.id, 'view']">{{ dealer.upazila.name }}</a>
             </div>
           </td>
           <td class="text-end">
             <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/pay-order']"
+                [queryParams]="{ 'filter[dealerId.in]': dealer.id }"
+                class="btn btn-info btn-sm"
+                data-cy="filterOtherEntityButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span
+                  class="d-none d-md-inline"
+                  jhiTranslate="entity.action.show"
+                  [translateValues]="{ otherEntity: ('jbdailyApp.dealer.payOrder' | translate) }"
+                  >Show Pay Order</span
+                >
+              </button>
               <button type="submit" [routerLink]="['/dealer', dealer.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                 <fa-icon icon="eye"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>

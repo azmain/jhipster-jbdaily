@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IFertilizer } from '../fertilizer.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../fertilizer.test-samples';
 
-import { FertilizerService } from './fertilizer.service';
+import { FertilizerService, RestFertilizer } from './fertilizer.service';
 
-const requireRestSample: IFertilizer = {
+const requireRestSample: RestFertilizer = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Fertilizer Service', () => {

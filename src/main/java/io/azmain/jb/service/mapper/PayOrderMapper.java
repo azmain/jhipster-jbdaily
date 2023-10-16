@@ -13,17 +13,19 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface PayOrderMapper extends EntityMapper<PayOrderDTO, PayOrder> {
-    @Mapping(target = "fertilizer", source = "fertilizer", qualifiedByName = "fertilizerId")
-    @Mapping(target = "dealer", source = "dealer", qualifiedByName = "dealerId")
+    @Mapping(target = "fertilizer", source = "fertilizer", qualifiedByName = "fertilizerName")
+    @Mapping(target = "dealer", source = "dealer", qualifiedByName = "dealerName")
     PayOrderDTO toDto(PayOrder s);
 
-    @Named("fertilizerId")
-    // @BeanMapping(ignoreByDefault = true)
+    @Named("fertilizerName")
+    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    FertilizerDTO toDtoFertilizerId(Fertilizer fertilizer);
+    @Mapping(target = "name", source = "name")
+    FertilizerDTO toDtoFertilizerName(Fertilizer fertilizer);
 
-    @Named("dealerId")
-    // @BeanMapping(ignoreByDefault = true)
+    @Named("dealerName")
+    @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    DealerDTO toDtoDealerId(Dealer dealer);
+    @Mapping(target = "name", source = "name")
+    DealerDTO toDtoDealerName(Dealer dealer);
 }

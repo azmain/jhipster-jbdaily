@@ -23,6 +23,10 @@
       "amount": "Amount",
       "slipNo": "Slip No",
       "controllingNo": "Controlling No",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "fertilizer": "Fertilizer",
       "dealer": "Dealer"
     }

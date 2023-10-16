@@ -2,6 +2,7 @@ package io.azmain.jb.service.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 import javax.validation.constraints.*;
@@ -28,6 +29,18 @@ public class PayOrderDTO implements Serializable {
 
     @NotNull
     private Long controllingNo;
+
+    @NotNull
+    @Size(max = 50)
+    private String createdBy;
+
+    @NotNull
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     private FertilizerDTO fertilizer;
 
@@ -81,6 +94,38 @@ public class PayOrderDTO implements Serializable {
         this.controllingNo = controllingNo;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public FertilizerDTO getFertilizer() {
         return fertilizer;
     }
@@ -128,6 +173,10 @@ public class PayOrderDTO implements Serializable {
             ", amount=" + getAmount() +
             ", slipNo=" + getSlipNo() +
             ", controllingNo=" + getControllingNo() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", fertilizer=" + getFertilizer() +
             ", dealer=" + getDealer() +
             "}";

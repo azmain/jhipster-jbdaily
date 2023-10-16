@@ -2,6 +2,7 @@ package io.azmain.jb.service.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
@@ -28,6 +29,18 @@ public class DealerDTO implements Serializable {
 
     @Size(max = 255)
     private String mobile;
+
+    @NotNull
+    @Size(max = 50)
+    private String createdBy;
+
+    @NotNull
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     private UpazilaDTO upazila;
 
@@ -71,6 +84,38 @@ public class DealerDTO implements Serializable {
         this.mobile = mobile;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public UpazilaDTO getUpazila() {
         return upazila;
     }
@@ -109,6 +154,10 @@ public class DealerDTO implements Serializable {
             ", bnName='" + getBnName() + "'" +
             ", shortName='" + getShortName() + "'" +
             ", mobile='" + getMobile() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", upazila=" + getUpazila() +
             "}";
     }

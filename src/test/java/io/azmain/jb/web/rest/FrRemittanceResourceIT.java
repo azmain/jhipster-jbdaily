@@ -2,6 +2,7 @@ package io.azmain.jb.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -14,19 +15,29 @@ import io.azmain.jb.domain.enumeration.Gender;
 import io.azmain.jb.domain.enumeration.Gender;
 import io.azmain.jb.domain.enumeration.TransactionType;
 import io.azmain.jb.repository.FrRemittanceRepository;
+import io.azmain.jb.service.FrRemittanceService;
 import io.azmain.jb.service.criteria.FrRemittanceCriteria;
 import io.azmain.jb.service.dto.FrRemittanceDTO;
 import io.azmain.jb.service.mapper.FrRemittanceMapper;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link FrRemittanceResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class FrRemittanceResourceIT {
@@ -108,6 +120,18 @@ class FrRemittanceResourceIT {
     private static final DocumentType DEFAULT_DOCUMENT_TYPE = DocumentType.NID;
     private static final DocumentType UPDATED_DOCUMENT_TYPE = DocumentType.PASSPORT;
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/fr-remittances";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -117,8 +141,14 @@ class FrRemittanceResourceIT {
     @Autowired
     private FrRemittanceRepository frRemittanceRepository;
 
+    @Mock
+    private FrRemittanceRepository frRemittanceRepositoryMock;
+
     @Autowired
     private FrRemittanceMapper frRemittanceMapper;
+
+    @Mock
+    private FrRemittanceService frRemittanceServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -156,7 +186,31 @@ class FrRemittanceResourceIT {
             .incAmountReimDate(DEFAULT_INC_AMOUNT_REIM_DATE)
             .recvGender(DEFAULT_RECV_GENDER)
             .remiGender(DEFAULT_REMI_GENDER)
-            .documentType(DEFAULT_DOCUMENT_TYPE);
+            .documentType(DEFAULT_DOCUMENT_TYPE)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
+        // Add required entity
+        MoneyExchange moneyExchange;
+        if (TestUtil.findAll(em, MoneyExchange.class).isEmpty()) {
+            moneyExchange = MoneyExchangeResourceIT.createEntity(em);
+            em.persist(moneyExchange);
+            em.flush();
+        } else {
+            moneyExchange = TestUtil.findAll(em, MoneyExchange.class).get(0);
+        }
+        frRemittance.setMoneyExchange(moneyExchange);
+        // Add required entity
+        IncPercentage incPercentage;
+        if (TestUtil.findAll(em, IncPercentage.class).isEmpty()) {
+            incPercentage = IncPercentageResourceIT.createEntity(em);
+            em.persist(incPercentage);
+            em.flush();
+        } else {
+            incPercentage = TestUtil.findAll(em, IncPercentage.class).get(0);
+        }
+        frRemittance.setIncPercentage(incPercentage);
         return frRemittance;
     }
 
@@ -188,7 +242,31 @@ class FrRemittanceResourceIT {
             .incAmountReimDate(UPDATED_INC_AMOUNT_REIM_DATE)
             .recvGender(UPDATED_RECV_GENDER)
             .remiGender(UPDATED_REMI_GENDER)
-            .documentType(UPDATED_DOCUMENT_TYPE);
+            .documentType(UPDATED_DOCUMENT_TYPE)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+        // Add required entity
+        MoneyExchange moneyExchange;
+        if (TestUtil.findAll(em, MoneyExchange.class).isEmpty()) {
+            moneyExchange = MoneyExchangeResourceIT.createUpdatedEntity(em);
+            em.persist(moneyExchange);
+            em.flush();
+        } else {
+            moneyExchange = TestUtil.findAll(em, MoneyExchange.class).get(0);
+        }
+        frRemittance.setMoneyExchange(moneyExchange);
+        // Add required entity
+        IncPercentage incPercentage;
+        if (TestUtil.findAll(em, IncPercentage.class).isEmpty()) {
+            incPercentage = IncPercentageResourceIT.createUpdatedEntity(em);
+            em.persist(incPercentage);
+            em.flush();
+        } else {
+            incPercentage = TestUtil.findAll(em, IncPercentage.class).get(0);
+        }
+        frRemittance.setIncPercentage(incPercentage);
         return frRemittance;
     }
 
@@ -234,6 +312,10 @@ class FrRemittanceResourceIT {
         assertThat(testFrRemittance.getRecvGender()).isEqualTo(DEFAULT_RECV_GENDER);
         assertThat(testFrRemittance.getRemiGender()).isEqualTo(DEFAULT_REMI_GENDER);
         assertThat(testFrRemittance.getDocumentType()).isEqualTo(DEFAULT_DOCUMENT_TYPE);
+        assertThat(testFrRemittance.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testFrRemittance.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testFrRemittance.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testFrRemittance.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -519,6 +601,46 @@ class FrRemittanceResourceIT {
 
     @Test
     @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = frRemittanceRepository.findAll().size();
+        // set the field null
+        frRemittance.setCreatedBy(null);
+
+        // Create the FrRemittance, which fails.
+        FrRemittanceDTO frRemittanceDTO = frRemittanceMapper.toDto(frRemittance);
+
+        restFrRemittanceMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(frRemittanceDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<FrRemittance> frRemittanceList = frRemittanceRepository.findAll();
+        assertThat(frRemittanceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = frRemittanceRepository.findAll().size();
+        // set the field null
+        frRemittance.setCreatedDate(null);
+
+        // Create the FrRemittance, which fails.
+        FrRemittanceDTO frRemittanceDTO = frRemittanceMapper.toDto(frRemittance);
+
+        restFrRemittanceMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(frRemittanceDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<FrRemittance> frRemittanceList = frRemittanceRepository.findAll();
+        assertThat(frRemittanceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllFrRemittances() throws Exception {
         // Initialize the database
         frRemittanceRepository.saveAndFlush(frRemittance);
@@ -549,7 +671,28 @@ class FrRemittanceResourceIT {
             .andExpect(jsonPath("$.[*].incAmountReimDate").value(hasItem(DEFAULT_INC_AMOUNT_REIM_DATE.toString())))
             .andExpect(jsonPath("$.[*].recvGender").value(hasItem(DEFAULT_RECV_GENDER.toString())))
             .andExpect(jsonPath("$.[*].remiGender").value(hasItem(DEFAULT_REMI_GENDER.toString())))
-            .andExpect(jsonPath("$.[*].documentType").value(hasItem(DEFAULT_DOCUMENT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].documentType").value(hasItem(DEFAULT_DOCUMENT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllFrRemittancesWithEagerRelationshipsIsEnabled() throws Exception {
+        when(frRemittanceServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restFrRemittanceMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(frRemittanceServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllFrRemittancesWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(frRemittanceServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restFrRemittanceMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(frRemittanceRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -584,7 +727,11 @@ class FrRemittanceResourceIT {
             .andExpect(jsonPath("$.incAmountReimDate").value(DEFAULT_INC_AMOUNT_REIM_DATE.toString()))
             .andExpect(jsonPath("$.recvGender").value(DEFAULT_RECV_GENDER.toString()))
             .andExpect(jsonPath("$.remiGender").value(DEFAULT_REMI_GENDER.toString()))
-            .andExpect(jsonPath("$.documentType").value(DEFAULT_DOCUMENT_TYPE.toString()));
+            .andExpect(jsonPath("$.documentType").value(DEFAULT_DOCUMENT_TYPE.toString()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -1998,6 +2145,214 @@ class FrRemittanceResourceIT {
 
     @Test
     @Transactional
+    void getAllFrRemittancesByCreatedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdBy equals to DEFAULT_CREATED_BY
+        defaultFrRemittanceShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
+
+        // Get all the frRemittanceList where createdBy equals to UPDATED_CREATED_BY
+        defaultFrRemittanceShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
+        defaultFrRemittanceShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
+
+        // Get all the frRemittanceList where createdBy equals to UPDATED_CREATED_BY
+        defaultFrRemittanceShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdBy is not null
+        defaultFrRemittanceShouldBeFound("createdBy.specified=true");
+
+        // Get all the frRemittanceList where createdBy is null
+        defaultFrRemittanceShouldNotBeFound("createdBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedByContainsSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdBy contains DEFAULT_CREATED_BY
+        defaultFrRemittanceShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
+
+        // Get all the frRemittanceList where createdBy contains UPDATED_CREATED_BY
+        defaultFrRemittanceShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdBy does not contain DEFAULT_CREATED_BY
+        defaultFrRemittanceShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+
+        // Get all the frRemittanceList where createdBy does not contain UPDATED_CREATED_BY
+        defaultFrRemittanceShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdDate equals to DEFAULT_CREATED_DATE
+        defaultFrRemittanceShouldBeFound("createdDate.equals=" + DEFAULT_CREATED_DATE);
+
+        // Get all the frRemittanceList where createdDate equals to UPDATED_CREATED_DATE
+        defaultFrRemittanceShouldNotBeFound("createdDate.equals=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdDate in DEFAULT_CREATED_DATE or UPDATED_CREATED_DATE
+        defaultFrRemittanceShouldBeFound("createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE);
+
+        // Get all the frRemittanceList where createdDate equals to UPDATED_CREATED_DATE
+        defaultFrRemittanceShouldNotBeFound("createdDate.in=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByCreatedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where createdDate is not null
+        defaultFrRemittanceShouldBeFound("createdDate.specified=true");
+
+        // Get all the frRemittanceList where createdDate is null
+        defaultFrRemittanceShouldNotBeFound("createdDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedBy equals to DEFAULT_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldBeFound("lastModifiedBy.equals=" + DEFAULT_LAST_MODIFIED_BY);
+
+        // Get all the frRemittanceList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldNotBeFound("lastModifiedBy.equals=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedBy in DEFAULT_LAST_MODIFIED_BY or UPDATED_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldBeFound("lastModifiedBy.in=" + DEFAULT_LAST_MODIFIED_BY + "," + UPDATED_LAST_MODIFIED_BY);
+
+        // Get all the frRemittanceList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldNotBeFound("lastModifiedBy.in=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedBy is not null
+        defaultFrRemittanceShouldBeFound("lastModifiedBy.specified=true");
+
+        // Get all the frRemittanceList where lastModifiedBy is null
+        defaultFrRemittanceShouldNotBeFound("lastModifiedBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedByContainsSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedBy contains DEFAULT_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldBeFound("lastModifiedBy.contains=" + DEFAULT_LAST_MODIFIED_BY);
+
+        // Get all the frRemittanceList where lastModifiedBy contains UPDATED_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldNotBeFound("lastModifiedBy.contains=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedBy does not contain DEFAULT_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldNotBeFound("lastModifiedBy.doesNotContain=" + DEFAULT_LAST_MODIFIED_BY);
+
+        // Get all the frRemittanceList where lastModifiedBy does not contain UPDATED_LAST_MODIFIED_BY
+        defaultFrRemittanceShouldBeFound("lastModifiedBy.doesNotContain=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedDate equals to DEFAULT_LAST_MODIFIED_DATE
+        defaultFrRemittanceShouldBeFound("lastModifiedDate.equals=" + DEFAULT_LAST_MODIFIED_DATE);
+
+        // Get all the frRemittanceList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
+        defaultFrRemittanceShouldNotBeFound("lastModifiedDate.equals=" + UPDATED_LAST_MODIFIED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedDate in DEFAULT_LAST_MODIFIED_DATE or UPDATED_LAST_MODIFIED_DATE
+        defaultFrRemittanceShouldBeFound("lastModifiedDate.in=" + DEFAULT_LAST_MODIFIED_DATE + "," + UPDATED_LAST_MODIFIED_DATE);
+
+        // Get all the frRemittanceList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
+        defaultFrRemittanceShouldNotBeFound("lastModifiedDate.in=" + UPDATED_LAST_MODIFIED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllFrRemittancesByLastModifiedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        frRemittanceRepository.saveAndFlush(frRemittance);
+
+        // Get all the frRemittanceList where lastModifiedDate is not null
+        defaultFrRemittanceShouldBeFound("lastModifiedDate.specified=true");
+
+        // Get all the frRemittanceList where lastModifiedDate is null
+        defaultFrRemittanceShouldNotBeFound("lastModifiedDate.specified=false");
+    }
+
+    @Test
+    @Transactional
     void getAllFrRemittancesByMoneyExchangeIsEqualToSomething() throws Exception {
         MoneyExchange moneyExchange;
         if (TestUtil.findAll(em, MoneyExchange.class).isEmpty()) {
@@ -2071,7 +2426,11 @@ class FrRemittanceResourceIT {
             .andExpect(jsonPath("$.[*].incAmountReimDate").value(hasItem(DEFAULT_INC_AMOUNT_REIM_DATE.toString())))
             .andExpect(jsonPath("$.[*].recvGender").value(hasItem(DEFAULT_RECV_GENDER.toString())))
             .andExpect(jsonPath("$.[*].remiGender").value(hasItem(DEFAULT_REMI_GENDER.toString())))
-            .andExpect(jsonPath("$.[*].documentType").value(hasItem(DEFAULT_DOCUMENT_TYPE.toString())));
+            .andExpect(jsonPath("$.[*].documentType").value(hasItem(DEFAULT_DOCUMENT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
 
         // Check, that the count call also returns 1
         restFrRemittanceMockMvc
@@ -2140,7 +2499,11 @@ class FrRemittanceResourceIT {
             .incAmountReimDate(UPDATED_INC_AMOUNT_REIM_DATE)
             .recvGender(UPDATED_RECV_GENDER)
             .remiGender(UPDATED_REMI_GENDER)
-            .documentType(UPDATED_DOCUMENT_TYPE);
+            .documentType(UPDATED_DOCUMENT_TYPE)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         FrRemittanceDTO frRemittanceDTO = frRemittanceMapper.toDto(updatedFrRemittance);
 
         restFrRemittanceMockMvc
@@ -2176,6 +2539,10 @@ class FrRemittanceResourceIT {
         assertThat(testFrRemittance.getRecvGender()).isEqualTo(UPDATED_RECV_GENDER);
         assertThat(testFrRemittance.getRemiGender()).isEqualTo(UPDATED_REMI_GENDER);
         assertThat(testFrRemittance.getDocumentType()).isEqualTo(UPDATED_DOCUMENT_TYPE);
+        assertThat(testFrRemittance.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testFrRemittance.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testFrRemittance.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testFrRemittance.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -2272,7 +2639,9 @@ class FrRemittanceResourceIT {
             .amountReimDate(UPDATED_AMOUNT_REIM_DATE)
             .recvGender(UPDATED_RECV_GENDER)
             .remiGender(UPDATED_REMI_GENDER)
-            .documentType(UPDATED_DOCUMENT_TYPE);
+            .documentType(UPDATED_DOCUMENT_TYPE)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restFrRemittanceMockMvc
             .perform(
@@ -2307,6 +2676,10 @@ class FrRemittanceResourceIT {
         assertThat(testFrRemittance.getRecvGender()).isEqualTo(UPDATED_RECV_GENDER);
         assertThat(testFrRemittance.getRemiGender()).isEqualTo(UPDATED_REMI_GENDER);
         assertThat(testFrRemittance.getDocumentType()).isEqualTo(UPDATED_DOCUMENT_TYPE);
+        assertThat(testFrRemittance.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testFrRemittance.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testFrRemittance.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testFrRemittance.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -2342,7 +2715,11 @@ class FrRemittanceResourceIT {
             .incAmountReimDate(UPDATED_INC_AMOUNT_REIM_DATE)
             .recvGender(UPDATED_RECV_GENDER)
             .remiGender(UPDATED_REMI_GENDER)
-            .documentType(UPDATED_DOCUMENT_TYPE);
+            .documentType(UPDATED_DOCUMENT_TYPE)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restFrRemittanceMockMvc
             .perform(
@@ -2377,6 +2754,10 @@ class FrRemittanceResourceIT {
         assertThat(testFrRemittance.getRecvGender()).isEqualTo(UPDATED_RECV_GENDER);
         assertThat(testFrRemittance.getRemiGender()).isEqualTo(UPDATED_REMI_GENDER);
         assertThat(testFrRemittance.getDocumentType()).isEqualTo(UPDATED_DOCUMENT_TYPE);
+        assertThat(testFrRemittance.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testFrRemittance.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testFrRemittance.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testFrRemittance.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

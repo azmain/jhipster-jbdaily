@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IUpazila, NewUpazila } from '../upazila.model';
 
 /**
@@ -14,13 +16,29 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type UpazilaFormGroupInput = IUpazila | PartialWithRequiredKeyOf<NewUpazila>;
 
-type UpazilaFormDefaults = Pick<NewUpazila, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IUpazila | NewUpazila> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type UpazilaFormRawValue = FormValueOf<IUpazila>;
+
+type NewUpazilaFormRawValue = FormValueOf<NewUpazila>;
+
+type UpazilaFormDefaults = Pick<NewUpazila, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type UpazilaFormGroupContent = {
-  id: FormControl<IUpazila['id'] | NewUpazila['id']>;
-  name: FormControl<IUpazila['name']>;
-  bnName: FormControl<IUpazila['bnName']>;
-  district: FormControl<IUpazila['district']>;
+  id: FormControl<UpazilaFormRawValue['id'] | NewUpazila['id']>;
+  name: FormControl<UpazilaFormRawValue['name']>;
+  bnName: FormControl<UpazilaFormRawValue['bnName']>;
+  createdBy: FormControl<UpazilaFormRawValue['createdBy']>;
+  createdDate: FormControl<UpazilaFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<UpazilaFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<UpazilaFormRawValue['lastModifiedDate']>;
+  district: FormControl<UpazilaFormRawValue['district']>;
 };
 
 export type UpazilaFormGroup = FormGroup<UpazilaFormGroupContent>;
@@ -28,10 +46,10 @@ export type UpazilaFormGroup = FormGroup<UpazilaFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class UpazilaFormService {
   createUpazilaFormGroup(upazila: UpazilaFormGroupInput = { id: null }): UpazilaFormGroup {
-    const upazilaRawValue = {
+    const upazilaRawValue = this.convertUpazilaToUpazilaRawValue({
       ...this.getFormDefaults(),
       ...upazila,
-    };
+    });
     return new FormGroup<UpazilaFormGroupContent>({
       id: new FormControl(
         { value: upazilaRawValue.id, disabled: true },
@@ -46,16 +64,28 @@ export class UpazilaFormService {
       bnName: new FormControl(upazilaRawValue.bnName, {
         validators: [Validators.required, Validators.maxLength(255)],
       }),
-      district: new FormControl(upazilaRawValue.district),
+      createdBy: new FormControl(upazilaRawValue.createdBy, {
+        validators: [Validators.required, Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(upazilaRawValue.createdDate, {
+        validators: [Validators.required],
+      }),
+      lastModifiedBy: new FormControl(upazilaRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(upazilaRawValue.lastModifiedDate),
+      district: new FormControl(upazilaRawValue.district, {
+        validators: [Validators.required],
+      }),
     });
   }
 
   getUpazila(form: UpazilaFormGroup): IUpazila | NewUpazila {
-    return form.getRawValue() as IUpazila | NewUpazila;
+    return this.convertUpazilaRawValueToUpazila(form.getRawValue() as UpazilaFormRawValue | NewUpazilaFormRawValue);
   }
 
   resetForm(form: UpazilaFormGroup, upazila: UpazilaFormGroupInput): void {
-    const upazilaRawValue = { ...this.getFormDefaults(), ...upazila };
+    const upazilaRawValue = this.convertUpazilaToUpazilaRawValue({ ...this.getFormDefaults(), ...upazila });
     form.reset(
       {
         ...upazilaRawValue,
@@ -65,8 +95,30 @@ export class UpazilaFormService {
   }
 
   private getFormDefaults(): UpazilaFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertUpazilaRawValueToUpazila(rawUpazila: UpazilaFormRawValue | NewUpazilaFormRawValue): IUpazila | NewUpazila {
+    return {
+      ...rawUpazila,
+      createdDate: dayjs(rawUpazila.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawUpazila.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertUpazilaToUpazilaRawValue(
+    upazila: IUpazila | (Partial<NewUpazila> & UpazilaFormDefaults)
+  ): UpazilaFormRawValue | PartialWithRequiredKeyOf<NewUpazilaFormRawValue> {
+    return {
+      ...upazila,
+      createdDate: upazila.createdDate ? upazila.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: upazila.lastModifiedDate ? upazila.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

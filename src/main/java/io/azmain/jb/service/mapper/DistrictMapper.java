@@ -11,11 +11,12 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface DistrictMapper extends EntityMapper<DistrictDTO, District> {
-    @Mapping(target = "division", source = "division", qualifiedByName = "divisionId")
+    @Mapping(target = "division", source = "division", qualifiedByName = "divisionName")
     DistrictDTO toDto(District s);
 
-    @Named("divisionId")
+    @Named("divisionName")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    DivisionDTO toDtoDivisionId(Division division);
+    @Mapping(target = "name", source = "name")
+    DivisionDTO toDtoDivisionName(Division division);
 }

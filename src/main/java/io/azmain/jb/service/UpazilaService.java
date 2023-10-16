@@ -42,6 +42,14 @@ public interface UpazilaService {
     Page<UpazilaDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the upazilas with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<UpazilaDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" upazila.
      *
      * @param id the id of the entity.

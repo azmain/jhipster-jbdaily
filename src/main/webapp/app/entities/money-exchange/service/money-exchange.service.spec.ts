@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IMoneyExchange } from '../money-exchange.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../money-exchange.test-samples';
 
-import { MoneyExchangeService } from './money-exchange.service';
+import { MoneyExchangeService, RestMoneyExchange } from './money-exchange.service';
 
-const requireRestSample: IMoneyExchange = {
+const requireRestSample: RestMoneyExchange = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('MoneyExchange Service', () => {

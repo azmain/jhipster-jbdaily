@@ -69,11 +69,15 @@ public class DealerServiceImpl implements DealerService {
         return dealerRepository.findAll(pageable).map(dealerMapper::toDto);
     }
 
+    public Page<DealerDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return dealerRepository.findAllWithEagerRelationships(pageable).map(dealerMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<DealerDTO> findOne(Long id) {
         log.debug("Request to get Dealer : {}", id);
-        return dealerRepository.findById(id).map(dealerMapper::toDto);
+        return dealerRepository.findOneWithEagerRelationships(id).map(dealerMapper::toDto);
     }
 
     @Override

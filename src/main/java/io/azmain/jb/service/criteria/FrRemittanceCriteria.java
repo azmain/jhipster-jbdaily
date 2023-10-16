@@ -120,6 +120,14 @@ public class FrRemittanceCriteria implements Serializable, Criteria {
 
     private DocumentTypeFilter documentType;
 
+    private StringFilter createdBy;
+
+    private InstantFilter createdDate;
+
+    private StringFilter lastModifiedBy;
+
+    private InstantFilter lastModifiedDate;
+
     private LongFilter moneyExchangeId;
 
     private LongFilter incPercentageId;
@@ -151,6 +159,10 @@ public class FrRemittanceCriteria implements Serializable, Criteria {
         this.recvGender = other.recvGender == null ? null : other.recvGender.copy();
         this.remiGender = other.remiGender == null ? null : other.remiGender.copy();
         this.documentType = other.documentType == null ? null : other.documentType.copy();
+        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
+        this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
+        this.lastModifiedBy = other.lastModifiedBy == null ? null : other.lastModifiedBy.copy();
+        this.lastModifiedDate = other.lastModifiedDate == null ? null : other.lastModifiedDate.copy();
         this.moneyExchangeId = other.moneyExchangeId == null ? null : other.moneyExchangeId.copy();
         this.incPercentageId = other.incPercentageId == null ? null : other.incPercentageId.copy();
         this.distinct = other.distinct;
@@ -491,6 +503,66 @@ public class FrRemittanceCriteria implements Serializable, Criteria {
         this.documentType = documentType;
     }
 
+    public StringFilter getCreatedBy() {
+        return createdBy;
+    }
+
+    public StringFilter createdBy() {
+        if (createdBy == null) {
+            createdBy = new StringFilter();
+        }
+        return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public InstantFilter getCreatedDate() {
+        return createdDate;
+    }
+
+    public InstantFilter createdDate() {
+        if (createdDate == null) {
+            createdDate = new InstantFilter();
+        }
+        return createdDate;
+    }
+
+    public void setCreatedDate(InstantFilter createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public StringFilter getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public StringFilter lastModifiedBy() {
+        if (lastModifiedBy == null) {
+            lastModifiedBy = new StringFilter();
+        }
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(StringFilter lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public InstantFilter getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public InstantFilter lastModifiedDate() {
+        if (lastModifiedDate == null) {
+            lastModifiedDate = new InstantFilter();
+        }
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public LongFilter getMoneyExchangeId() {
         return moneyExchangeId;
     }
@@ -561,6 +633,10 @@ public class FrRemittanceCriteria implements Serializable, Criteria {
             Objects.equals(recvGender, that.recvGender) &&
             Objects.equals(remiGender, that.remiGender) &&
             Objects.equals(documentType, that.documentType) &&
+            Objects.equals(createdBy, that.createdBy) &&
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
+            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
             Objects.equals(moneyExchangeId, that.moneyExchangeId) &&
             Objects.equals(incPercentageId, that.incPercentageId) &&
             Objects.equals(distinct, that.distinct)
@@ -592,6 +668,10 @@ public class FrRemittanceCriteria implements Serializable, Criteria {
             recvGender,
             remiGender,
             documentType,
+            createdBy,
+            createdDate,
+            lastModifiedBy,
+            lastModifiedDate,
             moneyExchangeId,
             incPercentageId,
             distinct
@@ -624,6 +704,10 @@ public class FrRemittanceCriteria implements Serializable, Criteria {
             (recvGender != null ? "recvGender=" + recvGender + ", " : "") +
             (remiGender != null ? "remiGender=" + remiGender + ", " : "") +
             (documentType != null ? "documentType=" + documentType + ", " : "") +
+            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
+            (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
+            (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +
+            (lastModifiedDate != null ? "lastModifiedDate=" + lastModifiedDate + ", " : "") +
             (moneyExchangeId != null ? "moneyExchangeId=" + moneyExchangeId + ", " : "") +
             (incPercentageId != null ? "incPercentageId=" + incPercentageId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +

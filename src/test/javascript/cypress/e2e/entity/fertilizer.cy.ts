@@ -16,10 +16,12 @@ describe('Fertilizer e2e test', () => {
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
   const fertilizerSample = {
-    name: 'well-modulated XSS Operative',
-    bnName: 'quantifying Exclusive 1080p',
-    accountNo: 'generating Cotton',
-    accountTitle: 'COM Officer Shoes',
+    name: 'bandwidth SCSI',
+    bnName: 'JBOD Senior',
+    accountNo: 'Buckinghamshire azure open-source',
+    accountTitle: 'Beauty',
+    createdBy: 'Berkshire Music up',
+    createdDate: '2023-10-02T13:51:59.201Z',
   };
 
   let fertilizer;
@@ -172,6 +174,14 @@ describe('Fertilizer e2e test', () => {
       cy.get(`[data-cy="accountNo"]`).type('USB e-commerce Bypass').should('have.value', 'USB e-commerce Bypass');
 
       cy.get(`[data-cy="accountTitle"]`).type('Stravenue quantify blue').should('have.value', 'Stravenue quantify blue');
+
+      cy.get(`[data-cy="createdBy"]`).type('well-modulated XSS Operative').should('have.value', 'well-modulated XSS Operative');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-01T23:45').blur().should('have.value', '2023-10-01T23:45');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('payment Programmable navigate').should('have.value', 'payment Programmable navigate');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-01T22:26').blur().should('have.value', '2023-10-01T22:26');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

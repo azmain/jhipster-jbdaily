@@ -2,6 +2,7 @@ package io.azmain.jb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -32,11 +33,28 @@ public class District implements Serializable {
     @Column(name = "bn_name", length = 255, nullable = false)
     private String bnName;
 
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50, nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
     @OneToMany(mappedBy = "district")
     @JsonIgnoreProperties(value = { "dealers", "district" }, allowSetters = true)
     private Set<Upazila> upazilas = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "districts" }, allowSetters = true)
     private Division division;
 
@@ -79,6 +97,58 @@ public class District implements Serializable {
 
     public void setBnName(String bnName) {
         this.bnName = bnName;
+    }
+
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public District createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public District createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public District lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public District lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Set<Upazila> getUpazilas() {
@@ -151,6 +221,10 @@ public class District implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", bnName='" + getBnName() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

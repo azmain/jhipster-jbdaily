@@ -105,6 +105,18 @@ public class PayOrderQueryService extends QueryService<PayOrder> {
             if (criteria.getControllingNo() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getControllingNo(), PayOrder_.controllingNo));
             }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), PayOrder_.createdBy));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), PayOrder_.createdDate));
+            }
+            if (criteria.getLastModifiedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), PayOrder_.lastModifiedBy));
+            }
+            if (criteria.getLastModifiedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), PayOrder_.lastModifiedDate));
+            }
             if (criteria.getFertilizerId() != null) {
                 specification =
                     specification.and(

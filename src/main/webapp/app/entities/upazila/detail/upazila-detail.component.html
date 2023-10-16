@@ -22,10 +22,26 @@
         <dd>
           <span>{{ upazila.bnName }}</span>
         </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ upazila.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ upazila.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ upazila.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.upazila.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ upazila.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
         <dt><span jhiTranslate="jbdailyApp.upazila.district">District</span></dt>
         <dd>
           <div *ngIf="upazila.district">
-            <a [routerLink]="['/district', upazila.district.id, 'view']">{{ upazila.district.id }}</a>
+            <a [routerLink]="['/district', upazila.district.id, 'view']">{{ upazila.district.name }}</a>
           </div>
         </dd>
       </dl>

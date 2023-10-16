@@ -20,6 +20,10 @@
       "id": "ID",
       "name": "Name",
       "bnName": "Bn Name",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "district": "District"
     }
   }

@@ -3,6 +3,7 @@ package io.azmain.jb.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -42,11 +43,30 @@ public class PayOrder implements Serializable {
     @Column(name = "controlling_no", nullable = false)
     private Long controllingNo;
 
-    @ManyToOne
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50, nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "payOrders" }, allowSetters = true)
     private Fertilizer fertilizer;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "upazila" }, allowSetters = true)
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = { "payOrders", "upazila" }, allowSetters = true)
     private Dealer dealer;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -129,6 +149,58 @@ public class PayOrder implements Serializable {
         this.controllingNo = controllingNo;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public PayOrder createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public PayOrder createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public PayOrder lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public PayOrder lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public Fertilizer getFertilizer() {
         return this.fertilizer;
     }
@@ -184,6 +256,10 @@ public class PayOrder implements Serializable {
             ", amount=" + getAmount() +
             ", slipNo=" + getSlipNo() +
             ", controllingNo=" + getControllingNo() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

@@ -13,17 +13,19 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface FrRemittanceMapper extends EntityMapper<FrRemittanceDTO, FrRemittance> {
-    @Mapping(target = "moneyExchange", source = "moneyExchange", qualifiedByName = "moneyExchangeId")
-    @Mapping(target = "incPercentage", source = "incPercentage", qualifiedByName = "incPercentageId")
+    @Mapping(target = "moneyExchange", source = "moneyExchange", qualifiedByName = "moneyExchangeName")
+    @Mapping(target = "incPercentage", source = "incPercentage", qualifiedByName = "incPercentageName")
     FrRemittanceDTO toDto(FrRemittance s);
 
-    @Named("moneyExchangeId")
+    @Named("moneyExchangeName")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    MoneyExchangeDTO toDtoMoneyExchangeId(MoneyExchange moneyExchange);
+    @Mapping(target = "name", source = "name")
+    MoneyExchangeDTO toDtoMoneyExchangeName(MoneyExchange moneyExchange);
 
-    @Named("incPercentageId")
+    @Named("incPercentageName")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    IncPercentageDTO toDtoIncPercentageId(IncPercentage incPercentage);
+    @Mapping(target = "name", source = "name")
+    IncPercentageDTO toDtoIncPercentageName(IncPercentage incPercentage);
 }

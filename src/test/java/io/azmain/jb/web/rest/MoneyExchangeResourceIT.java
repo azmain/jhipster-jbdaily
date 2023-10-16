@@ -10,6 +10,8 @@ import io.azmain.jb.domain.MoneyExchange;
 import io.azmain.jb.repository.MoneyExchangeRepository;
 import io.azmain.jb.service.dto.MoneyExchangeDTO;
 import io.azmain.jb.service.mapper.MoneyExchangeMapper;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,6 +45,18 @@ class MoneyExchangeResourceIT {
     private static final String DEFAULT_SHORT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_SHORT_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/money-exchanges";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -74,7 +88,11 @@ class MoneyExchangeResourceIT {
             .name(DEFAULT_NAME)
             .digit(DEFAULT_DIGIT)
             .link(DEFAULT_LINK)
-            .shortName(DEFAULT_SHORT_NAME);
+            .shortName(DEFAULT_SHORT_NAME)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return moneyExchange;
     }
 
@@ -89,7 +107,11 @@ class MoneyExchangeResourceIT {
             .name(UPDATED_NAME)
             .digit(UPDATED_DIGIT)
             .link(UPDATED_LINK)
-            .shortName(UPDATED_SHORT_NAME);
+            .shortName(UPDATED_SHORT_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return moneyExchange;
     }
 
@@ -118,6 +140,10 @@ class MoneyExchangeResourceIT {
         assertThat(testMoneyExchange.getDigit()).isEqualTo(DEFAULT_DIGIT);
         assertThat(testMoneyExchange.getLink()).isEqualTo(DEFAULT_LINK);
         assertThat(testMoneyExchange.getShortName()).isEqualTo(DEFAULT_SHORT_NAME);
+        assertThat(testMoneyExchange.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testMoneyExchange.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testMoneyExchange.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testMoneyExchange.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -183,6 +209,46 @@ class MoneyExchangeResourceIT {
 
     @Test
     @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = moneyExchangeRepository.findAll().size();
+        // set the field null
+        moneyExchange.setCreatedBy(null);
+
+        // Create the MoneyExchange, which fails.
+        MoneyExchangeDTO moneyExchangeDTO = moneyExchangeMapper.toDto(moneyExchange);
+
+        restMoneyExchangeMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(moneyExchangeDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<MoneyExchange> moneyExchangeList = moneyExchangeRepository.findAll();
+        assertThat(moneyExchangeList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = moneyExchangeRepository.findAll().size();
+        // set the field null
+        moneyExchange.setCreatedDate(null);
+
+        // Create the MoneyExchange, which fails.
+        MoneyExchangeDTO moneyExchangeDTO = moneyExchangeMapper.toDto(moneyExchange);
+
+        restMoneyExchangeMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(moneyExchangeDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<MoneyExchange> moneyExchangeList = moneyExchangeRepository.findAll();
+        assertThat(moneyExchangeList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllMoneyExchanges() throws Exception {
         // Initialize the database
         moneyExchangeRepository.saveAndFlush(moneyExchange);
@@ -196,7 +262,11 @@ class MoneyExchangeResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].digit").value(hasItem(DEFAULT_DIGIT)))
             .andExpect(jsonPath("$.[*].link").value(hasItem(DEFAULT_LINK)))
-            .andExpect(jsonPath("$.[*].shortName").value(hasItem(DEFAULT_SHORT_NAME)));
+            .andExpect(jsonPath("$.[*].shortName").value(hasItem(DEFAULT_SHORT_NAME)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -214,7 +284,11 @@ class MoneyExchangeResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.digit").value(DEFAULT_DIGIT))
             .andExpect(jsonPath("$.link").value(DEFAULT_LINK))
-            .andExpect(jsonPath("$.shortName").value(DEFAULT_SHORT_NAME));
+            .andExpect(jsonPath("$.shortName").value(DEFAULT_SHORT_NAME))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -236,7 +310,15 @@ class MoneyExchangeResourceIT {
         MoneyExchange updatedMoneyExchange = moneyExchangeRepository.findById(moneyExchange.getId()).get();
         // Disconnect from session so that the updates on updatedMoneyExchange are not directly saved in db
         em.detach(updatedMoneyExchange);
-        updatedMoneyExchange.name(UPDATED_NAME).digit(UPDATED_DIGIT).link(UPDATED_LINK).shortName(UPDATED_SHORT_NAME);
+        updatedMoneyExchange
+            .name(UPDATED_NAME)
+            .digit(UPDATED_DIGIT)
+            .link(UPDATED_LINK)
+            .shortName(UPDATED_SHORT_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         MoneyExchangeDTO moneyExchangeDTO = moneyExchangeMapper.toDto(updatedMoneyExchange);
 
         restMoneyExchangeMockMvc
@@ -255,6 +337,10 @@ class MoneyExchangeResourceIT {
         assertThat(testMoneyExchange.getDigit()).isEqualTo(UPDATED_DIGIT);
         assertThat(testMoneyExchange.getLink()).isEqualTo(UPDATED_LINK);
         assertThat(testMoneyExchange.getShortName()).isEqualTo(UPDATED_SHORT_NAME);
+        assertThat(testMoneyExchange.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testMoneyExchange.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testMoneyExchange.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testMoneyExchange.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -354,6 +440,10 @@ class MoneyExchangeResourceIT {
         assertThat(testMoneyExchange.getDigit()).isEqualTo(DEFAULT_DIGIT);
         assertThat(testMoneyExchange.getLink()).isEqualTo(DEFAULT_LINK);
         assertThat(testMoneyExchange.getShortName()).isEqualTo(DEFAULT_SHORT_NAME);
+        assertThat(testMoneyExchange.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testMoneyExchange.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testMoneyExchange.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testMoneyExchange.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -368,7 +458,15 @@ class MoneyExchangeResourceIT {
         MoneyExchange partialUpdatedMoneyExchange = new MoneyExchange();
         partialUpdatedMoneyExchange.setId(moneyExchange.getId());
 
-        partialUpdatedMoneyExchange.name(UPDATED_NAME).digit(UPDATED_DIGIT).link(UPDATED_LINK).shortName(UPDATED_SHORT_NAME);
+        partialUpdatedMoneyExchange
+            .name(UPDATED_NAME)
+            .digit(UPDATED_DIGIT)
+            .link(UPDATED_LINK)
+            .shortName(UPDATED_SHORT_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restMoneyExchangeMockMvc
             .perform(
@@ -386,6 +484,10 @@ class MoneyExchangeResourceIT {
         assertThat(testMoneyExchange.getDigit()).isEqualTo(UPDATED_DIGIT);
         assertThat(testMoneyExchange.getLink()).isEqualTo(UPDATED_LINK);
         assertThat(testMoneyExchange.getShortName()).isEqualTo(UPDATED_SHORT_NAME);
+        assertThat(testMoneyExchange.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testMoneyExchange.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testMoneyExchange.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testMoneyExchange.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

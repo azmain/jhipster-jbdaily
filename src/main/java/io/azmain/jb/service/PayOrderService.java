@@ -42,6 +42,14 @@ public interface PayOrderService {
     Page<PayOrderDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the payOrders with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<PayOrderDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" payOrder.
      *
      * @param id the id of the entity.

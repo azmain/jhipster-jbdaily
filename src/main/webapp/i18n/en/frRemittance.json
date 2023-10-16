@@ -39,6 +39,10 @@
       "recvGender": "Recv Gender",
       "remiGender": "Remi Gender",
       "documentType": "Document Type",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "moneyExchange": "Money Exchange",
       "incPercentage": "Inc Percentage"
     }

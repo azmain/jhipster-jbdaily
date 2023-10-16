@@ -21,7 +21,12 @@
       "name": "Name",
       "bnName": "Bn Name",
       "accountNo": "Account No",
-      "accountTitle": "Account Title"
+      "accountTitle": "Account Title",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "payOrder": "Pay Order"
     }
   }
 }

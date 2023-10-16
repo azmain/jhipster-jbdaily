@@ -12,8 +12,10 @@ import { IPayOrder, NewPayOrder } from '../pay-order.model';
 
 export type PartialUpdatePayOrder = Partial<IPayOrder> & Pick<IPayOrder, 'id'>;
 
-type RestOf<T extends IPayOrder | NewPayOrder> = Omit<T, 'payOrderDate'> & {
+type RestOf<T extends IPayOrder | NewPayOrder> = Omit<T, 'payOrderDate' | 'createdDate' | 'lastModifiedDate'> & {
   payOrderDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 export type RestPayOrder = RestOf<IPayOrder>;
@@ -101,6 +103,8 @@ export class PayOrderService {
     return {
       ...payOrder,
       payOrderDate: payOrder.payOrderDate?.format(DATE_FORMAT) ?? null,
+      createdDate: payOrder.createdDate?.toJSON() ?? null,
+      lastModifiedDate: payOrder.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
@@ -108,6 +112,8 @@ export class PayOrderService {
     return {
       ...restPayOrder,
       payOrderDate: restPayOrder.payOrderDate ? dayjs(restPayOrder.payOrderDate) : undefined,
+      createdDate: restPayOrder.createdDate ? dayjs(restPayOrder.createdDate) : undefined,
+      lastModifiedDate: restPayOrder.lastModifiedDate ? dayjs(restPayOrder.lastModifiedDate) : undefined,
     };
   }
 

@@ -166,13 +166,37 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="moneyExchange.id">
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.createdBy">Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.createdDate">Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.lastModifiedBy">Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.lastModifiedDate">Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="moneyExchange.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.frRemittance.moneyExchange">Money Exchange</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="incPercentage.id">
+          <th scope="col" jhiSortBy="incPercentage.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.frRemittance.incPercentage">Inc Percentage</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -207,14 +231,18 @@
           <td jhiTranslate="{{ 'jbdailyApp.Gender.' + frRemittance.recvGender }}">{{ frRemittance.recvGender }}</td>
           <td jhiTranslate="{{ 'jbdailyApp.Gender.' + frRemittance.remiGender }}">{{ frRemittance.remiGender }}</td>
           <td jhiTranslate="{{ 'jbdailyApp.DocumentType.' + frRemittance.documentType }}">{{ frRemittance.documentType }}</td>
+          <td>{{ frRemittance.createdBy }}</td>
+          <td>{{ frRemittance.createdDate | formatMediumDatetime }}</td>
+          <td>{{ frRemittance.lastModifiedBy }}</td>
+          <td>{{ frRemittance.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="frRemittance.moneyExchange">
-              <a [routerLink]="['/money-exchange', frRemittance.moneyExchange.id, 'view']">{{ frRemittance.moneyExchange.id }}</a>
+              <a [routerLink]="['/money-exchange', frRemittance.moneyExchange.id, 'view']">{{ frRemittance.moneyExchange.name }}</a>
             </div>
           </td>
           <td>
             <div *ngIf="frRemittance.incPercentage">
-              <a [routerLink]="['/inc-percentage', frRemittance.incPercentage.id, 'view']">{{ frRemittance.incPercentage.id }}</a>
+              <a [routerLink]="['/inc-percentage', frRemittance.incPercentage.id, 'view']">{{ frRemittance.incPercentage.name }}</a>
             </div>
           </td>
           <td class="text-end">

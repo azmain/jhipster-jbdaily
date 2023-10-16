@@ -3,6 +3,7 @@ package io.azmain.jb.web.rest;
 import static io.azmain.jb.web.rest.TestUtil.sameNumber;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -11,20 +12,30 @@ import io.azmain.jb.domain.Dealer;
 import io.azmain.jb.domain.Fertilizer;
 import io.azmain.jb.domain.PayOrder;
 import io.azmain.jb.repository.PayOrderRepository;
+import io.azmain.jb.service.PayOrderService;
 import io.azmain.jb.service.criteria.PayOrderCriteria;
 import io.azmain.jb.service.dto.PayOrderDTO;
 import io.azmain.jb.service.mapper.PayOrderMapper;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link PayOrderResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class PayOrderResourceIT {
@@ -58,6 +70,18 @@ class PayOrderResourceIT {
     private static final Long UPDATED_CONTROLLING_NO = 2L;
     private static final Long SMALLER_CONTROLLING_NO = 1L - 1L;
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/pay-orders";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,8 +91,14 @@ class PayOrderResourceIT {
     @Autowired
     private PayOrderRepository payOrderRepository;
 
+    @Mock
+    private PayOrderRepository payOrderRepositoryMock;
+
     @Autowired
     private PayOrderMapper payOrderMapper;
+
+    @Mock
+    private PayOrderService payOrderServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -90,7 +120,31 @@ class PayOrderResourceIT {
             .payOrderDate(DEFAULT_PAY_ORDER_DATE)
             .amount(DEFAULT_AMOUNT)
             .slipNo(DEFAULT_SLIP_NO)
-            .controllingNo(DEFAULT_CONTROLLING_NO);
+            .controllingNo(DEFAULT_CONTROLLING_NO)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
+        // Add required entity
+        Fertilizer fertilizer;
+        if (TestUtil.findAll(em, Fertilizer.class).isEmpty()) {
+            fertilizer = FertilizerResourceIT.createEntity(em);
+            em.persist(fertilizer);
+            em.flush();
+        } else {
+            fertilizer = TestUtil.findAll(em, Fertilizer.class).get(0);
+        }
+        payOrder.setFertilizer(fertilizer);
+        // Add required entity
+        Dealer dealer;
+        if (TestUtil.findAll(em, Dealer.class).isEmpty()) {
+            dealer = DealerResourceIT.createEntity(em);
+            em.persist(dealer);
+            em.flush();
+        } else {
+            dealer = TestUtil.findAll(em, Dealer.class).get(0);
+        }
+        payOrder.setDealer(dealer);
         return payOrder;
     }
 
@@ -106,7 +160,31 @@ class PayOrderResourceIT {
             .payOrderDate(UPDATED_PAY_ORDER_DATE)
             .amount(UPDATED_AMOUNT)
             .slipNo(UPDATED_SLIP_NO)
-            .controllingNo(UPDATED_CONTROLLING_NO);
+            .controllingNo(UPDATED_CONTROLLING_NO)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+        // Add required entity
+        Fertilizer fertilizer;
+        if (TestUtil.findAll(em, Fertilizer.class).isEmpty()) {
+            fertilizer = FertilizerResourceIT.createUpdatedEntity(em);
+            em.persist(fertilizer);
+            em.flush();
+        } else {
+            fertilizer = TestUtil.findAll(em, Fertilizer.class).get(0);
+        }
+        payOrder.setFertilizer(fertilizer);
+        // Add required entity
+        Dealer dealer;
+        if (TestUtil.findAll(em, Dealer.class).isEmpty()) {
+            dealer = DealerResourceIT.createUpdatedEntity(em);
+            em.persist(dealer);
+            em.flush();
+        } else {
+            dealer = TestUtil.findAll(em, Dealer.class).get(0);
+        }
+        payOrder.setDealer(dealer);
         return payOrder;
     }
 
@@ -134,6 +212,10 @@ class PayOrderResourceIT {
         assertThat(testPayOrder.getAmount()).isEqualByComparingTo(DEFAULT_AMOUNT);
         assertThat(testPayOrder.getSlipNo()).isEqualTo(DEFAULT_SLIP_NO);
         assertThat(testPayOrder.getControllingNo()).isEqualTo(DEFAULT_CONTROLLING_NO);
+        assertThat(testPayOrder.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testPayOrder.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testPayOrder.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testPayOrder.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -247,6 +329,42 @@ class PayOrderResourceIT {
 
     @Test
     @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = payOrderRepository.findAll().size();
+        // set the field null
+        payOrder.setCreatedBy(null);
+
+        // Create the PayOrder, which fails.
+        PayOrderDTO payOrderDTO = payOrderMapper.toDto(payOrder);
+
+        restPayOrderMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(payOrderDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<PayOrder> payOrderList = payOrderRepository.findAll();
+        assertThat(payOrderList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = payOrderRepository.findAll().size();
+        // set the field null
+        payOrder.setCreatedDate(null);
+
+        // Create the PayOrder, which fails.
+        PayOrderDTO payOrderDTO = payOrderMapper.toDto(payOrder);
+
+        restPayOrderMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(payOrderDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<PayOrder> payOrderList = payOrderRepository.findAll();
+        assertThat(payOrderList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllPayOrders() throws Exception {
         // Initialize the database
         payOrderRepository.saveAndFlush(payOrder);
@@ -261,7 +379,28 @@ class PayOrderResourceIT {
             .andExpect(jsonPath("$.[*].payOrderDate").value(hasItem(DEFAULT_PAY_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(sameNumber(DEFAULT_AMOUNT))))
             .andExpect(jsonPath("$.[*].slipNo").value(hasItem(DEFAULT_SLIP_NO.intValue())))
-            .andExpect(jsonPath("$.[*].controllingNo").value(hasItem(DEFAULT_CONTROLLING_NO.intValue())));
+            .andExpect(jsonPath("$.[*].controllingNo").value(hasItem(DEFAULT_CONTROLLING_NO.intValue())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllPayOrdersWithEagerRelationshipsIsEnabled() throws Exception {
+        when(payOrderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restPayOrderMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(payOrderServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllPayOrdersWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(payOrderServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restPayOrderMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(payOrderRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -280,7 +419,11 @@ class PayOrderResourceIT {
             .andExpect(jsonPath("$.payOrderDate").value(DEFAULT_PAY_ORDER_DATE.toString()))
             .andExpect(jsonPath("$.amount").value(sameNumber(DEFAULT_AMOUNT)))
             .andExpect(jsonPath("$.slipNo").value(DEFAULT_SLIP_NO.intValue()))
-            .andExpect(jsonPath("$.controllingNo").value(DEFAULT_CONTROLLING_NO.intValue()));
+            .andExpect(jsonPath("$.controllingNo").value(DEFAULT_CONTROLLING_NO.intValue()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -758,6 +901,214 @@ class PayOrderResourceIT {
 
     @Test
     @Transactional
+    void getAllPayOrdersByCreatedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdBy equals to DEFAULT_CREATED_BY
+        defaultPayOrderShouldBeFound("createdBy.equals=" + DEFAULT_CREATED_BY);
+
+        // Get all the payOrderList where createdBy equals to UPDATED_CREATED_BY
+        defaultPayOrderShouldNotBeFound("createdBy.equals=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdBy in DEFAULT_CREATED_BY or UPDATED_CREATED_BY
+        defaultPayOrderShouldBeFound("createdBy.in=" + DEFAULT_CREATED_BY + "," + UPDATED_CREATED_BY);
+
+        // Get all the payOrderList where createdBy equals to UPDATED_CREATED_BY
+        defaultPayOrderShouldNotBeFound("createdBy.in=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdBy is not null
+        defaultPayOrderShouldBeFound("createdBy.specified=true");
+
+        // Get all the payOrderList where createdBy is null
+        defaultPayOrderShouldNotBeFound("createdBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedByContainsSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdBy contains DEFAULT_CREATED_BY
+        defaultPayOrderShouldBeFound("createdBy.contains=" + DEFAULT_CREATED_BY);
+
+        // Get all the payOrderList where createdBy contains UPDATED_CREATED_BY
+        defaultPayOrderShouldNotBeFound("createdBy.contains=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdBy does not contain DEFAULT_CREATED_BY
+        defaultPayOrderShouldNotBeFound("createdBy.doesNotContain=" + DEFAULT_CREATED_BY);
+
+        // Get all the payOrderList where createdBy does not contain UPDATED_CREATED_BY
+        defaultPayOrderShouldBeFound("createdBy.doesNotContain=" + UPDATED_CREATED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdDate equals to DEFAULT_CREATED_DATE
+        defaultPayOrderShouldBeFound("createdDate.equals=" + DEFAULT_CREATED_DATE);
+
+        // Get all the payOrderList where createdDate equals to UPDATED_CREATED_DATE
+        defaultPayOrderShouldNotBeFound("createdDate.equals=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdDate in DEFAULT_CREATED_DATE or UPDATED_CREATED_DATE
+        defaultPayOrderShouldBeFound("createdDate.in=" + DEFAULT_CREATED_DATE + "," + UPDATED_CREATED_DATE);
+
+        // Get all the payOrderList where createdDate equals to UPDATED_CREATED_DATE
+        defaultPayOrderShouldNotBeFound("createdDate.in=" + UPDATED_CREATED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByCreatedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where createdDate is not null
+        defaultPayOrderShouldBeFound("createdDate.specified=true");
+
+        // Get all the payOrderList where createdDate is null
+        defaultPayOrderShouldNotBeFound("createdDate.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedByIsEqualToSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedBy equals to DEFAULT_LAST_MODIFIED_BY
+        defaultPayOrderShouldBeFound("lastModifiedBy.equals=" + DEFAULT_LAST_MODIFIED_BY);
+
+        // Get all the payOrderList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
+        defaultPayOrderShouldNotBeFound("lastModifiedBy.equals=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedByIsInShouldWork() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedBy in DEFAULT_LAST_MODIFIED_BY or UPDATED_LAST_MODIFIED_BY
+        defaultPayOrderShouldBeFound("lastModifiedBy.in=" + DEFAULT_LAST_MODIFIED_BY + "," + UPDATED_LAST_MODIFIED_BY);
+
+        // Get all the payOrderList where lastModifiedBy equals to UPDATED_LAST_MODIFIED_BY
+        defaultPayOrderShouldNotBeFound("lastModifiedBy.in=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedByIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedBy is not null
+        defaultPayOrderShouldBeFound("lastModifiedBy.specified=true");
+
+        // Get all the payOrderList where lastModifiedBy is null
+        defaultPayOrderShouldNotBeFound("lastModifiedBy.specified=false");
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedByContainsSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedBy contains DEFAULT_LAST_MODIFIED_BY
+        defaultPayOrderShouldBeFound("lastModifiedBy.contains=" + DEFAULT_LAST_MODIFIED_BY);
+
+        // Get all the payOrderList where lastModifiedBy contains UPDATED_LAST_MODIFIED_BY
+        defaultPayOrderShouldNotBeFound("lastModifiedBy.contains=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedByNotContainsSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedBy does not contain DEFAULT_LAST_MODIFIED_BY
+        defaultPayOrderShouldNotBeFound("lastModifiedBy.doesNotContain=" + DEFAULT_LAST_MODIFIED_BY);
+
+        // Get all the payOrderList where lastModifiedBy does not contain UPDATED_LAST_MODIFIED_BY
+        defaultPayOrderShouldBeFound("lastModifiedBy.doesNotContain=" + UPDATED_LAST_MODIFIED_BY);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedDate equals to DEFAULT_LAST_MODIFIED_DATE
+        defaultPayOrderShouldBeFound("lastModifiedDate.equals=" + DEFAULT_LAST_MODIFIED_DATE);
+
+        // Get all the payOrderList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
+        defaultPayOrderShouldNotBeFound("lastModifiedDate.equals=" + UPDATED_LAST_MODIFIED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedDate in DEFAULT_LAST_MODIFIED_DATE or UPDATED_LAST_MODIFIED_DATE
+        defaultPayOrderShouldBeFound("lastModifiedDate.in=" + DEFAULT_LAST_MODIFIED_DATE + "," + UPDATED_LAST_MODIFIED_DATE);
+
+        // Get all the payOrderList where lastModifiedDate equals to UPDATED_LAST_MODIFIED_DATE
+        defaultPayOrderShouldNotBeFound("lastModifiedDate.in=" + UPDATED_LAST_MODIFIED_DATE);
+    }
+
+    @Test
+    @Transactional
+    void getAllPayOrdersByLastModifiedDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        payOrderRepository.saveAndFlush(payOrder);
+
+        // Get all the payOrderList where lastModifiedDate is not null
+        defaultPayOrderShouldBeFound("lastModifiedDate.specified=true");
+
+        // Get all the payOrderList where lastModifiedDate is null
+        defaultPayOrderShouldNotBeFound("lastModifiedDate.specified=false");
+    }
+
+    @Test
+    @Transactional
     void getAllPayOrdersByFertilizerIsEqualToSomething() throws Exception {
         Fertilizer fertilizer;
         if (TestUtil.findAll(em, Fertilizer.class).isEmpty()) {
@@ -815,7 +1166,11 @@ class PayOrderResourceIT {
             .andExpect(jsonPath("$.[*].payOrderDate").value(hasItem(DEFAULT_PAY_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(sameNumber(DEFAULT_AMOUNT))))
             .andExpect(jsonPath("$.[*].slipNo").value(hasItem(DEFAULT_SLIP_NO.intValue())))
-            .andExpect(jsonPath("$.[*].controllingNo").value(hasItem(DEFAULT_CONTROLLING_NO.intValue())));
+            .andExpect(jsonPath("$.[*].controllingNo").value(hasItem(DEFAULT_CONTROLLING_NO.intValue())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
 
         // Check, that the count call also returns 1
         restPayOrderMockMvc
@@ -868,7 +1223,11 @@ class PayOrderResourceIT {
             .payOrderDate(UPDATED_PAY_ORDER_DATE)
             .amount(UPDATED_AMOUNT)
             .slipNo(UPDATED_SLIP_NO)
-            .controllingNo(UPDATED_CONTROLLING_NO);
+            .controllingNo(UPDATED_CONTROLLING_NO)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         PayOrderDTO payOrderDTO = payOrderMapper.toDto(updatedPayOrder);
 
         restPayOrderMockMvc
@@ -888,6 +1247,10 @@ class PayOrderResourceIT {
         assertThat(testPayOrder.getAmount()).isEqualByComparingTo(UPDATED_AMOUNT);
         assertThat(testPayOrder.getSlipNo()).isEqualTo(UPDATED_SLIP_NO);
         assertThat(testPayOrder.getControllingNo()).isEqualTo(UPDATED_CONTROLLING_NO);
+        assertThat(testPayOrder.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testPayOrder.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testPayOrder.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testPayOrder.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -967,7 +1330,13 @@ class PayOrderResourceIT {
         PayOrder partialUpdatedPayOrder = new PayOrder();
         partialUpdatedPayOrder.setId(payOrder.getId());
 
-        partialUpdatedPayOrder.payOrderNumber(UPDATED_PAY_ORDER_NUMBER).amount(UPDATED_AMOUNT).controllingNo(UPDATED_CONTROLLING_NO);
+        partialUpdatedPayOrder
+            .payOrderNumber(UPDATED_PAY_ORDER_NUMBER)
+            .amount(UPDATED_AMOUNT)
+            .controllingNo(UPDATED_CONTROLLING_NO)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restPayOrderMockMvc
             .perform(
@@ -986,6 +1355,10 @@ class PayOrderResourceIT {
         assertThat(testPayOrder.getAmount()).isEqualByComparingTo(UPDATED_AMOUNT);
         assertThat(testPayOrder.getSlipNo()).isEqualTo(DEFAULT_SLIP_NO);
         assertThat(testPayOrder.getControllingNo()).isEqualTo(UPDATED_CONTROLLING_NO);
+        assertThat(testPayOrder.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testPayOrder.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testPayOrder.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testPayOrder.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -1005,7 +1378,11 @@ class PayOrderResourceIT {
             .payOrderDate(UPDATED_PAY_ORDER_DATE)
             .amount(UPDATED_AMOUNT)
             .slipNo(UPDATED_SLIP_NO)
-            .controllingNo(UPDATED_CONTROLLING_NO);
+            .controllingNo(UPDATED_CONTROLLING_NO)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restPayOrderMockMvc
             .perform(
@@ -1024,6 +1401,10 @@ class PayOrderResourceIT {
         assertThat(testPayOrder.getAmount()).isEqualByComparingTo(UPDATED_AMOUNT);
         assertThat(testPayOrder.getSlipNo()).isEqualTo(UPDATED_SLIP_NO);
         assertThat(testPayOrder.getControllingNo()).isEqualTo(UPDATED_CONTROLLING_NO);
+        assertThat(testPayOrder.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testPayOrder.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testPayOrder.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testPayOrder.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

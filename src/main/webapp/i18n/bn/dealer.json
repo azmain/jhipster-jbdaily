@@ -22,6 +22,11 @@
       "bnName": "Bn Name",
       "shortName": "Short Name",
       "mobile": "Mobile",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "payOrder": "Pay Order",
       "upazila": "Upazila"
     }
   }

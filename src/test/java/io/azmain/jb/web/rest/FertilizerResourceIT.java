@@ -10,6 +10,8 @@ import io.azmain.jb.domain.Fertilizer;
 import io.azmain.jb.repository.FertilizerRepository;
 import io.azmain.jb.service.dto.FertilizerDTO;
 import io.azmain.jb.service.mapper.FertilizerMapper;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -43,6 +45,18 @@ class FertilizerResourceIT {
     private static final String DEFAULT_ACCOUNT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_ACCOUNT_TITLE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/fertilizers";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -74,7 +88,11 @@ class FertilizerResourceIT {
             .name(DEFAULT_NAME)
             .bnName(DEFAULT_BN_NAME)
             .accountNo(DEFAULT_ACCOUNT_NO)
-            .accountTitle(DEFAULT_ACCOUNT_TITLE);
+            .accountTitle(DEFAULT_ACCOUNT_TITLE)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return fertilizer;
     }
 
@@ -89,7 +107,11 @@ class FertilizerResourceIT {
             .name(UPDATED_NAME)
             .bnName(UPDATED_BN_NAME)
             .accountNo(UPDATED_ACCOUNT_NO)
-            .accountTitle(UPDATED_ACCOUNT_TITLE);
+            .accountTitle(UPDATED_ACCOUNT_TITLE)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return fertilizer;
     }
 
@@ -116,6 +138,10 @@ class FertilizerResourceIT {
         assertThat(testFertilizer.getBnName()).isEqualTo(DEFAULT_BN_NAME);
         assertThat(testFertilizer.getAccountNo()).isEqualTo(DEFAULT_ACCOUNT_NO);
         assertThat(testFertilizer.getAccountTitle()).isEqualTo(DEFAULT_ACCOUNT_TITLE);
+        assertThat(testFertilizer.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testFertilizer.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testFertilizer.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testFertilizer.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -211,6 +237,42 @@ class FertilizerResourceIT {
 
     @Test
     @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = fertilizerRepository.findAll().size();
+        // set the field null
+        fertilizer.setCreatedBy(null);
+
+        // Create the Fertilizer, which fails.
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
+        restFertilizerMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Fertilizer> fertilizerList = fertilizerRepository.findAll();
+        assertThat(fertilizerList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = fertilizerRepository.findAll().size();
+        // set the field null
+        fertilizer.setCreatedDate(null);
+
+        // Create the Fertilizer, which fails.
+        FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(fertilizer);
+
+        restFertilizerMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(fertilizerDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Fertilizer> fertilizerList = fertilizerRepository.findAll();
+        assertThat(fertilizerList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllFertilizers() throws Exception {
         // Initialize the database
         fertilizerRepository.saveAndFlush(fertilizer);
@@ -224,7 +286,11 @@ class FertilizerResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].bnName").value(hasItem(DEFAULT_BN_NAME)))
             .andExpect(jsonPath("$.[*].accountNo").value(hasItem(DEFAULT_ACCOUNT_NO)))
-            .andExpect(jsonPath("$.[*].accountTitle").value(hasItem(DEFAULT_ACCOUNT_TITLE)));
+            .andExpect(jsonPath("$.[*].accountTitle").value(hasItem(DEFAULT_ACCOUNT_TITLE)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -242,7 +308,11 @@ class FertilizerResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.bnName").value(DEFAULT_BN_NAME))
             .andExpect(jsonPath("$.accountNo").value(DEFAULT_ACCOUNT_NO))
-            .andExpect(jsonPath("$.accountTitle").value(DEFAULT_ACCOUNT_TITLE));
+            .andExpect(jsonPath("$.accountTitle").value(DEFAULT_ACCOUNT_TITLE))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -264,7 +334,15 @@ class FertilizerResourceIT {
         Fertilizer updatedFertilizer = fertilizerRepository.findById(fertilizer.getId()).get();
         // Disconnect from session so that the updates on updatedFertilizer are not directly saved in db
         em.detach(updatedFertilizer);
-        updatedFertilizer.name(UPDATED_NAME).bnName(UPDATED_BN_NAME).accountNo(UPDATED_ACCOUNT_NO).accountTitle(UPDATED_ACCOUNT_TITLE);
+        updatedFertilizer
+            .name(UPDATED_NAME)
+            .bnName(UPDATED_BN_NAME)
+            .accountNo(UPDATED_ACCOUNT_NO)
+            .accountTitle(UPDATED_ACCOUNT_TITLE)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         FertilizerDTO fertilizerDTO = fertilizerMapper.toDto(updatedFertilizer);
 
         restFertilizerMockMvc
@@ -283,6 +361,10 @@ class FertilizerResourceIT {
         assertThat(testFertilizer.getBnName()).isEqualTo(UPDATED_BN_NAME);
         assertThat(testFertilizer.getAccountNo()).isEqualTo(UPDATED_ACCOUNT_NO);
         assertThat(testFertilizer.getAccountTitle()).isEqualTo(UPDATED_ACCOUNT_TITLE);
+        assertThat(testFertilizer.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testFertilizer.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testFertilizer.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testFertilizer.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -362,7 +444,13 @@ class FertilizerResourceIT {
         Fertilizer partialUpdatedFertilizer = new Fertilizer();
         partialUpdatedFertilizer.setId(fertilizer.getId());
 
-        partialUpdatedFertilizer.name(UPDATED_NAME).bnName(UPDATED_BN_NAME).accountNo(UPDATED_ACCOUNT_NO);
+        partialUpdatedFertilizer
+            .name(UPDATED_NAME)
+            .bnName(UPDATED_BN_NAME)
+            .accountNo(UPDATED_ACCOUNT_NO)
+            .createdBy(UPDATED_CREATED_BY)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restFertilizerMockMvc
             .perform(
@@ -380,6 +468,10 @@ class FertilizerResourceIT {
         assertThat(testFertilizer.getBnName()).isEqualTo(UPDATED_BN_NAME);
         assertThat(testFertilizer.getAccountNo()).isEqualTo(UPDATED_ACCOUNT_NO);
         assertThat(testFertilizer.getAccountTitle()).isEqualTo(DEFAULT_ACCOUNT_TITLE);
+        assertThat(testFertilizer.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testFertilizer.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testFertilizer.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testFertilizer.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -398,7 +490,11 @@ class FertilizerResourceIT {
             .name(UPDATED_NAME)
             .bnName(UPDATED_BN_NAME)
             .accountNo(UPDATED_ACCOUNT_NO)
-            .accountTitle(UPDATED_ACCOUNT_TITLE);
+            .accountTitle(UPDATED_ACCOUNT_TITLE)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restFertilizerMockMvc
             .perform(
@@ -416,6 +512,10 @@ class FertilizerResourceIT {
         assertThat(testFertilizer.getBnName()).isEqualTo(UPDATED_BN_NAME);
         assertThat(testFertilizer.getAccountNo()).isEqualTo(UPDATED_ACCOUNT_NO);
         assertThat(testFertilizer.getAccountTitle()).isEqualTo(UPDATED_ACCOUNT_TITLE);
+        assertThat(testFertilizer.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testFertilizer.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testFertilizer.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testFertilizer.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

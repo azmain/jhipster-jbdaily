@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IDivision } from '../division.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../division.test-samples';
 
-import { DivisionService } from './division.service';
+import { DivisionService, RestDivision } from './division.service';
 
-const requireRestSample: IDivision = {
+const requireRestSample: RestDivision = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Division Service', () => {

@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IDistrict } from '../district.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../district.test-samples';
 
-import { DistrictService } from './district.service';
+import { DistrictService, RestDistrict } from './district.service';
 
-const requireRestSample: IDistrict = {
+const requireRestSample: RestDistrict = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('District Service', () => {

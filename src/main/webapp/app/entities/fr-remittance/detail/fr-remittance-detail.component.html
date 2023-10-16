@@ -98,16 +98,32 @@
         <dd>
           <span jhiTranslate="{{ 'jbdailyApp.DocumentType.' + frRemittance.documentType }}">{{ frRemittance.documentType }}</span>
         </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ frRemittance.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ frRemittance.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.frRemittance.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ frRemittance.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
         <dt><span jhiTranslate="jbdailyApp.frRemittance.moneyExchange">Money Exchange</span></dt>
         <dd>
           <div *ngIf="frRemittance.moneyExchange">
-            <a [routerLink]="['/money-exchange', frRemittance.moneyExchange.id, 'view']">{{ frRemittance.moneyExchange.id }}</a>
+            <a [routerLink]="['/money-exchange', frRemittance.moneyExchange.id, 'view']">{{ frRemittance.moneyExchange.name }}</a>
           </div>
         </dd>
         <dt><span jhiTranslate="jbdailyApp.frRemittance.incPercentage">Inc Percentage</span></dt>
         <dd>
           <div *ngIf="frRemittance.incPercentage">
-            <a [routerLink]="['/inc-percentage', frRemittance.incPercentage.id, 'view']">{{ frRemittance.incPercentage.id }}</a>
+            <a [routerLink]="['/inc-percentage', frRemittance.incPercentage.id, 'view']">{{ frRemittance.incPercentage.name }}</a>
           </div>
         </dd>
       </dl>

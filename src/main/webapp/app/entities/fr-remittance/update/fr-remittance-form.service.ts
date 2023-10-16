@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IFrRemittance, NewFrRemittance } from '../fr-remittance.model';
 
 /**
@@ -14,33 +16,49 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type FrRemittanceFormGroupInput = IFrRemittance | PartialWithRequiredKeyOf<NewFrRemittance>;
 
-type FrRemittanceFormDefaults = Pick<NewFrRemittance, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IFrRemittance | NewFrRemittance> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type FrRemittanceFormRawValue = FormValueOf<IFrRemittance>;
+
+type NewFrRemittanceFormRawValue = FormValueOf<NewFrRemittance>;
+
+type FrRemittanceFormDefaults = Pick<NewFrRemittance, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type FrRemittanceFormGroupContent = {
-  id: FormControl<IFrRemittance['id'] | NewFrRemittance['id']>;
-  pin: FormControl<IFrRemittance['pin']>;
-  remitersName: FormControl<IFrRemittance['remitersName']>;
-  amount: FormControl<IFrRemittance['amount']>;
-  incentiveAmount: FormControl<IFrRemittance['incentiveAmount']>;
-  paymentDate: FormControl<IFrRemittance['paymentDate']>;
-  incPaymentDate: FormControl<IFrRemittance['incPaymentDate']>;
-  remiSendingDate: FormControl<IFrRemittance['remiSendingDate']>;
-  remiFrCurrency: FormControl<IFrRemittance['remiFrCurrency']>;
-  currency: FormControl<IFrRemittance['currency']>;
-  country: FormControl<IFrRemittance['country']>;
-  exchangeRate: FormControl<IFrRemittance['exchangeRate']>;
-  transactionType: FormControl<IFrRemittance['transactionType']>;
-  recvMobileNo: FormControl<IFrRemittance['recvMobileNo']>;
-  recvName: FormControl<IFrRemittance['recvName']>;
-  recvLegalId: FormControl<IFrRemittance['recvLegalId']>;
-  moneyExchangeName: FormControl<IFrRemittance['moneyExchangeName']>;
-  amountReimDate: FormControl<IFrRemittance['amountReimDate']>;
-  incAmountReimDate: FormControl<IFrRemittance['incAmountReimDate']>;
-  recvGender: FormControl<IFrRemittance['recvGender']>;
-  remiGender: FormControl<IFrRemittance['remiGender']>;
-  documentType: FormControl<IFrRemittance['documentType']>;
-  moneyExchange: FormControl<IFrRemittance['moneyExchange']>;
-  incPercentage: FormControl<IFrRemittance['incPercentage']>;
+  id: FormControl<FrRemittanceFormRawValue['id'] | NewFrRemittance['id']>;
+  pin: FormControl<FrRemittanceFormRawValue['pin']>;
+  remitersName: FormControl<FrRemittanceFormRawValue['remitersName']>;
+  amount: FormControl<FrRemittanceFormRawValue['amount']>;
+  incentiveAmount: FormControl<FrRemittanceFormRawValue['incentiveAmount']>;
+  paymentDate: FormControl<FrRemittanceFormRawValue['paymentDate']>;
+  incPaymentDate: FormControl<FrRemittanceFormRawValue['incPaymentDate']>;
+  remiSendingDate: FormControl<FrRemittanceFormRawValue['remiSendingDate']>;
+  remiFrCurrency: FormControl<FrRemittanceFormRawValue['remiFrCurrency']>;
+  currency: FormControl<FrRemittanceFormRawValue['currency']>;
+  country: FormControl<FrRemittanceFormRawValue['country']>;
+  exchangeRate: FormControl<FrRemittanceFormRawValue['exchangeRate']>;
+  transactionType: FormControl<FrRemittanceFormRawValue['transactionType']>;
+  recvMobileNo: FormControl<FrRemittanceFormRawValue['recvMobileNo']>;
+  recvName: FormControl<FrRemittanceFormRawValue['recvName']>;
+  recvLegalId: FormControl<FrRemittanceFormRawValue['recvLegalId']>;
+  moneyExchangeName: FormControl<FrRemittanceFormRawValue['moneyExchangeName']>;
+  amountReimDate: FormControl<FrRemittanceFormRawValue['amountReimDate']>;
+  incAmountReimDate: FormControl<FrRemittanceFormRawValue['incAmountReimDate']>;
+  recvGender: FormControl<FrRemittanceFormRawValue['recvGender']>;
+  remiGender: FormControl<FrRemittanceFormRawValue['remiGender']>;
+  documentType: FormControl<FrRemittanceFormRawValue['documentType']>;
+  createdBy: FormControl<FrRemittanceFormRawValue['createdBy']>;
+  createdDate: FormControl<FrRemittanceFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<FrRemittanceFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<FrRemittanceFormRawValue['lastModifiedDate']>;
+  moneyExchange: FormControl<FrRemittanceFormRawValue['moneyExchange']>;
+  incPercentage: FormControl<FrRemittanceFormRawValue['incPercentage']>;
 };
 
 export type FrRemittanceFormGroup = FormGroup<FrRemittanceFormGroupContent>;
@@ -48,10 +66,10 @@ export type FrRemittanceFormGroup = FormGroup<FrRemittanceFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class FrRemittanceFormService {
   createFrRemittanceFormGroup(frRemittance: FrRemittanceFormGroupInput = { id: null }): FrRemittanceFormGroup {
-    const frRemittanceRawValue = {
+    const frRemittanceRawValue = this.convertFrRemittanceToFrRemittanceRawValue({
       ...this.getFormDefaults(),
       ...frRemittance,
-    };
+    });
     return new FormGroup<FrRemittanceFormGroupContent>({
       id: new FormControl(
         { value: frRemittanceRawValue.id, disabled: true },
@@ -117,17 +135,31 @@ export class FrRemittanceFormService {
       documentType: new FormControl(frRemittanceRawValue.documentType, {
         validators: [Validators.required],
       }),
-      moneyExchange: new FormControl(frRemittanceRawValue.moneyExchange),
-      incPercentage: new FormControl(frRemittanceRawValue.incPercentage),
+      createdBy: new FormControl(frRemittanceRawValue.createdBy, {
+        validators: [Validators.required, Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(frRemittanceRawValue.createdDate, {
+        validators: [Validators.required],
+      }),
+      lastModifiedBy: new FormControl(frRemittanceRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(frRemittanceRawValue.lastModifiedDate),
+      moneyExchange: new FormControl(frRemittanceRawValue.moneyExchange, {
+        validators: [Validators.required],
+      }),
+      incPercentage: new FormControl(frRemittanceRawValue.incPercentage, {
+        validators: [Validators.required],
+      }),
     });
   }
 
   getFrRemittance(form: FrRemittanceFormGroup): IFrRemittance | NewFrRemittance {
-    return form.getRawValue() as IFrRemittance | NewFrRemittance;
+    return this.convertFrRemittanceRawValueToFrRemittance(form.getRawValue() as FrRemittanceFormRawValue | NewFrRemittanceFormRawValue);
   }
 
   resetForm(form: FrRemittanceFormGroup, frRemittance: FrRemittanceFormGroupInput): void {
-    const frRemittanceRawValue = { ...this.getFormDefaults(), ...frRemittance };
+    const frRemittanceRawValue = this.convertFrRemittanceToFrRemittanceRawValue({ ...this.getFormDefaults(), ...frRemittance });
     form.reset(
       {
         ...frRemittanceRawValue,
@@ -137,8 +169,32 @@ export class FrRemittanceFormService {
   }
 
   private getFormDefaults(): FrRemittanceFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertFrRemittanceRawValueToFrRemittance(
+    rawFrRemittance: FrRemittanceFormRawValue | NewFrRemittanceFormRawValue
+  ): IFrRemittance | NewFrRemittance {
+    return {
+      ...rawFrRemittance,
+      createdDate: dayjs(rawFrRemittance.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawFrRemittance.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertFrRemittanceToFrRemittanceRawValue(
+    frRemittance: IFrRemittance | (Partial<NewFrRemittance> & FrRemittanceFormDefaults)
+  ): FrRemittanceFormRawValue | PartialWithRequiredKeyOf<NewFrRemittanceFormRawValue> {
+    return {
+      ...frRemittance,
+      createdDate: frRemittance.createdDate ? frRemittance.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: frRemittance.lastModifiedDate ? frRemittance.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

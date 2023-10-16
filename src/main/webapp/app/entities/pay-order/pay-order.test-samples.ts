@@ -9,32 +9,44 @@ export const sampleWithRequiredData: IPayOrder = {
   amount: 45147,
   slipNo: 88227,
   controllingNo: 30257,
+  createdBy: 'Loan',
+  createdDate: dayjs('2023-10-02T02:50'),
 };
 
 export const sampleWithPartialData: IPayOrder = {
-  id: 2769,
-  payOrderNumber: 59677,
-  payOrderDate: dayjs('2023-10-01'),
-  amount: 35845,
-  slipNo: 64341,
-  controllingNo: 81812,
+  id: 47765,
+  payOrderNumber: 5636,
+  payOrderDate: dayjs('2023-10-02'),
+  amount: 25410,
+  slipNo: 28972,
+  controllingNo: 16231,
+  createdBy: 'ADP Coordinator Locks',
+  createdDate: dayjs('2023-10-02T10:33'),
+  lastModifiedBy: 'Australian Buckinghamshire',
+  lastModifiedDate: dayjs('2023-10-02T12:10'),
 };
 
 export const sampleWithFullData: IPayOrder = {
-  id: 62089,
-  payOrderNumber: 47765,
+  id: 10880,
+  payOrderNumber: 36705,
   payOrderDate: dayjs('2023-10-02'),
-  amount: 48424,
-  slipNo: 25410,
-  controllingNo: 28972,
+  amount: 6516,
+  slipNo: 22142,
+  controllingNo: 74098,
+  createdBy: 'Movies',
+  createdDate: dayjs('2023-10-01T19:44'),
+  lastModifiedBy: 'impactful',
+  lastModifiedDate: dayjs('2023-10-01T20:40'),
 };
 
 export const sampleWithNewData: NewPayOrder = {
-  payOrderNumber: 16231,
+  payOrderNumber: 19314,
   payOrderDate: dayjs('2023-10-01'),
-  amount: 85630,
-  slipNo: 43156,
-  controllingNo: 49739,
+  amount: 1433,
+  slipNo: 69588,
+  controllingNo: 10959,
+  createdBy: 'Louisiana deposit Soap',
+  createdDate: dayjs('2023-10-02T17:59'),
   id: null,
 };
 

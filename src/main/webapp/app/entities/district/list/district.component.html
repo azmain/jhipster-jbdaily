@@ -50,7 +50,31 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="division.id">
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.district.createdBy">Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.district.createdDate">Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.district.lastModifiedBy">Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.district.lastModifiedDate">Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="division.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.district.division">Division</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -66,9 +90,13 @@
           </td>
           <td>{{ district.name }}</td>
           <td>{{ district.bnName }}</td>
+          <td>{{ district.createdBy }}</td>
+          <td>{{ district.createdDate | formatMediumDatetime }}</td>
+          <td>{{ district.lastModifiedBy }}</td>
+          <td>{{ district.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="district.division">
-              <a [routerLink]="['/division', district.division.id, 'view']">{{ district.division.id }}</a>
+              <a [routerLink]="['/division', district.division.id, 'view']">{{ district.division.name }}</a>
             </div>
           </td>
           <td class="text-end">

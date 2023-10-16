@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IDealer } from '../dealer.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../dealer.test-samples';
 
-import { DealerService } from './dealer.service';
+import { DealerService, RestDealer } from './dealer.service';
 
-const requireRestSample: IDealer = {
+const requireRestSample: RestDealer = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Dealer Service', () => {

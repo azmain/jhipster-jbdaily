@@ -1,6 +1,7 @@
 package io.azmain.jb.service.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
@@ -19,6 +20,18 @@ public class DistrictDTO implements Serializable {
     @NotNull
     @Size(max = 255)
     private String bnName;
+
+    @NotNull
+    @Size(max = 50)
+    private String createdBy;
+
+    @NotNull
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     private DivisionDTO division;
 
@@ -44,6 +57,38 @@ public class DistrictDTO implements Serializable {
 
     public void setBnName(String bnName) {
         this.bnName = bnName;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public DivisionDTO getDivision() {
@@ -82,6 +127,10 @@ public class DistrictDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", bnName='" + getBnName() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", division=" + getDivision() +
             "}";
     }

@@ -1,9 +1,7 @@
 package io.azmain.jb.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -40,9 +38,21 @@ public class MoneyExchange implements Serializable {
     @Column(name = "short_name", length = 256)
     private String shortName;
 
-    @OneToMany(mappedBy = "moneyExchange")
-    @JsonIgnoreProperties(value = { "moneyExchange", "incPercentage" }, allowSetters = true)
-    private Set<FrRemittance> frRemittances = new HashSet<>();
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50, nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -111,35 +121,56 @@ public class MoneyExchange implements Serializable {
         this.shortName = shortName;
     }
 
-    public Set<FrRemittance> getFrRemittances() {
-        return this.frRemittances;
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setFrRemittances(Set<FrRemittance> frRemittances) {
-        if (this.frRemittances != null) {
-            this.frRemittances.forEach(i -> i.setMoneyExchange(null));
-        }
-        if (frRemittances != null) {
-            frRemittances.forEach(i -> i.setMoneyExchange(this));
-        }
-        this.frRemittances = frRemittances;
-    }
-
-    public MoneyExchange frRemittances(Set<FrRemittance> frRemittances) {
-        this.setFrRemittances(frRemittances);
+    public MoneyExchange createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
         return this;
     }
 
-    public MoneyExchange addFrRemittance(FrRemittance frRemittance) {
-        this.frRemittances.add(frRemittance);
-        frRemittance.setMoneyExchange(this);
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public MoneyExchange createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
         return this;
     }
 
-    public MoneyExchange removeFrRemittance(FrRemittance frRemittance) {
-        this.frRemittances.remove(frRemittance);
-        frRemittance.setMoneyExchange(null);
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public MoneyExchange lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
         return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public MoneyExchange lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -170,6 +201,10 @@ public class MoneyExchange implements Serializable {
             ", digit='" + getDigit() + "'" +
             ", link='" + getLink() + "'" +
             ", shortName='" + getShortName() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

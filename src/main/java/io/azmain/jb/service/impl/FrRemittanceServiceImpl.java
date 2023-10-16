@@ -69,11 +69,15 @@ public class FrRemittanceServiceImpl implements FrRemittanceService {
         return frRemittanceRepository.findAll(pageable).map(frRemittanceMapper::toDto);
     }
 
+    public Page<FrRemittanceDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return frRemittanceRepository.findAllWithEagerRelationships(pageable).map(frRemittanceMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<FrRemittanceDTO> findOne(Long id) {
         log.debug("Request to get FrRemittance : {}", id);
-        return frRemittanceRepository.findById(id).map(frRemittanceMapper::toDto);
+        return frRemittanceRepository.findOneWithEagerRelationships(id).map(frRemittanceMapper::toDto);
     }
 
     @Override

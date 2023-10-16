@@ -1,9 +1,7 @@
 package io.azmain.jb.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -27,9 +25,21 @@ public class IncPercentage implements Serializable {
     @Column(name = "name", length = 256, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "incPercentage")
-    @JsonIgnoreProperties(value = { "moneyExchange", "incPercentage" }, allowSetters = true)
-    private Set<FrRemittance> frRemittances = new HashSet<>();
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50, nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -59,35 +69,56 @@ public class IncPercentage implements Serializable {
         this.name = name;
     }
 
-    public Set<FrRemittance> getFrRemittances() {
-        return this.frRemittances;
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
-    public void setFrRemittances(Set<FrRemittance> frRemittances) {
-        if (this.frRemittances != null) {
-            this.frRemittances.forEach(i -> i.setIncPercentage(null));
-        }
-        if (frRemittances != null) {
-            frRemittances.forEach(i -> i.setIncPercentage(this));
-        }
-        this.frRemittances = frRemittances;
-    }
-
-    public IncPercentage frRemittances(Set<FrRemittance> frRemittances) {
-        this.setFrRemittances(frRemittances);
+    public IncPercentage createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
         return this;
     }
 
-    public IncPercentage addFrRemittance(FrRemittance frRemittance) {
-        this.frRemittances.add(frRemittance);
-        frRemittance.setIncPercentage(this);
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public IncPercentage createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
         return this;
     }
 
-    public IncPercentage removeFrRemittance(FrRemittance frRemittance) {
-        this.frRemittances.remove(frRemittance);
-        frRemittance.setIncPercentage(null);
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public IncPercentage lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
         return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public IncPercentage lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -115,6 +146,10 @@ public class IncPercentage implements Serializable {
         return "IncPercentage{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

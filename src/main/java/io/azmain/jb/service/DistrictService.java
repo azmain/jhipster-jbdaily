@@ -42,6 +42,14 @@ public interface DistrictService {
     Page<DistrictDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the districts with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<DistrictDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" district.
      *
      * @param id the id of the entity.

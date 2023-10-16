@@ -25,6 +25,10 @@ describe('PayOrder Form Service', () => {
             amount: expect.any(Object),
             slipNo: expect.any(Object),
             controllingNo: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             fertilizer: expect.any(Object),
             dealer: expect.any(Object),
           })
@@ -42,6 +46,10 @@ describe('PayOrder Form Service', () => {
             amount: expect.any(Object),
             slipNo: expect.any(Object),
             controllingNo: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             fertilizer: expect.any(Object),
             dealer: expect.any(Object),
           })

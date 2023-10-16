@@ -155,6 +155,18 @@ public class FrRemittanceQueryService extends QueryService<FrRemittance> {
             if (criteria.getDocumentType() != null) {
                 specification = specification.and(buildSpecification(criteria.getDocumentType(), FrRemittance_.documentType));
             }
+            if (criteria.getCreatedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getCreatedBy(), FrRemittance_.createdBy));
+            }
+            if (criteria.getCreatedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getCreatedDate(), FrRemittance_.createdDate));
+            }
+            if (criteria.getLastModifiedBy() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getLastModifiedBy(), FrRemittance_.lastModifiedBy));
+            }
+            if (criteria.getLastModifiedDate() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getLastModifiedDate(), FrRemittance_.lastModifiedDate));
+            }
             if (criteria.getMoneyExchangeId() != null) {
                 specification =
                     specification.and(

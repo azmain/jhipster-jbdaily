@@ -70,13 +70,37 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="fertilizer.id">
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.createdBy">Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.createdDate">Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.lastModifiedBy">Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.payOrder.lastModifiedDate">Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="fertilizer.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.payOrder.fertilizer">Fertilizer</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="dealer.id">
+          <th scope="col" jhiSortBy="dealer.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.payOrder.dealer">Dealer</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -95,23 +119,22 @@
           <td>{{ payOrder.amount }}</td>
           <td>{{ payOrder.slipNo }}</td>
           <td>{{ payOrder.controllingNo }}</td>
+          <td>{{ payOrder.createdBy }}</td>
+          <td>{{ payOrder.createdDate | formatMediumDatetime }}</td>
+          <td>{{ payOrder.lastModifiedBy }}</td>
+          <td>{{ payOrder.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="payOrder.fertilizer">
-              <a [routerLink]="['/fertilizer', payOrder.fertilizer.id, 'view']">{{ payOrder.fertilizer.id }}</a>
+              <a [routerLink]="['/fertilizer', payOrder.fertilizer.id, 'view']">{{ payOrder.fertilizer.name }}</a>
             </div>
           </td>
           <td>
             <div *ngIf="payOrder.dealer">
-              <a [routerLink]="['/dealer', payOrder.dealer.id, 'view']">{{ payOrder.dealer.id }}</a>
+              <a [routerLink]="['/dealer', payOrder.dealer.id, 'view']">{{ payOrder.dealer.name }}</a>
             </div>
           </td>
           <td class="text-end">
             <div class="btn-group">
-              <button type="button" class="btn btn-info btn-sm" data-cy="entityDetailsButton" (click)="createPdf(payOrder)">
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Pdf</span>
-              </button>
-
               <button
                 type="submit"
                 [routerLink]="['/pay-order', payOrder.id, 'view']"

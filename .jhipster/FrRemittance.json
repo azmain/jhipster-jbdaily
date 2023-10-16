@@ -122,6 +122,33 @@
       "fieldType": "DocumentType",
       "fieldValidateRules": ["required"],
       "fieldValues": "NID,PASSPORT,DRIVING_LICENCE,BIRTH_CERTIFICATE"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"],
+      "options": {
+        "createdDate": true
+      }
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "options": {
+        "lastModifiedDate": true
+      }
     }
   ],
   "fluentMethods": true,
@@ -131,16 +158,18 @@
   "readOnly": false,
   "relationships": [
     {
+      "otherEntityField": "name",
       "otherEntityName": "moneyExchange",
-      "otherEntityRelationshipName": "frRemittance",
       "relationshipName": "moneyExchange",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     },
     {
+      "otherEntityField": "name",
       "otherEntityName": "incPercentage",
-      "otherEntityRelationshipName": "frRemittance",
       "relationshipName": "incPercentage",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "service": "serviceImpl"

@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IUpazila } from '../upazila.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../upazila.test-samples';
 
-import { UpazilaService } from './upazila.service';
+import { UpazilaService, RestUpazila } from './upazila.service';
 
-const requireRestSample: IUpazila = {
+const requireRestSample: RestUpazila = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Upazila Service', () => {

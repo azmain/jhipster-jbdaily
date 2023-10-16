@@ -15,7 +15,7 @@ describe('IncPercentage e2e test', () => {
   const incPercentagePageUrlPattern = new RegExp('/inc-percentage(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const incPercentageSample = { name: 'program RAM California' };
+  const incPercentageSample = { name: 'input', createdBy: 'SQL Movies bus', createdDate: '2023-10-03T20:10:41.961Z' };
 
   let incPercentage;
 
@@ -161,6 +161,14 @@ describe('IncPercentage e2e test', () => {
 
     it('should create an instance of IncPercentage', () => {
       cy.get(`[data-cy="name"]`).type('back-end').should('have.value', 'back-end');
+
+      cy.get(`[data-cy="createdBy"]`).type('program RAM California').should('have.value', 'program RAM California');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-04T00:58').blur().should('have.value', '2023-10-04T00:58');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('&amp;').should('have.value', '&amp;');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-04T09:53').blur().should('have.value', '2023-10-04T09:53');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

@@ -9,8 +9,12 @@ export interface IPayOrder {
   amount?: number | null;
   slipNo?: number | null;
   controllingNo?: number | null;
-  fertilizer?: IFertilizer | null;
-  dealer?: IDealer | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
+  fertilizer?: Pick<IFertilizer, 'id' | 'name'> | null;
+  dealer?: Pick<IDealer, 'id' | 'name'> | null;
 }
 
 export type NewPayOrder = Omit<IPayOrder, 'id'> & { id: null };

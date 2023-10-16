@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="userSettings">
+      <h2 data-cy="userSettingsDetailsHeading"><span jhiTranslate="jbdailyApp.userSettings.detail.title">User Settings</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ userSettings.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.name">Name</span></dt>
+        <dd>
+          <span>{{ userSettings.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.payOrderNumSeq">Pay Order Num Seq</span></dt>
+        <dd>
+          <span>{{ userSettings.payOrderNumSeq }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.payOrderControlNum">Pay Order Control Num</span></dt>
+        <dd>
+          <span>{{ userSettings.payOrderControlNum }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ userSettings.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ userSettings.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ userSettings.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.userSettings.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ userSettings.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/user-settings', userSettings.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

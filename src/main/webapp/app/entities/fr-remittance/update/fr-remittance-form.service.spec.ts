@@ -41,6 +41,10 @@ describe('FrRemittance Form Service', () => {
             recvGender: expect.any(Object),
             remiGender: expect.any(Object),
             documentType: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             moneyExchange: expect.any(Object),
             incPercentage: expect.any(Object),
           })
@@ -74,6 +78,10 @@ describe('FrRemittance Form Service', () => {
             recvGender: expect.any(Object),
             remiGender: expect.any(Object),
             documentType: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             moneyExchange: expect.any(Object),
             incPercentage: expect.any(Object),
           })

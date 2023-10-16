@@ -1,28 +1,42 @@
+import dayjs from 'dayjs/esm';
+
 import { IMoneyExchange, NewMoneyExchange } from './money-exchange.model';
 
 export const sampleWithRequiredData: IMoneyExchange = {
   id: 24778,
   name: 'aggregate Trail homogeneous',
   digit: 'innovative Croatia system',
+  createdBy: 'open application',
+  createdDate: dayjs('2023-10-04T00:35'),
 };
 
 export const sampleWithPartialData: IMoneyExchange = {
-  id: 69647,
-  name: 'application',
-  digit: 'Hat Concrete PCI',
+  id: 22942,
+  name: 'PCI',
+  digit: 'Buckinghamshire copying Ac',
+  shortName: 'redundant methodical',
+  createdBy: 'invoice Oregon violet',
+  createdDate: dayjs('2023-10-03T22:03'),
+  lastModifiedBy: 'green grow',
 };
 
 export const sampleWithFullData: IMoneyExchange = {
-  id: 96473,
-  name: 'Franc customized',
-  digit: 'XML',
-  link: 'Islands Reunion',
-  shortName: 'Infrastructure overriding transmitting',
+  id: 2338,
+  name: 'robust Malawi neural-net',
+  digit: 'data-warehouse bypassing',
+  link: 'index back Front-line',
+  shortName: 'microchip Towels Incredible',
+  createdBy: 'high-level Digitized',
+  createdDate: dayjs('2023-10-04T03:09'),
+  lastModifiedBy: 'XML quantifying',
+  lastModifiedDate: dayjs('2023-10-04T07:37'),
 };
 
 export const sampleWithNewData: NewMoneyExchange = {
-  name: 'Cotton',
-  digit: 'Director',
+  name: 'Investment cross-platform',
+  digit: 'Unit Shirt',
+  createdBy: 'AGP Engineer',
+  createdDate: dayjs('2023-10-03T23:52'),
   id: null,
 };
 

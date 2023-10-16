@@ -142,12 +142,21 @@ public class UpazilaResource {
      * {@code GET  /upazilas} : get all the upazilas.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of upazilas in body.
      */
     @GetMapping("/upazilas")
-    public ResponseEntity<List<UpazilaDTO>> getAllUpazilas(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<UpazilaDTO>> getAllUpazilas(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Upazilas");
-        Page<UpazilaDTO> page = upazilaService.findAll(pageable);
+        Page<UpazilaDTO> page;
+        if (eagerload) {
+            page = upazilaService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = upazilaService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

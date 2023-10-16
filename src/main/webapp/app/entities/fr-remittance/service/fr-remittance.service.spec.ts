@@ -14,6 +14,8 @@ const requireRestSample: RestFrRemittance = {
   remiSendingDate: sampleWithRequiredData.remiSendingDate?.format(DATE_FORMAT),
   amountReimDate: sampleWithRequiredData.amountReimDate?.format(DATE_FORMAT),
   incAmountReimDate: sampleWithRequiredData.incAmountReimDate?.format(DATE_FORMAT),
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('FrRemittance Service', () => {

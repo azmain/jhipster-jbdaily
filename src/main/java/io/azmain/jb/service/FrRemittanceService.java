@@ -42,6 +42,14 @@ public interface FrRemittanceService {
     Page<FrRemittanceDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the frRemittances with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<FrRemittanceDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" frRemittance.
      *
      * @param id the id of the entity.

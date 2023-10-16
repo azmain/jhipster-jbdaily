@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -8,6 +10,17 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { IDivision, NewDivision } from '../division.model';
 
 export type PartialUpdateDivision = Partial<IDivision> & Pick<IDivision, 'id'>;
+
+type RestOf<T extends IDivision | NewDivision> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestDivision = RestOf<IDivision>;
+
+export type NewRestDivision = RestOf<NewDivision>;
+
+export type PartialUpdateRestDivision = RestOf<PartialUpdateDivision>;
 
 export type EntityResponseType = HttpResponse<IDivision>;
 export type EntityArrayResponseType = HttpResponse<IDivision[]>;
@@ -19,24 +32,37 @@ export class DivisionService {
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(division: NewDivision): Observable<EntityResponseType> {
-    return this.http.post<IDivision>(this.resourceUrl, division, { observe: 'response' });
+    const copy = this.convertDateFromClient(division);
+    return this.http
+      .post<RestDivision>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(division: IDivision): Observable<EntityResponseType> {
-    return this.http.put<IDivision>(`${this.resourceUrl}/${this.getDivisionIdentifier(division)}`, division, { observe: 'response' });
+    const copy = this.convertDateFromClient(division);
+    return this.http
+      .put<RestDivision>(`${this.resourceUrl}/${this.getDivisionIdentifier(division)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(division: PartialUpdateDivision): Observable<EntityResponseType> {
-    return this.http.patch<IDivision>(`${this.resourceUrl}/${this.getDivisionIdentifier(division)}`, division, { observe: 'response' });
+    const copy = this.convertDateFromClient(division);
+    return this.http
+      .patch<RestDivision>(`${this.resourceUrl}/${this.getDivisionIdentifier(division)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IDivision>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestDivision>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IDivision[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestDivision[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -69,5 +95,33 @@ export class DivisionService {
       return [...divisionsToAdd, ...divisionCollection];
     }
     return divisionCollection;
+  }
+
+  protected convertDateFromClient<T extends IDivision | NewDivision | PartialUpdateDivision>(division: T): RestOf<T> {
+    return {
+      ...division,
+      createdDate: division.createdDate?.toJSON() ?? null,
+      lastModifiedDate: division.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restDivision: RestDivision): IDivision {
+    return {
+      ...restDivision,
+      createdDate: restDivision.createdDate ? dayjs(restDivision.createdDate) : undefined,
+      lastModifiedDate: restDivision.lastModifiedDate ? dayjs(restDivision.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestDivision>): HttpResponse<IDivision> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestDivision[]>): HttpResponse<IDivision[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

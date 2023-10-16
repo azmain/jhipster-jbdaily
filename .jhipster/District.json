@@ -16,6 +16,33 @@
       "fieldType": "String",
       "fieldValidateRules": ["required", "maxlength"],
       "fieldValidateRulesMaxlength": "255"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"],
+      "options": {
+        "createdDate": true
+      }
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "options": {
+        "lastModifiedDate": true
+      }
     }
   ],
   "fluentMethods": true,
@@ -31,10 +58,12 @@
       "relationshipType": "one-to-many"
     },
     {
+      "otherEntityField": "name",
       "otherEntityName": "division",
       "otherEntityRelationshipName": "district",
       "relationshipName": "division",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
     }
   ],
   "service": "serviceImpl"

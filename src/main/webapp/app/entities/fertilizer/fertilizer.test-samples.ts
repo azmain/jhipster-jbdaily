@@ -1,3 +1,5 @@
+import dayjs from 'dayjs/esm';
+
 import { IFertilizer, NewFertilizer } from './fertilizer.model';
 
 export const sampleWithRequiredData: IFertilizer = {
@@ -6,29 +8,41 @@ export const sampleWithRequiredData: IFertilizer = {
   bnName: 'upward-trending deposit',
   accountNo: 'solutions',
   accountTitle: 'generate monetize',
+  createdBy: 'International solid Specialist',
+  createdDate: dayjs('2023-10-01T23:24'),
 };
 
 export const sampleWithPartialData: IFertilizer = {
-  id: 89707,
-  name: 'Convertible Lead protocol',
-  bnName: 'Berkshire Intelligent Bedfordshire',
-  accountNo: 'Global invoice',
-  accountTitle: 'Tala Bedfordshire',
+  id: 46541,
+  name: 'Intelligent Bedfordshire Valleys',
+  bnName: 'invoice Rapids',
+  accountNo: 'Bedfordshire e-commerce',
+  accountTitle: 'Granite EXE',
+  createdBy: 'Ruble application',
+  createdDate: dayjs('2023-10-02T00:22'),
+  lastModifiedBy: 'withdrawal even-keeled Director',
+  lastModifiedDate: dayjs('2023-10-02T01:09'),
 };
 
 export const sampleWithFullData: IFertilizer = {
-  id: 44022,
-  name: 'synthesize Designer',
-  bnName: 'EXE payment',
-  accountNo: 'application synthesize orchestrate',
-  accountTitle: 'Personal payment',
-};
-
-export const sampleWithNewData: NewFertilizer = {
+  id: 92777,
   name: 'Secured',
   bnName: 'communities Future Borders',
   accountNo: 'facilitate gold',
   accountTitle: 'deposit Account driver',
+  createdBy: 'Automotive Auto Squares',
+  createdDate: dayjs('2023-10-02T03:45'),
+  lastModifiedBy: 'Specialist Korea',
+  lastModifiedDate: dayjs('2023-10-02T04:20'),
+};
+
+export const sampleWithNewData: NewFertilizer = {
+  name: 'Soap Ridges',
+  bnName: 'aggregate',
+  accountNo: 'Via',
+  accountTitle: 'Intelligent SSL Awesome',
+  createdBy: 'Lead Generic red',
+  createdDate: dayjs('2023-10-02T11:25'),
   id: null,
 };
 

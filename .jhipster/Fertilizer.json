@@ -28,6 +28,33 @@
       "fieldType": "String",
       "fieldValidateRules": ["required", "maxlength"],
       "fieldValidateRulesMaxlength": "255"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"],
+      "options": {
+        "createdDate": true
+      }
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant",
+      "options": {
+        "lastModifiedDate": true
+      }
     }
   ],
   "fluentMethods": true,
@@ -35,6 +62,13 @@
   "name": "Fertilizer",
   "pagination": "pagination",
   "readOnly": false,
-  "relationships": [],
+  "relationships": [
+    {
+      "otherEntityName": "payOrder",
+      "otherEntityRelationshipName": "fertilizer",
+      "relationshipName": "payOrder",
+      "relationshipType": "one-to-many"
+    }
+  ],
   "service": "serviceImpl"
 }

@@ -50,7 +50,31 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="district.id">
+          <th scope="col" jhiSortBy="createdBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.upazila.createdBy">Created By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.upazila.createdDate">Created Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedBy">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.upazila.lastModifiedBy">Last Modified By</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="lastModifiedDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.upazila.lastModifiedDate">Last Modified Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="district.name">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.upazila.district">District</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
@@ -66,9 +90,13 @@
           </td>
           <td>{{ upazila.name }}</td>
           <td>{{ upazila.bnName }}</td>
+          <td>{{ upazila.createdBy }}</td>
+          <td>{{ upazila.createdDate | formatMediumDatetime }}</td>
+          <td>{{ upazila.lastModifiedBy }}</td>
+          <td>{{ upazila.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="upazila.district">
-              <a [routerLink]="['/district', upazila.district.id, 'view']">{{ upazila.district.id }}</a>
+              <a [routerLink]="['/district', upazila.district.id, 'view']">{{ upazila.district.name }}</a>
             </div>
           </td>
           <td class="text-end">

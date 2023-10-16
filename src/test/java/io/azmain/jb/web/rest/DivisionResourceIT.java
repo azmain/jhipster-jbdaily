@@ -10,6 +10,8 @@ import io.azmain.jb.domain.Division;
 import io.azmain.jb.repository.DivisionRepository;
 import io.azmain.jb.service.dto.DivisionDTO;
 import io.azmain.jb.service.mapper.DivisionMapper;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,6 +38,18 @@ class DivisionResourceIT {
 
     private static final String DEFAULT_BN_NAME = "AAAAAAAAAA";
     private static final String UPDATED_BN_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/divisions";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -64,7 +78,13 @@ class DivisionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Division createEntity(EntityManager em) {
-        Division division = new Division().name(DEFAULT_NAME).bnName(DEFAULT_BN_NAME);
+        Division division = new Division()
+            .name(DEFAULT_NAME)
+            .bnName(DEFAULT_BN_NAME)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return division;
     }
 
@@ -75,7 +95,13 @@ class DivisionResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Division createUpdatedEntity(EntityManager em) {
-        Division division = new Division().name(UPDATED_NAME).bnName(UPDATED_BN_NAME);
+        Division division = new Division()
+            .name(UPDATED_NAME)
+            .bnName(UPDATED_BN_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return division;
     }
 
@@ -100,6 +126,10 @@ class DivisionResourceIT {
         Division testDivision = divisionList.get(divisionList.size() - 1);
         assertThat(testDivision.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testDivision.getBnName()).isEqualTo(DEFAULT_BN_NAME);
+        assertThat(testDivision.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testDivision.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testDivision.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testDivision.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -159,6 +189,42 @@ class DivisionResourceIT {
 
     @Test
     @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = divisionRepository.findAll().size();
+        // set the field null
+        division.setCreatedBy(null);
+
+        // Create the Division, which fails.
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
+        restDivisionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Division> divisionList = divisionRepository.findAll();
+        assertThat(divisionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = divisionRepository.findAll().size();
+        // set the field null
+        division.setCreatedDate(null);
+
+        // Create the Division, which fails.
+        DivisionDTO divisionDTO = divisionMapper.toDto(division);
+
+        restDivisionMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(divisionDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Division> divisionList = divisionRepository.findAll();
+        assertThat(divisionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllDivisions() throws Exception {
         // Initialize the database
         divisionRepository.saveAndFlush(division);
@@ -170,7 +236,11 @@ class DivisionResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(division.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].bnName").value(hasItem(DEFAULT_BN_NAME)));
+            .andExpect(jsonPath("$.[*].bnName").value(hasItem(DEFAULT_BN_NAME)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -186,7 +256,11 @@ class DivisionResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(division.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.bnName").value(DEFAULT_BN_NAME));
+            .andExpect(jsonPath("$.bnName").value(DEFAULT_BN_NAME))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -208,7 +282,13 @@ class DivisionResourceIT {
         Division updatedDivision = divisionRepository.findById(division.getId()).get();
         // Disconnect from session so that the updates on updatedDivision are not directly saved in db
         em.detach(updatedDivision);
-        updatedDivision.name(UPDATED_NAME).bnName(UPDATED_BN_NAME);
+        updatedDivision
+            .name(UPDATED_NAME)
+            .bnName(UPDATED_BN_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         DivisionDTO divisionDTO = divisionMapper.toDto(updatedDivision);
 
         restDivisionMockMvc
@@ -225,6 +305,10 @@ class DivisionResourceIT {
         Division testDivision = divisionList.get(divisionList.size() - 1);
         assertThat(testDivision.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testDivision.getBnName()).isEqualTo(UPDATED_BN_NAME);
+        assertThat(testDivision.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testDivision.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testDivision.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testDivision.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -304,7 +388,11 @@ class DivisionResourceIT {
         Division partialUpdatedDivision = new Division();
         partialUpdatedDivision.setId(division.getId());
 
-        partialUpdatedDivision.bnName(UPDATED_BN_NAME);
+        partialUpdatedDivision
+            .bnName(UPDATED_BN_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restDivisionMockMvc
             .perform(
@@ -320,6 +408,10 @@ class DivisionResourceIT {
         Division testDivision = divisionList.get(divisionList.size() - 1);
         assertThat(testDivision.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testDivision.getBnName()).isEqualTo(UPDATED_BN_NAME);
+        assertThat(testDivision.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testDivision.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testDivision.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testDivision.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -334,7 +426,13 @@ class DivisionResourceIT {
         Division partialUpdatedDivision = new Division();
         partialUpdatedDivision.setId(division.getId());
 
-        partialUpdatedDivision.name(UPDATED_NAME).bnName(UPDATED_BN_NAME);
+        partialUpdatedDivision
+            .name(UPDATED_NAME)
+            .bnName(UPDATED_BN_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restDivisionMockMvc
             .perform(
@@ -350,6 +448,10 @@ class DivisionResourceIT {
         Division testDivision = divisionList.get(divisionList.size() - 1);
         assertThat(testDivision.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testDivision.getBnName()).isEqualTo(UPDATED_BN_NAME);
+        assertThat(testDivision.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testDivision.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testDivision.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testDivision.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

@@ -11,11 +11,12 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface DealerMapper extends EntityMapper<DealerDTO, Dealer> {
-    @Mapping(target = "upazila", source = "upazila", qualifiedByName = "upazilaId")
+    @Mapping(target = "upazila", source = "upazila", qualifiedByName = "upazilaName")
     DealerDTO toDto(Dealer s);
 
-    @Named("upazilaId")
+    @Named("upazilaName")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    UpazilaDTO toDtoUpazilaId(Upazila upazila);
+    @Mapping(target = "name", source = "name")
+    UpazilaDTO toDtoUpazilaName(Upazila upazila);
 }

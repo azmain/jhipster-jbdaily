@@ -49,6 +49,11 @@ import { RouterModule } from '@angular/router';
         data: { pageTitle: 'jbdailyApp.moneyExchange.home.title' },
         loadChildren: () => import('./money-exchange/money-exchange.module').then(m => m.MoneyExchangeModule),
       },
+      {
+        path: 'user-settings',
+        data: { pageTitle: 'jbdailyApp.userSettings.home.title' },
+        loadChildren: () => import('./user-settings/user-settings.module').then(m => m.UserSettingsModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

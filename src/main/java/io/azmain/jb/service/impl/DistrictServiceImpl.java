@@ -69,11 +69,15 @@ public class DistrictServiceImpl implements DistrictService {
         return districtRepository.findAll(pageable).map(districtMapper::toDto);
     }
 
+    public Page<DistrictDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return districtRepository.findAllWithEagerRelationships(pageable).map(districtMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<DistrictDTO> findOne(Long id) {
         log.debug("Request to get District : {}", id);
-        return districtRepository.findById(id).map(districtMapper::toDto);
+        return districtRepository.findOneWithEagerRelationships(id).map(districtMapper::toDto);
     }
 
     @Override

@@ -22,7 +22,10 @@
       "digit": "Digit",
       "link": "Link",
       "shortName": "Short Name",
-      "frRemittance": "Fr Remittance"
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date"
     }
   }
 }

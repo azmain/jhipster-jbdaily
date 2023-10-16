@@ -15,7 +15,12 @@ describe('Division e2e test', () => {
   const divisionPageUrlPattern = new RegExp('/division(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const divisionSample = { name: 'synthesize', bnName: 'supply-chains' };
+  const divisionSample = {
+    name: 'viral intuitive connecting',
+    bnName: 'Account global blue',
+    createdBy: 'Wooden cross-media digital',
+    createdDate: '2023-10-01T19:53:46.488Z',
+  };
 
   let division;
 
@@ -163,6 +168,14 @@ describe('Division e2e test', () => {
       cy.get(`[data-cy="name"]`).type('calculate Tuna Credit').should('have.value', 'calculate Tuna Credit');
 
       cy.get(`[data-cy="bnName"]`).type('auxiliary Dynamic Isle').should('have.value', 'auxiliary Dynamic Isle');
+
+      cy.get(`[data-cy="createdBy"]`).type('synthesize').should('have.value', 'synthesize');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-02T12:00').blur().should('have.value', '2023-10-02T12:00');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('Plain SMTP').should('have.value', 'Plain SMTP');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-01T22:09').blur().should('have.value', '2023-10-01T22:09');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

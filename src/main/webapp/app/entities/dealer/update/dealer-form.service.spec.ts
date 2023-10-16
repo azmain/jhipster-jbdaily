@@ -24,6 +24,10 @@ describe('Dealer Form Service', () => {
             bnName: expect.any(Object),
             shortName: expect.any(Object),
             mobile: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             upazila: expect.any(Object),
           })
         );
@@ -39,6 +43,10 @@ describe('Dealer Form Service', () => {
             bnName: expect.any(Object),
             shortName: expect.any(Object),
             mobile: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             upazila: expect.any(Object),
           })
         );

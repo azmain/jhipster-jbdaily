@@ -15,19 +15,49 @@ describe('Upazila e2e test', () => {
   const upazilaPageUrlPattern = new RegExp('/upazila(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const upazilaSample = { name: 'invoice Keyboard Dynamic', bnName: 'Rubber innovate' };
+  // const upazilaSample = {"name":"transmitter redundant","bnName":"Tunnel","createdBy":"Rupiah","createdDate":"2023-10-02T16:03:17.612Z"};
 
   let upazila;
+  // let district;
 
   beforeEach(() => {
     cy.login(username, password);
   });
+
+  /* Disabled due to incompatibility
+  beforeEach(() => {
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/districts',
+      body: {"name":"SMS","bnName":"sexy Shoes capacitor","createdBy":"Customer deposit applications","createdDate":"2023-10-02T15:19:03.097Z","lastModifiedBy":"encryption Forge Plastic","lastModifiedDate":"2023-10-02T10:53:53.578Z"},
+    }).then(({ body }) => {
+      district = body;
+    });
+  });
+   */
 
   beforeEach(() => {
     cy.intercept('GET', '/api/upazilas+(?*|)').as('entitiesRequest');
     cy.intercept('POST', '/api/upazilas').as('postEntityRequest');
     cy.intercept('DELETE', '/api/upazilas/*').as('deleteEntityRequest');
   });
+
+  /* Disabled due to incompatibility
+  beforeEach(() => {
+    // Simulate relationships api for better performance and reproducibility.
+    cy.intercept('GET', '/api/dealers', {
+      statusCode: 200,
+      body: [],
+    });
+
+    cy.intercept('GET', '/api/districts', {
+      statusCode: 200,
+      body: [district],
+    });
+
+  });
+   */
 
   afterEach(() => {
     if (upazila) {
@@ -39,6 +69,19 @@ describe('Upazila e2e test', () => {
       });
     }
   });
+
+  /* Disabled due to incompatibility
+  afterEach(() => {
+    if (district) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/districts/${district.id}`,
+      }).then(() => {
+        district = undefined;
+      });
+    }
+  });
+   */
 
   it('Upazilas menu should load Upazilas page', () => {
     cy.visit('/');
@@ -75,11 +118,15 @@ describe('Upazila e2e test', () => {
     });
 
     describe('with existing value', () => {
+      /* Disabled due to incompatibility
       beforeEach(() => {
         cy.authenticatedRequest({
           method: 'POST',
           url: '/api/upazilas',
-          body: upazilaSample,
+          body: {
+            ...upazilaSample,
+            district: district,
+          },
         }).then(({ body }) => {
           upazila = body;
 
@@ -102,6 +149,17 @@ describe('Upazila e2e test', () => {
         cy.visit(upazilaPageUrl);
 
         cy.wait('@entitiesRequestInternal');
+      });
+       */
+
+      beforeEach(function () {
+        cy.visit(upazilaPageUrl);
+
+        cy.wait('@entitiesRequest').then(({ response }) => {
+          if (response.body.length === 0) {
+            this.skip();
+          }
+        });
       });
 
       it('detail button click should load details Upazila page', () => {
@@ -135,7 +193,7 @@ describe('Upazila e2e test', () => {
         cy.url().should('match', upazilaPageUrlPattern);
       });
 
-      it('last delete button click should delete instance of Upazila', () => {
+      it.skip('last delete button click should delete instance of Upazila', () => {
         cy.get(entityDeleteButtonSelector).last().click();
         cy.getEntityDeleteDialogHeading('upazila').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
@@ -159,10 +217,20 @@ describe('Upazila e2e test', () => {
       cy.getEntityCreateUpdateHeading('Upazila');
     });
 
-    it('should create an instance of Upazila', () => {
+    it.skip('should create an instance of Upazila', () => {
       cy.get(`[data-cy="name"]`).type('Account').should('have.value', 'Account');
 
       cy.get(`[data-cy="bnName"]`).type('Bolivia parsing').should('have.value', 'Bolivia parsing');
+
+      cy.get(`[data-cy="createdBy"]`).type('invoice Keyboard Dynamic').should('have.value', 'invoice Keyboard Dynamic');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-02T10:14').blur().should('have.value', '2023-10-02T10:14');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('Investment').should('have.value', 'Investment');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-02T00:50').blur().should('have.value', '2023-10-02T00:50');
+
+      cy.get(`[data-cy="district"]`).select(1);
 
       cy.get(entityCreateSaveButtonSelector).click();
 

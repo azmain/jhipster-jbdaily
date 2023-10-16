@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -8,6 +10,17 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { IUpazila, NewUpazila } from '../upazila.model';
 
 export type PartialUpdateUpazila = Partial<IUpazila> & Pick<IUpazila, 'id'>;
+
+type RestOf<T extends IUpazila | NewUpazila> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestUpazila = RestOf<IUpazila>;
+
+export type NewRestUpazila = RestOf<NewUpazila>;
+
+export type PartialUpdateRestUpazila = RestOf<PartialUpdateUpazila>;
 
 export type EntityResponseType = HttpResponse<IUpazila>;
 export type EntityArrayResponseType = HttpResponse<IUpazila[]>;
@@ -19,24 +32,37 @@ export class UpazilaService {
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(upazila: NewUpazila): Observable<EntityResponseType> {
-    return this.http.post<IUpazila>(this.resourceUrl, upazila, { observe: 'response' });
+    const copy = this.convertDateFromClient(upazila);
+    return this.http
+      .post<RestUpazila>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(upazila: IUpazila): Observable<EntityResponseType> {
-    return this.http.put<IUpazila>(`${this.resourceUrl}/${this.getUpazilaIdentifier(upazila)}`, upazila, { observe: 'response' });
+    const copy = this.convertDateFromClient(upazila);
+    return this.http
+      .put<RestUpazila>(`${this.resourceUrl}/${this.getUpazilaIdentifier(upazila)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(upazila: PartialUpdateUpazila): Observable<EntityResponseType> {
-    return this.http.patch<IUpazila>(`${this.resourceUrl}/${this.getUpazilaIdentifier(upazila)}`, upazila, { observe: 'response' });
+    const copy = this.convertDateFromClient(upazila);
+    return this.http
+      .patch<RestUpazila>(`${this.resourceUrl}/${this.getUpazilaIdentifier(upazila)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IUpazila>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestUpazila>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IUpazila[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestUpazila[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -69,5 +95,33 @@ export class UpazilaService {
       return [...upazilasToAdd, ...upazilaCollection];
     }
     return upazilaCollection;
+  }
+
+  protected convertDateFromClient<T extends IUpazila | NewUpazila | PartialUpdateUpazila>(upazila: T): RestOf<T> {
+    return {
+      ...upazila,
+      createdDate: upazila.createdDate?.toJSON() ?? null,
+      lastModifiedDate: upazila.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restUpazila: RestUpazila): IUpazila {
+    return {
+      ...restUpazila,
+      createdDate: restUpazila.createdDate ? dayjs(restUpazila.createdDate) : undefined,
+      lastModifiedDate: restUpazila.lastModifiedDate ? dayjs(restUpazila.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestUpazila>): HttpResponse<IUpazila> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestUpazila[]>): HttpResponse<IUpazila[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

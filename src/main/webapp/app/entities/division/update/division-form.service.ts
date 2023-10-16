@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IDivision, NewDivision } from '../division.model';
 
 /**
@@ -14,12 +16,28 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type DivisionFormGroupInput = IDivision | PartialWithRequiredKeyOf<NewDivision>;
 
-type DivisionFormDefaults = Pick<NewDivision, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IDivision | NewDivision> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type DivisionFormRawValue = FormValueOf<IDivision>;
+
+type NewDivisionFormRawValue = FormValueOf<NewDivision>;
+
+type DivisionFormDefaults = Pick<NewDivision, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type DivisionFormGroupContent = {
-  id: FormControl<IDivision['id'] | NewDivision['id']>;
-  name: FormControl<IDivision['name']>;
-  bnName: FormControl<IDivision['bnName']>;
+  id: FormControl<DivisionFormRawValue['id'] | NewDivision['id']>;
+  name: FormControl<DivisionFormRawValue['name']>;
+  bnName: FormControl<DivisionFormRawValue['bnName']>;
+  createdBy: FormControl<DivisionFormRawValue['createdBy']>;
+  createdDate: FormControl<DivisionFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<DivisionFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<DivisionFormRawValue['lastModifiedDate']>;
 };
 
 export type DivisionFormGroup = FormGroup<DivisionFormGroupContent>;
@@ -27,10 +45,10 @@ export type DivisionFormGroup = FormGroup<DivisionFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class DivisionFormService {
   createDivisionFormGroup(division: DivisionFormGroupInput = { id: null }): DivisionFormGroup {
-    const divisionRawValue = {
+    const divisionRawValue = this.convertDivisionToDivisionRawValue({
       ...this.getFormDefaults(),
       ...division,
-    };
+    });
     return new FormGroup<DivisionFormGroupContent>({
       id: new FormControl(
         { value: divisionRawValue.id, disabled: true },
@@ -45,15 +63,25 @@ export class DivisionFormService {
       bnName: new FormControl(divisionRawValue.bnName, {
         validators: [Validators.required, Validators.maxLength(255)],
       }),
+      createdBy: new FormControl(divisionRawValue.createdBy, {
+        validators: [Validators.required, Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(divisionRawValue.createdDate, {
+        validators: [Validators.required],
+      }),
+      lastModifiedBy: new FormControl(divisionRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(divisionRawValue.lastModifiedDate),
     });
   }
 
   getDivision(form: DivisionFormGroup): IDivision | NewDivision {
-    return form.getRawValue() as IDivision | NewDivision;
+    return this.convertDivisionRawValueToDivision(form.getRawValue() as DivisionFormRawValue | NewDivisionFormRawValue);
   }
 
   resetForm(form: DivisionFormGroup, division: DivisionFormGroupInput): void {
-    const divisionRawValue = { ...this.getFormDefaults(), ...division };
+    const divisionRawValue = this.convertDivisionToDivisionRawValue({ ...this.getFormDefaults(), ...division });
     form.reset(
       {
         ...divisionRawValue,
@@ -63,8 +91,30 @@ export class DivisionFormService {
   }
 
   private getFormDefaults(): DivisionFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertDivisionRawValueToDivision(rawDivision: DivisionFormRawValue | NewDivisionFormRawValue): IDivision | NewDivision {
+    return {
+      ...rawDivision,
+      createdDate: dayjs(rawDivision.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawDivision.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertDivisionToDivisionRawValue(
+    division: IDivision | (Partial<NewDivision> & DivisionFormDefaults)
+  ): DivisionFormRawValue | PartialWithRequiredKeyOf<NewDivisionFormRawValue> {
+    return {
+      ...division,
+      createdDate: division.createdDate ? division.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: division.lastModifiedDate ? division.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

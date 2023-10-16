@@ -15,19 +15,58 @@ describe('PayOrder e2e test', () => {
   const payOrderPageUrlPattern = new RegExp('/pay-order(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const payOrderSample = { payOrderNumber: 59039, payOrderDate: '2023-10-02', amount: 50298, slipNo: 1771, controllingNo: 78804 };
+  // const payOrderSample = {"payOrderNumber":70076,"payOrderDate":"2023-10-02","amount":42305,"slipNo":57598,"controllingNo":51770,"createdBy":"Cambridgeshire CSS","createdDate":"2023-10-02T14:00:17.358Z"};
 
   let payOrder;
+  // let fertilizer;
+  // let dealer;
 
   beforeEach(() => {
     cy.login(username, password);
   });
+
+  /* Disabled due to incompatibility
+  beforeEach(() => {
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/fertilizers',
+      body: {"name":"and Glen Dakota","bnName":"Louisiana initiatives extensible","accountNo":"Dam","accountTitle":"EXE","createdBy":"parse ivory IB","createdDate":"2023-10-01T23:00:55.504Z","lastModifiedBy":"Persistent schemas","lastModifiedDate":"2023-10-02T11:49:05.374Z"},
+    }).then(({ body }) => {
+      fertilizer = body;
+    });
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/dealers',
+      body: {"name":"Pants calculating","bnName":"Tuna","shortName":"evolve","mobile":"discrete program","createdBy":"deposit Personal synthesize","createdDate":"2023-10-02T10:46:15.886Z","lastModifiedBy":"Account auxiliary Maldives","lastModifiedDate":"2023-10-01T21:25:35.874Z"},
+    }).then(({ body }) => {
+      dealer = body;
+    });
+  });
+   */
 
   beforeEach(() => {
     cy.intercept('GET', '/api/pay-orders+(?*|)').as('entitiesRequest');
     cy.intercept('POST', '/api/pay-orders').as('postEntityRequest');
     cy.intercept('DELETE', '/api/pay-orders/*').as('deleteEntityRequest');
   });
+
+  /* Disabled due to incompatibility
+  beforeEach(() => {
+    // Simulate relationships api for better performance and reproducibility.
+    cy.intercept('GET', '/api/fertilizers', {
+      statusCode: 200,
+      body: [fertilizer],
+    });
+
+    cy.intercept('GET', '/api/dealers', {
+      statusCode: 200,
+      body: [dealer],
+    });
+
+  });
+   */
 
   afterEach(() => {
     if (payOrder) {
@@ -39,6 +78,27 @@ describe('PayOrder e2e test', () => {
       });
     }
   });
+
+  /* Disabled due to incompatibility
+  afterEach(() => {
+    if (fertilizer) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/fertilizers/${fertilizer.id}`,
+      }).then(() => {
+        fertilizer = undefined;
+      });
+    }
+    if (dealer) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/dealers/${dealer.id}`,
+      }).then(() => {
+        dealer = undefined;
+      });
+    }
+  });
+   */
 
   it('PayOrders menu should load PayOrders page', () => {
     cy.visit('/');
@@ -75,11 +135,16 @@ describe('PayOrder e2e test', () => {
     });
 
     describe('with existing value', () => {
+      /* Disabled due to incompatibility
       beforeEach(() => {
         cy.authenticatedRequest({
           method: 'POST',
           url: '/api/pay-orders',
-          body: payOrderSample,
+          body: {
+            ...payOrderSample,
+            fertilizer: fertilizer,
+            dealer: dealer,
+          },
         }).then(({ body }) => {
           payOrder = body;
 
@@ -102,6 +167,17 @@ describe('PayOrder e2e test', () => {
         cy.visit(payOrderPageUrl);
 
         cy.wait('@entitiesRequestInternal');
+      });
+       */
+
+      beforeEach(function () {
+        cy.visit(payOrderPageUrl);
+
+        cy.wait('@entitiesRequest').then(({ response }) => {
+          if (response.body.length === 0) {
+            this.skip();
+          }
+        });
       });
 
       it('detail button click should load details PayOrder page', () => {
@@ -135,7 +211,7 @@ describe('PayOrder e2e test', () => {
         cy.url().should('match', payOrderPageUrlPattern);
       });
 
-      it('last delete button click should delete instance of PayOrder', () => {
+      it.skip('last delete button click should delete instance of PayOrder', () => {
         cy.get(entityDeleteButtonSelector).last().click();
         cy.getEntityDeleteDialogHeading('payOrder').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
@@ -159,7 +235,7 @@ describe('PayOrder e2e test', () => {
       cy.getEntityCreateUpdateHeading('PayOrder');
     });
 
-    it('should create an instance of PayOrder', () => {
+    it.skip('should create an instance of PayOrder', () => {
       cy.get(`[data-cy="payOrderNumber"]`).type('78526').should('have.value', '78526');
 
       cy.get(`[data-cy="payOrderDate"]`).type('2023-10-02').blur().should('have.value', '2023-10-02');
@@ -169,6 +245,17 @@ describe('PayOrder e2e test', () => {
       cy.get(`[data-cy="slipNo"]`).type('29444').should('have.value', '29444');
 
       cy.get(`[data-cy="controllingNo"]`).type('88664').should('have.value', '88664');
+
+      cy.get(`[data-cy="createdBy"]`).type('installation haptic').should('have.value', 'installation haptic');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-02T03:40').blur().should('have.value', '2023-10-02T03:40');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('Account').should('have.value', 'Account');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-02T17:15').blur().should('have.value', '2023-10-02T17:15');
+
+      cy.get(`[data-cy="fertilizer"]`).select(1);
+      cy.get(`[data-cy="dealer"]`).select(1);
 
       cy.get(entityCreateSaveButtonSelector).click();
 

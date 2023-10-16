@@ -69,11 +69,15 @@ public class UpazilaServiceImpl implements UpazilaService {
         return upazilaRepository.findAll(pageable).map(upazilaMapper::toDto);
     }
 
+    public Page<UpazilaDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return upazilaRepository.findAllWithEagerRelationships(pageable).map(upazilaMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<UpazilaDTO> findOne(Long id) {
         log.debug("Request to get Upazila : {}", id);
-        return upazilaRepository.findById(id).map(upazilaMapper::toDto);
+        return upazilaRepository.findOneWithEagerRelationships(id).map(upazilaMapper::toDto);
     }
 
     @Override

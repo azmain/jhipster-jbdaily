@@ -33,6 +33,14 @@ public class PayOrderCriteria implements Serializable, Criteria {
 
     private LongFilter controllingNo;
 
+    private StringFilter createdBy;
+
+    private InstantFilter createdDate;
+
+    private StringFilter lastModifiedBy;
+
+    private InstantFilter lastModifiedDate;
+
     private LongFilter fertilizerId;
 
     private LongFilter dealerId;
@@ -48,6 +56,10 @@ public class PayOrderCriteria implements Serializable, Criteria {
         this.amount = other.amount == null ? null : other.amount.copy();
         this.slipNo = other.slipNo == null ? null : other.slipNo.copy();
         this.controllingNo = other.controllingNo == null ? null : other.controllingNo.copy();
+        this.createdBy = other.createdBy == null ? null : other.createdBy.copy();
+        this.createdDate = other.createdDate == null ? null : other.createdDate.copy();
+        this.lastModifiedBy = other.lastModifiedBy == null ? null : other.lastModifiedBy.copy();
+        this.lastModifiedDate = other.lastModifiedDate == null ? null : other.lastModifiedDate.copy();
         this.fertilizerId = other.fertilizerId == null ? null : other.fertilizerId.copy();
         this.dealerId = other.dealerId == null ? null : other.dealerId.copy();
         this.distinct = other.distinct;
@@ -148,6 +160,66 @@ public class PayOrderCriteria implements Serializable, Criteria {
         this.controllingNo = controllingNo;
     }
 
+    public StringFilter getCreatedBy() {
+        return createdBy;
+    }
+
+    public StringFilter createdBy() {
+        if (createdBy == null) {
+            createdBy = new StringFilter();
+        }
+        return createdBy;
+    }
+
+    public void setCreatedBy(StringFilter createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public InstantFilter getCreatedDate() {
+        return createdDate;
+    }
+
+    public InstantFilter createdDate() {
+        if (createdDate == null) {
+            createdDate = new InstantFilter();
+        }
+        return createdDate;
+    }
+
+    public void setCreatedDate(InstantFilter createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public StringFilter getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public StringFilter lastModifiedBy() {
+        if (lastModifiedBy == null) {
+            lastModifiedBy = new StringFilter();
+        }
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(StringFilter lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public InstantFilter getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public InstantFilter lastModifiedDate() {
+        if (lastModifiedDate == null) {
+            lastModifiedDate = new InstantFilter();
+        }
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(InstantFilter lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public LongFilter getFertilizerId() {
         return fertilizerId;
     }
@@ -202,6 +274,10 @@ public class PayOrderCriteria implements Serializable, Criteria {
             Objects.equals(amount, that.amount) &&
             Objects.equals(slipNo, that.slipNo) &&
             Objects.equals(controllingNo, that.controllingNo) &&
+            Objects.equals(createdBy, that.createdBy) &&
+            Objects.equals(createdDate, that.createdDate) &&
+            Objects.equals(lastModifiedBy, that.lastModifiedBy) &&
+            Objects.equals(lastModifiedDate, that.lastModifiedDate) &&
             Objects.equals(fertilizerId, that.fertilizerId) &&
             Objects.equals(dealerId, that.dealerId) &&
             Objects.equals(distinct, that.distinct)
@@ -210,7 +286,21 @@ public class PayOrderCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, payOrderNumber, payOrderDate, amount, slipNo, controllingNo, fertilizerId, dealerId, distinct);
+        return Objects.hash(
+            id,
+            payOrderNumber,
+            payOrderDate,
+            amount,
+            slipNo,
+            controllingNo,
+            createdBy,
+            createdDate,
+            lastModifiedBy,
+            lastModifiedDate,
+            fertilizerId,
+            dealerId,
+            distinct
+        );
     }
 
     // prettier-ignore
@@ -223,6 +313,10 @@ public class PayOrderCriteria implements Serializable, Criteria {
             (amount != null ? "amount=" + amount + ", " : "") +
             (slipNo != null ? "slipNo=" + slipNo + ", " : "") +
             (controllingNo != null ? "controllingNo=" + controllingNo + ", " : "") +
+            (createdBy != null ? "createdBy=" + createdBy + ", " : "") +
+            (createdDate != null ? "createdDate=" + createdDate + ", " : "") +
+            (lastModifiedBy != null ? "lastModifiedBy=" + lastModifiedBy + ", " : "") +
+            (lastModifiedDate != null ? "lastModifiedDate=" + lastModifiedDate + ", " : "") +
             (fertilizerId != null ? "fertilizerId=" + fertilizerId + ", " : "") +
             (dealerId != null ? "dealerId=" + dealerId + ", " : "") +
             (distinct != null ? "distinct=" + distinct + ", " : "") +

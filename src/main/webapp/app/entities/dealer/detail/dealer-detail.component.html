@@ -30,10 +30,26 @@
         <dd>
           <span>{{ dealer.mobile }}</span>
         </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ dealer.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ dealer.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ dealer.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.dealer.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ dealer.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
         <dt><span jhiTranslate="jbdailyApp.dealer.upazila">Upazila</span></dt>
         <dd>
           <div *ngIf="dealer.upazila">
-            <a [routerLink]="['/upazila', dealer.upazila.id, 'view']">{{ dealer.upazila.id }}</a>
+            <a [routerLink]="['/upazila', dealer.upazila.id, 'view']">{{ dealer.upazila.name }}</a>
           </div>
         </dd>
       </dl>

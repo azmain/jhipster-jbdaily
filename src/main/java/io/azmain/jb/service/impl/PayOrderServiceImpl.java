@@ -69,11 +69,15 @@ public class PayOrderServiceImpl implements PayOrderService {
         return payOrderRepository.findAll(pageable).map(payOrderMapper::toDto);
     }
 
+    public Page<PayOrderDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return payOrderRepository.findAllWithEagerRelationships(pageable).map(payOrderMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<PayOrderDTO> findOne(Long id) {
         log.debug("Request to get PayOrder : {}", id);
-        return payOrderRepository.findById(id).map(payOrderMapper::toDto);
+        return payOrderRepository.findOneWithEagerRelationships(id).map(payOrderMapper::toDto);
     }
 
     @Override

@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import dayjs from 'dayjs/esm';
 
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
@@ -8,6 +10,17 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { IMoneyExchange, NewMoneyExchange } from '../money-exchange.model';
 
 export type PartialUpdateMoneyExchange = Partial<IMoneyExchange> & Pick<IMoneyExchange, 'id'>;
+
+type RestOf<T extends IMoneyExchange | NewMoneyExchange> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestMoneyExchange = RestOf<IMoneyExchange>;
+
+export type NewRestMoneyExchange = RestOf<NewMoneyExchange>;
+
+export type PartialUpdateRestMoneyExchange = RestOf<PartialUpdateMoneyExchange>;
 
 export type EntityResponseType = HttpResponse<IMoneyExchange>;
 export type EntityArrayResponseType = HttpResponse<IMoneyExchange[]>;
@@ -19,28 +32,37 @@ export class MoneyExchangeService {
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
 
   create(moneyExchange: NewMoneyExchange): Observable<EntityResponseType> {
-    return this.http.post<IMoneyExchange>(this.resourceUrl, moneyExchange, { observe: 'response' });
+    const copy = this.convertDateFromClient(moneyExchange);
+    return this.http
+      .post<RestMoneyExchange>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(moneyExchange: IMoneyExchange): Observable<EntityResponseType> {
-    return this.http.put<IMoneyExchange>(`${this.resourceUrl}/${this.getMoneyExchangeIdentifier(moneyExchange)}`, moneyExchange, {
-      observe: 'response',
-    });
+    const copy = this.convertDateFromClient(moneyExchange);
+    return this.http
+      .put<RestMoneyExchange>(`${this.resourceUrl}/${this.getMoneyExchangeIdentifier(moneyExchange)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(moneyExchange: PartialUpdateMoneyExchange): Observable<EntityResponseType> {
-    return this.http.patch<IMoneyExchange>(`${this.resourceUrl}/${this.getMoneyExchangeIdentifier(moneyExchange)}`, moneyExchange, {
-      observe: 'response',
-    });
+    const copy = this.convertDateFromClient(moneyExchange);
+    return this.http
+      .patch<RestMoneyExchange>(`${this.resourceUrl}/${this.getMoneyExchangeIdentifier(moneyExchange)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IMoneyExchange>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestMoneyExchange>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IMoneyExchange[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestMoneyExchange[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -75,5 +97,33 @@ export class MoneyExchangeService {
       return [...moneyExchangesToAdd, ...moneyExchangeCollection];
     }
     return moneyExchangeCollection;
+  }
+
+  protected convertDateFromClient<T extends IMoneyExchange | NewMoneyExchange | PartialUpdateMoneyExchange>(moneyExchange: T): RestOf<T> {
+    return {
+      ...moneyExchange,
+      createdDate: moneyExchange.createdDate?.toJSON() ?? null,
+      lastModifiedDate: moneyExchange.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restMoneyExchange: RestMoneyExchange): IMoneyExchange {
+    return {
+      ...restMoneyExchange,
+      createdDate: restMoneyExchange.createdDate ? dayjs(restMoneyExchange.createdDate) : undefined,
+      lastModifiedDate: restMoneyExchange.lastModifiedDate ? dayjs(restMoneyExchange.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestMoneyExchange>): HttpResponse<IMoneyExchange> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestMoneyExchange[]>): HttpResponse<IMoneyExchange[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

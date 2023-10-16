@@ -1,10 +1,10 @@
 package io.azmain.jb.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.azmain.jb.domain.enumeration.DocumentType;
 import io.azmain.jb.domain.enumeration.Gender;
 import io.azmain.jb.domain.enumeration.TransactionType;
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDate;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -116,12 +116,28 @@ public class FrRemittance implements Serializable {
     @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "frRemittances" }, allowSetters = true)
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50, nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @ManyToOne(optional = false)
+    @NotNull
     private MoneyExchange moneyExchange;
 
-    @ManyToOne
-    @JsonIgnoreProperties(value = { "frRemittances" }, allowSetters = true)
+    @ManyToOne(optional = false)
+    @NotNull
     private IncPercentage incPercentage;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -412,6 +428,58 @@ public class FrRemittance implements Serializable {
         this.documentType = documentType;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public FrRemittance createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public FrRemittance createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public FrRemittance lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public FrRemittance lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public MoneyExchange getMoneyExchange() {
         return this.moneyExchange;
     }
@@ -483,6 +551,10 @@ public class FrRemittance implements Serializable {
             ", recvGender='" + getRecvGender() + "'" +
             ", remiGender='" + getRemiGender() + "'" +
             ", documentType='" + getDocumentType() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

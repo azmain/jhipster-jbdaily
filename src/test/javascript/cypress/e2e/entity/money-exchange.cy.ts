@@ -15,7 +15,12 @@ describe('MoneyExchange e2e test', () => {
   const moneyExchangePageUrlPattern = new RegExp('/money-exchange(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const moneyExchangeSample = { name: 'Sleek Universal Principal', digit: 'needs-based overriding Fun' };
+  const moneyExchangeSample = {
+    name: 'Function-based process primary',
+    digit: 'Savings',
+    createdBy: 'Table',
+    createdDate: '2023-10-04T00:19:49.252Z',
+  };
 
   let moneyExchange;
 
@@ -167,6 +172,14 @@ describe('MoneyExchange e2e test', () => {
       cy.get(`[data-cy="link"]`).type('Avon Wooden e-tailers').should('have.value', 'Avon Wooden e-tailers');
 
       cy.get(`[data-cy="shortName"]`).type('calculate').should('have.value', 'calculate');
+
+      cy.get(`[data-cy="createdBy"]`).type('Sleek Universal Principal').should('have.value', 'Sleek Universal Principal');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-04T02:25').blur().should('have.value', '2023-10-04T02:25');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('Som').should('have.value', 'Som');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-04T13:22').blur().should('have.value', '2023-10-04T13:22');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

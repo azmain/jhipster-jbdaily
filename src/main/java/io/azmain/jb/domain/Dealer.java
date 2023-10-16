@@ -2,6 +2,9 @@ package io.azmain.jb.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -39,7 +42,28 @@ public class Dealer implements Serializable {
     @Column(name = "mobile", length = 255)
     private String mobile;
 
-    @ManyToOne
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50, nullable = false)
+    private String createdBy;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @OneToMany(mappedBy = "dealer")
+    @JsonIgnoreProperties(value = { "fertilizer", "dealer" }, allowSetters = true)
+    private Set<PayOrder> payOrders = new HashSet<>();
+
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = { "dealers", "district" }, allowSetters = true)
     private Upazila upazila;
 
@@ -110,6 +134,89 @@ public class Dealer implements Serializable {
         this.mobile = mobile;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public Dealer createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public Dealer createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public Dealer lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public Dealer lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Set<PayOrder> getPayOrders() {
+        return this.payOrders;
+    }
+
+    public void setPayOrders(Set<PayOrder> payOrders) {
+        if (this.payOrders != null) {
+            this.payOrders.forEach(i -> i.setDealer(null));
+        }
+        if (payOrders != null) {
+            payOrders.forEach(i -> i.setDealer(this));
+        }
+        this.payOrders = payOrders;
+    }
+
+    public Dealer payOrders(Set<PayOrder> payOrders) {
+        this.setPayOrders(payOrders);
+        return this;
+    }
+
+    public Dealer addPayOrder(PayOrder payOrder) {
+        this.payOrders.add(payOrder);
+        payOrder.setDealer(this);
+        return this;
+    }
+
+    public Dealer removePayOrder(PayOrder payOrder) {
+        this.payOrders.remove(payOrder);
+        payOrder.setDealer(null);
+        return this;
+    }
+
     public Upazila getUpazila() {
         return this.upazila;
     }
@@ -151,6 +258,10 @@ public class Dealer implements Serializable {
             ", bnName='" + getBnName() + "'" +
             ", shortName='" + getShortName() + "'" +
             ", mobile='" + getMobile() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

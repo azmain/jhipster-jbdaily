@@ -16,31 +16,82 @@ describe('FrRemittance e2e test', () => {
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
   const frRemittanceSample = {
-    pin: 'Cambridgeshire',
-    remitersName: 'connecting matrix fault-tolerant',
-    amount: 'Mississippi encryption',
-    incentiveAmount: 'bypass Tasty',
+    pin: 'Bedfordshire hub',
+    remitersName: 'Computer',
+    amount: 'Metal Borders',
+    incentiveAmount: 'Usability Engineer',
     paymentDate: '2023-10-04',
     incPaymentDate: '2023-10-04',
-    transactionType: 'ACCOUNT',
-    recvMobileNo: 'Illinois Usability',
-    recvName: 'analyzing white pink',
-    recvLegalId: 'strategy',
-    recvGender: 'OTHERS',
+    transactionType: 'SPOT',
+    recvMobileNo: 'pink',
+    recvName: 'strategy',
+    recvLegalId: 'Gorgeous impactful synergize',
+    recvGender: 'MALE',
     remiGender: 'MALE',
-    documentType: 'PASSPORT',
+    documentType: 'BIRTH_CERTIFICATE',
+    createdBy: 'Overpass Shoes',
+    createdDate: '2023-10-03T20:17:27.558Z',
   };
 
   let frRemittance;
+  let moneyExchange;
+  let incPercentage;
 
   beforeEach(() => {
     cy.login(username, password);
   });
 
   beforeEach(() => {
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/money-exchanges',
+      body: {
+        name: 'Viaduct',
+        digit: 'PNG orange bypass',
+        link: 'bandwidth-monitored Streamlined',
+        shortName: 'Steel Intelligent USB',
+        createdBy: 'North Account',
+        createdDate: '2023-10-04T04:53:49.288Z',
+        lastModifiedBy: 'Fantastic Boliviano',
+        lastModifiedDate: '2023-10-03T21:31:55.762Z',
+      },
+    }).then(({ body }) => {
+      moneyExchange = body;
+    });
+    // create an instance at the required relationship entity:
+    cy.authenticatedRequest({
+      method: 'POST',
+      url: '/api/inc-percentages',
+      body: {
+        name: 'payment',
+        createdBy: 'Sausages',
+        createdDate: '2023-10-03T20:29:35.304Z',
+        lastModifiedBy: 'Concrete frame',
+        lastModifiedDate: '2023-10-04T02:09:59.586Z',
+      },
+    }).then(({ body }) => {
+      incPercentage = body;
+    });
+  });
+
+  beforeEach(() => {
     cy.intercept('GET', '/api/fr-remittances+(?*|)').as('entitiesRequest');
     cy.intercept('POST', '/api/fr-remittances').as('postEntityRequest');
     cy.intercept('DELETE', '/api/fr-remittances/*').as('deleteEntityRequest');
+  });
+
+  beforeEach(() => {
+    // Simulate relationships api for better performance and reproducibility.
+    cy.intercept('GET', '/api/money-exchanges', {
+      statusCode: 200,
+      body: [moneyExchange],
+    });
+
+    cy.intercept('GET', '/api/inc-percentages', {
+      statusCode: 200,
+      body: [incPercentage],
+    });
   });
 
   afterEach(() => {
@@ -50,6 +101,25 @@ describe('FrRemittance e2e test', () => {
         url: `/api/fr-remittances/${frRemittance.id}`,
       }).then(() => {
         frRemittance = undefined;
+      });
+    }
+  });
+
+  afterEach(() => {
+    if (moneyExchange) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/money-exchanges/${moneyExchange.id}`,
+      }).then(() => {
+        moneyExchange = undefined;
+      });
+    }
+    if (incPercentage) {
+      cy.authenticatedRequest({
+        method: 'DELETE',
+        url: `/api/inc-percentages/${incPercentage.id}`,
+      }).then(() => {
+        incPercentage = undefined;
       });
     }
   });
@@ -93,7 +163,11 @@ describe('FrRemittance e2e test', () => {
         cy.authenticatedRequest({
           method: 'POST',
           url: '/api/fr-remittances',
-          body: frRemittanceSample,
+          body: {
+            ...frRemittanceSample,
+            moneyExchange: moneyExchange,
+            incPercentage: incPercentage,
+          },
         }).then(({ body }) => {
           frRemittance = body;
 
@@ -215,6 +289,17 @@ describe('FrRemittance e2e test', () => {
       cy.get(`[data-cy="remiGender"]`).select('OTHERS');
 
       cy.get(`[data-cy="documentType"]`).select('PASSPORT');
+
+      cy.get(`[data-cy="createdBy"]`).type('Cambridgeshire').should('have.value', 'Cambridgeshire');
+
+      cy.get(`[data-cy="createdDate"]`).type('2023-10-04T01:13').blur().should('have.value', '2023-10-04T01:13');
+
+      cy.get(`[data-cy="lastModifiedBy"]`).type('Nepal Assistant disintermediate').should('have.value', 'Nepal Assistant disintermediate');
+
+      cy.get(`[data-cy="lastModifiedDate"]`).type('2023-10-04T05:21').blur().should('have.value', '2023-10-04T05:21');
+
+      cy.get(`[data-cy="moneyExchange"]`).select(1);
+      cy.get(`[data-cy="incPercentage"]`).select(1);
 
       cy.get(entityCreateSaveButtonSelector).click();
 

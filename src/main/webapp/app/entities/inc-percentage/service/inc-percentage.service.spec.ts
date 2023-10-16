@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IIncPercentage } from '../inc-percentage.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../inc-percentage.test-samples';
 
-import { IncPercentageService } from './inc-percentage.service';
+import { IncPercentageService, RestIncPercentage } from './inc-percentage.service';
 
-const requireRestSample: IIncPercentage = {
+const requireRestSample: RestIncPercentage = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('IncPercentage Service', () => {

@@ -14,13 +14,15 @@ export type PartialUpdateFrRemittance = Partial<IFrRemittance> & Pick<IFrRemitta
 
 type RestOf<T extends IFrRemittance | NewFrRemittance> = Omit<
   T,
-  'paymentDate' | 'incPaymentDate' | 'remiSendingDate' | 'amountReimDate' | 'incAmountReimDate'
+  'paymentDate' | 'incPaymentDate' | 'remiSendingDate' | 'amountReimDate' | 'incAmountReimDate' | 'createdDate' | 'lastModifiedDate'
 > & {
   paymentDate?: string | null;
   incPaymentDate?: string | null;
   remiSendingDate?: string | null;
   amountReimDate?: string | null;
   incAmountReimDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 export type RestFrRemittance = RestOf<IFrRemittance>;
@@ -114,6 +116,8 @@ export class FrRemittanceService {
       remiSendingDate: frRemittance.remiSendingDate?.format(DATE_FORMAT) ?? null,
       amountReimDate: frRemittance.amountReimDate?.format(DATE_FORMAT) ?? null,
       incAmountReimDate: frRemittance.incAmountReimDate?.format(DATE_FORMAT) ?? null,
+      createdDate: frRemittance.createdDate?.toJSON() ?? null,
+      lastModifiedDate: frRemittance.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
@@ -125,6 +129,8 @@ export class FrRemittanceService {
       remiSendingDate: restFrRemittance.remiSendingDate ? dayjs(restFrRemittance.remiSendingDate) : undefined,
       amountReimDate: restFrRemittance.amountReimDate ? dayjs(restFrRemittance.amountReimDate) : undefined,
       incAmountReimDate: restFrRemittance.incAmountReimDate ? dayjs(restFrRemittance.incAmountReimDate) : undefined,
+      createdDate: restFrRemittance.createdDate ? dayjs(restFrRemittance.createdDate) : undefined,
+      lastModifiedDate: restFrRemittance.lastModifiedDate ? dayjs(restFrRemittance.lastModifiedDate) : undefined,
     };
   }
 

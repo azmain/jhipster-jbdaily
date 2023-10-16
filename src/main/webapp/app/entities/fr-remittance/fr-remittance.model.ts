@@ -28,8 +28,12 @@ export interface IFrRemittance {
   recvGender?: Gender | null;
   remiGender?: Gender | null;
   documentType?: DocumentType | null;
-  moneyExchange?: Pick<IMoneyExchange, 'id'> | null;
-  incPercentage?: Pick<IIncPercentage, 'id'> | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
+  moneyExchange?: Pick<IMoneyExchange, 'id' | 'name'> | null;
+  incPercentage?: Pick<IIncPercentage, 'id' | 'name'> | null;
 }
 
 export type NewFrRemittance = Omit<IFrRemittance, 'id'> & { id: null };

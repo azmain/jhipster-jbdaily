@@ -42,6 +42,14 @@ public interface DealerService {
     Page<DealerDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the dealers with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<DealerDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" dealer.
      *
      * @param id the id of the entity.

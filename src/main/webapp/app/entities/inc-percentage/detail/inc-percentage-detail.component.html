@@ -18,6 +18,22 @@
         <dd>
           <span>{{ incPercentage.name }}</span>
         </dd>
+        <dt><span jhiTranslate="jbdailyApp.incPercentage.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ incPercentage.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.incPercentage.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ incPercentage.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.incPercentage.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ incPercentage.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.incPercentage.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ incPercentage.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

@@ -10,6 +10,8 @@ import io.azmain.jb.domain.IncPercentage;
 import io.azmain.jb.repository.IncPercentageRepository;
 import io.azmain.jb.service.dto.IncPercentageDTO;
 import io.azmain.jb.service.mapper.IncPercentageMapper;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -33,6 +35,18 @@ class IncPercentageResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/inc-percentages";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -61,7 +75,12 @@ class IncPercentageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static IncPercentage createEntity(EntityManager em) {
-        IncPercentage incPercentage = new IncPercentage().name(DEFAULT_NAME);
+        IncPercentage incPercentage = new IncPercentage()
+            .name(DEFAULT_NAME)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return incPercentage;
     }
 
@@ -72,7 +91,12 @@ class IncPercentageResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static IncPercentage createUpdatedEntity(EntityManager em) {
-        IncPercentage incPercentage = new IncPercentage().name(UPDATED_NAME);
+        IncPercentage incPercentage = new IncPercentage()
+            .name(UPDATED_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return incPercentage;
     }
 
@@ -98,6 +122,10 @@ class IncPercentageResourceIT {
         assertThat(incPercentageList).hasSize(databaseSizeBeforeCreate + 1);
         IncPercentage testIncPercentage = incPercentageList.get(incPercentageList.size() - 1);
         assertThat(testIncPercentage.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testIncPercentage.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testIncPercentage.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testIncPercentage.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testIncPercentage.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -143,6 +171,46 @@ class IncPercentageResourceIT {
 
     @Test
     @Transactional
+    void checkCreatedByIsRequired() throws Exception {
+        int databaseSizeBeforeTest = incPercentageRepository.findAll().size();
+        // set the field null
+        incPercentage.setCreatedBy(null);
+
+        // Create the IncPercentage, which fails.
+        IncPercentageDTO incPercentageDTO = incPercentageMapper.toDto(incPercentage);
+
+        restIncPercentageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incPercentageDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<IncPercentage> incPercentageList = incPercentageRepository.findAll();
+        assertThat(incPercentageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkCreatedDateIsRequired() throws Exception {
+        int databaseSizeBeforeTest = incPercentageRepository.findAll().size();
+        // set the field null
+        incPercentage.setCreatedDate(null);
+
+        // Create the IncPercentage, which fails.
+        IncPercentageDTO incPercentageDTO = incPercentageMapper.toDto(incPercentage);
+
+        restIncPercentageMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incPercentageDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<IncPercentage> incPercentageList = incPercentageRepository.findAll();
+        assertThat(incPercentageList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllIncPercentages() throws Exception {
         // Initialize the database
         incPercentageRepository.saveAndFlush(incPercentage);
@@ -153,7 +221,11 @@ class IncPercentageResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(incPercentage.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -168,7 +240,11 @@ class IncPercentageResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(incPercentage.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -190,7 +266,12 @@ class IncPercentageResourceIT {
         IncPercentage updatedIncPercentage = incPercentageRepository.findById(incPercentage.getId()).get();
         // Disconnect from session so that the updates on updatedIncPercentage are not directly saved in db
         em.detach(updatedIncPercentage);
-        updatedIncPercentage.name(UPDATED_NAME);
+        updatedIncPercentage
+            .name(UPDATED_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         IncPercentageDTO incPercentageDTO = incPercentageMapper.toDto(updatedIncPercentage);
 
         restIncPercentageMockMvc
@@ -206,6 +287,10 @@ class IncPercentageResourceIT {
         assertThat(incPercentageList).hasSize(databaseSizeBeforeUpdate);
         IncPercentage testIncPercentage = incPercentageList.get(incPercentageList.size() - 1);
         assertThat(testIncPercentage.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testIncPercentage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testIncPercentage.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testIncPercentage.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testIncPercentage.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -287,6 +372,11 @@ class IncPercentageResourceIT {
         IncPercentage partialUpdatedIncPercentage = new IncPercentage();
         partialUpdatedIncPercentage.setId(incPercentage.getId());
 
+        partialUpdatedIncPercentage
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+
         restIncPercentageMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedIncPercentage.getId())
@@ -300,6 +390,10 @@ class IncPercentageResourceIT {
         assertThat(incPercentageList).hasSize(databaseSizeBeforeUpdate);
         IncPercentage testIncPercentage = incPercentageList.get(incPercentageList.size() - 1);
         assertThat(testIncPercentage.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testIncPercentage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testIncPercentage.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testIncPercentage.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testIncPercentage.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -314,7 +408,12 @@ class IncPercentageResourceIT {
         IncPercentage partialUpdatedIncPercentage = new IncPercentage();
         partialUpdatedIncPercentage.setId(incPercentage.getId());
 
-        partialUpdatedIncPercentage.name(UPDATED_NAME);
+        partialUpdatedIncPercentage
+            .name(UPDATED_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restIncPercentageMockMvc
             .perform(
@@ -329,6 +428,10 @@ class IncPercentageResourceIT {
         assertThat(incPercentageList).hasSize(databaseSizeBeforeUpdate);
         IncPercentage testIncPercentage = incPercentageList.get(incPercentageList.size() - 1);
         assertThat(testIncPercentage.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testIncPercentage.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testIncPercentage.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testIncPercentage.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testIncPercentage.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

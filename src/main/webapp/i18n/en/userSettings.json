@@ -1,0 +1,30 @@
+{
+  "jbdailyApp": {
+    "userSettings": {
+      "home": {
+        "title": "User Settings",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new User Settings",
+        "createOrEditLabel": "Create or edit a User Settings",
+        "notFound": "No User Settings found"
+      },
+      "created": "A new User Settings is created with identifier {{ param }}",
+      "updated": "A User Settings is updated with identifier {{ param }}",
+      "deleted": "A User Settings is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete User Settings {{ id }}?"
+      },
+      "detail": {
+        "title": "User Settings"
+      },
+      "id": "ID",
+      "name": "Name",
+      "payOrderNumSeq": "Pay Order Num Seq",
+      "payOrderControlNum": "Pay Order Control Num",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date"
+    }
+  }
+}

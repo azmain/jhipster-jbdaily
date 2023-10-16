@@ -34,16 +34,32 @@
         <dd>
           <span>{{ payOrder.controllingNo }}</span>
         </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ payOrder.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ payOrder.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ payOrder.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.payOrder.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ payOrder.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
         <dt><span jhiTranslate="jbdailyApp.payOrder.fertilizer">Fertilizer</span></dt>
         <dd>
           <div *ngIf="payOrder.fertilizer">
-            <a [routerLink]="['/fertilizer', payOrder.fertilizer.id, 'view']">{{ payOrder.fertilizer.id }}</a>
+            <a [routerLink]="['/fertilizer', payOrder.fertilizer.id, 'view']">{{ payOrder.fertilizer.name }}</a>
           </div>
         </dd>
         <dt><span jhiTranslate="jbdailyApp.payOrder.dealer">Dealer</span></dt>
         <dd>
           <div *ngIf="payOrder.dealer">
-            <a [routerLink]="['/dealer', payOrder.dealer.id, 'view']">{{ payOrder.dealer.id }}</a>
+            <a [routerLink]="['/dealer', payOrder.dealer.id, 'view']">{{ payOrder.dealer.name }}</a>
           </div>
         </dd>
       </dl>

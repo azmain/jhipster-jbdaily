@@ -22,10 +22,26 @@
         <dd>
           <span>{{ district.bnName }}</span>
         </dd>
+        <dt><span jhiTranslate="jbdailyApp.district.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ district.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.district.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ district.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.district.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ district.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="jbdailyApp.district.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ district.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
         <dt><span jhiTranslate="jbdailyApp.district.division">Division</span></dt>
         <dd>
           <div *ngIf="district.division">
-            <a [routerLink]="['/division', district.division.id, 'view']">{{ district.division.id }}</a>
+            <a [routerLink]="['/division', district.division.id, 'view']">{{ district.division.name }}</a>
           </div>
         </dd>
       </dl>

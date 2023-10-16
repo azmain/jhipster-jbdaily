@@ -106,6 +106,7 @@ export class DistrictComponent implements OnInit {
     const queryObject = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
+      eagerload: true,
       sort: this.getSortQueryParam(predicate, ascending),
     };
     return this.districtService.query(queryObject).pipe(tap(() => (this.isLoading = false)));

@@ -1,17 +1,38 @@
 entity Division {
 	name String required maxlength(255)
   	bnName String required maxlength(255)
-
+    
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 entity District {
 	name String required maxlength(255)
     bnName String required maxlength(255)
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 entity Upazila {
 	name String required maxlength(255)
     bnName String required maxlength(255)
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 /** not an ignored comment */
@@ -20,6 +41,13 @@ entity Dealer {
 	bnName String required maxlength(255)
 	shortName String required maxlength(255)
 	mobile String maxlength(255)
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 entity Fertilizer {
@@ -27,6 +55,13 @@ entity Fertilizer {
     bnName String required maxlength(255)
     accountNo String required maxlength(255)
     accountTitle String required maxlength(255)
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 entity PayOrder {
@@ -35,6 +70,13 @@ entity PayOrder {
     amount BigDecimal required
     slipNo Long required
     controllingNo Long required
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 entity FrRemittance {
@@ -60,10 +102,24 @@ entity FrRemittance {
     remiGender Gender required
     documentType DocumentType required
     
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
+    
 }
 
 entity IncPercentage {
 	name String required maxlength(256)
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 entity MoneyExchange {
@@ -71,6 +127,26 @@ entity MoneyExchange {
     digit String required maxlength(26)
     link String maxlength(256)
     shortName String maxlength(256)
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
+}
+
+entity UserSettings {
+	name String required maxlength(256)
+    payOrderNumSeq String required
+    payOrderControlNum String required
+    
+    createdBy String required maxlength(50)
+    @CreatedDate
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    @LastModifiedDate
+    lastModifiedDate Instant
 }
 
 
@@ -85,16 +161,18 @@ enum DocumentType {
 }
 
 relationship OneToMany {
-	Division to District{division}
-    District to Upazila{district}
-    Upazila to Dealer{upazila}
-    MoneyExchange to FrRemittance{moneyExchange}
-    IncPercentage to FrRemittance{incPercentage}
+	Division to District{division(name) required}
+    District to Upazila{district(name) required}
+    Upazila to Dealer{upazila(name) required}
+    
+    Fertilizer to PayOrder{fertilizer(name) required}
+    Dealer to PayOrder{dealer(name) required}
+    
 }
 
 relationship ManyToOne {
-	PayOrder{fertilizer} to Fertilizer
-    PayOrder{dealer} to Dealer
+	FrRemittance{moneyExchange(name) required} to MoneyExchange
+    FrRemittance{incPercentage(name) required} to IncPercentage
 }
 
 
