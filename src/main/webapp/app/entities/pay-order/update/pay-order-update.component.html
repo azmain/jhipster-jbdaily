@@ -47,21 +47,13 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="jbdailyApp.payOrder.payOrderDate" for="field_payOrderDate">Pay Order Date</label>
-          <div class="input-group">
-            <input
-              id="field_payOrderDate"
-              data-cy="payOrderDate"
-              type="text"
-              class="form-control"
-              name="payOrderDate"
-              ngbDatepicker
-              #payOrderDateDp="ngbDatepicker"
-              formControlName="payOrderDate"
-            />
-            <button type="button" class="btn btn-secondary" (click)="payOrderDateDp.toggle()">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
-          </div>
+          <p-calendar
+            name="payOrderDate"
+            id="field_payOrderDate"
+            formControlName="payOrderDate"
+            dateFormat="dd/mm/yy"
+            [style]="{ width: '100%' }"
+          ></p-calendar>
           <div
             *ngIf="editForm.get('payOrderDate')!.invalid && (editForm.get('payOrderDate')!.dirty || editForm.get('payOrderDate')!.touched)"
           >
@@ -259,17 +251,17 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="jbdailyApp.payOrder.dealer" for="field_dealer">Dealer</label>
-          <select
-            class="form-control"
-            id="field_dealer"
-            data-cy="dealer"
-            name="dealer"
+
+          <p-dropdown
+            [options]="dealersSharedCollection"
             formControlName="dealer"
-            [compareWith]="compareDealer"
+            optionLabel="name"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Select a dealer"
           >
-            <option *ngIf="editForm.get(['dealer'])!.value == null" [ngValue]="null" selected></option>
-            <option [ngValue]="dealerOption" *ngFor="let dealerOption of dealersSharedCollection">{{ dealerOption.name }}</option>
-          </select>
+          </p-dropdown>
         </div>
         <div *ngIf="editForm.get(['dealer'])!.invalid && (editForm.get(['dealer'])!.dirty || editForm.get(['dealer'])!.touched)">
           <small class="form-text text-danger" *ngIf="editForm.get(['dealer'])?.errors?.required" jhiTranslate="entity.validation.required">
