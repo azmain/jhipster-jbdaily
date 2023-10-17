@@ -14,7 +14,7 @@ export interface IPayOrder {
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
   fertilizer?: Pick<IFertilizer, 'id' | 'name'> | null;
-  dealer?: Pick<IDealer, 'id' | 'name'> | null;
+  dealer?: Pick<IDealer, 'id' | 'name' | 'shortName'> | null;
 }
 
 export type NewPayOrder = Omit<IPayOrder, 'id'> & { id: null };

@@ -27,5 +27,6 @@ public interface PayOrderMapper extends EntityMapper<PayOrderDTO, PayOrder> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "shortName", source = "shortName")
     DealerDTO toDtoDealerName(Dealer dealer);
 }

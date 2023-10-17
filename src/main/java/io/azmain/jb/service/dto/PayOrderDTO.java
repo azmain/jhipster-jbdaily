@@ -30,11 +30,9 @@ public class PayOrderDTO implements Serializable {
     @NotNull
     private Long controllingNo;
 
-    @NotNull
     @Size(max = 50)
     private String createdBy;
 
-    @NotNull
     private Instant createdDate;
 
     @Size(max = 50)

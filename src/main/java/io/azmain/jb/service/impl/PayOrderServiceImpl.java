@@ -1,10 +1,13 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
 import io.azmain.jb.domain.PayOrder;
 import io.azmain.jb.repository.PayOrderRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.PayOrderService;
 import io.azmain.jb.service.dto.PayOrderDTO;
 import io.azmain.jb.service.mapper.PayOrderMapper;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +29,24 @@ public class PayOrderServiceImpl implements PayOrderService {
 
     private final PayOrderMapper payOrderMapper;
 
-    public PayOrderServiceImpl(PayOrderRepository payOrderRepository, PayOrderMapper payOrderMapper) {
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
+
+    public PayOrderServiceImpl(
+        PayOrderRepository payOrderRepository,
+        PayOrderMapper payOrderMapper,
+        SpringSecurityAuditorAware springSecurityAuditorAware
+    ) {
         this.payOrderRepository = payOrderRepository;
         this.payOrderMapper = payOrderMapper;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
     }
 
     @Override
     public PayOrderDTO save(PayOrderDTO payOrderDTO) {
         log.debug("Request to save PayOrder : {}", payOrderDTO);
         PayOrder payOrder = payOrderMapper.toEntity(payOrderDTO);
+        payOrder.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        payOrder.createdDate(Instant.now());
         payOrder = payOrderRepository.save(payOrder);
         return payOrderMapper.toDto(payOrder);
     }

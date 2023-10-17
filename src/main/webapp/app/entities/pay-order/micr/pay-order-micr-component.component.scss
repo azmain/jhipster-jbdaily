@@ -1,0 +1,62 @@
+/* Add application styles & imports to this file! */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700&display=swap');
+
+#reportDoc {
+  font-family: 'Baloo Da 2', sans-serif !important;
+}
+
+.line1 {
+  display: flex;
+  flex-direction: row;
+}
+.left {
+  display: flex;
+  flex: 1;
+  margin-left: 90px;
+}
+.right {
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+}
+
+.line2 .date {
+  margin-left: 20px;
+}
+
+.line3 {
+  display: flex;
+  flex-direction: row;
+}
+.line3 .notOver {
+  padding-left: 300px;
+}
+.line3 .date {
+  padding-left: 20px;
+  margin-top: -5px;
+}
+
+.line4 {
+  display: flex;
+  flex-direction: row;
+}
+.line4 .left {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.line4 .center {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.line4 .right {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+}
