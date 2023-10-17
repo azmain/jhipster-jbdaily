@@ -2,6 +2,7 @@ package io.azmain.jb.service;
 
 import io.azmain.jb.service.dto.UserSettingsDTO;
 import java.util.Optional;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -49,10 +50,13 @@ public interface UserSettingsService {
      */
     Optional<UserSettingsDTO> findOne(Long id);
 
+    Optional<UserSettingsDTO> findByUser(String user);
+
     /**
      * Delete the "id" userSettings.
      *
      * @param id the id of the entity.
      */
     void delete(Long id);
+    void updatePayOrderNumSeqAndControlNum(String payOrderNumSeq, String payOrderControlNum);
 }

@@ -19,26 +19,19 @@ type UserSettingsFormGroupInput = IUserSettings | PartialWithRequiredKeyOf<NewUs
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IUserSettings | NewUserSettings> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IUserSettings | NewUserSettings> = Omit<T, ''> & {};
 
 type UserSettingsFormRawValue = FormValueOf<IUserSettings>;
 
 type NewUserSettingsFormRawValue = FormValueOf<NewUserSettings>;
 
-type UserSettingsFormDefaults = Pick<NewUserSettings, 'id' | 'createdDate' | 'lastModifiedDate'>;
+type UserSettingsFormDefaults = Pick<NewUserSettings, 'id'>;
 
 type UserSettingsFormGroupContent = {
   id: FormControl<UserSettingsFormRawValue['id'] | NewUserSettings['id']>;
   name: FormControl<UserSettingsFormRawValue['name']>;
   payOrderNumSeq: FormControl<UserSettingsFormRawValue['payOrderNumSeq']>;
   payOrderControlNum: FormControl<UserSettingsFormRawValue['payOrderControlNum']>;
-  createdBy: FormControl<UserSettingsFormRawValue['createdBy']>;
-  createdDate: FormControl<UserSettingsFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<UserSettingsFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<UserSettingsFormRawValue['lastModifiedDate']>;
 };
 
 export type UserSettingsFormGroup = FormGroup<UserSettingsFormGroupContent>;
@@ -50,6 +43,7 @@ export class UserSettingsFormService {
       ...this.getFormDefaults(),
       ...userSettings,
     });
+    console.log('userSettingsRawValue', userSettingsRawValue);
     return new FormGroup<UserSettingsFormGroupContent>({
       id: new FormControl(
         { value: userSettingsRawValue.id, disabled: true },
@@ -67,16 +61,6 @@ export class UserSettingsFormService {
       payOrderControlNum: new FormControl(userSettingsRawValue.payOrderControlNum, {
         validators: [Validators.required],
       }),
-      createdBy: new FormControl(userSettingsRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(userSettingsRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(userSettingsRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(userSettingsRawValue.lastModifiedDate),
     });
   }
 
@@ -99,8 +83,6 @@ export class UserSettingsFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
@@ -109,8 +91,6 @@ export class UserSettingsFormService {
   ): IUserSettings | NewUserSettings {
     return {
       ...rawUserSettings,
-      createdDate: dayjs(rawUserSettings.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawUserSettings.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -119,8 +99,6 @@ export class UserSettingsFormService {
   ): UserSettingsFormRawValue | PartialWithRequiredKeyOf<NewUserSettingsFormRawValue> {
     return {
       ...userSettings,
-      createdDate: userSettings.createdDate ? userSettings.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: userSettings.lastModifiedDate ? userSettings.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

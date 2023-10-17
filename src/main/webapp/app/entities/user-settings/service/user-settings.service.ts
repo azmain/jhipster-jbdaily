@@ -58,6 +58,12 @@ export class UserSettingsService {
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
+  findByUser(user: string): Observable<EntityResponseType> {
+    return this.http
+      .get<RestUserSettings>(`${this.resourceUrl}/${user}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

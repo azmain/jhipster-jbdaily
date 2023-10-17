@@ -5,6 +5,7 @@ import io.azmain.jb.domain.PayOrder;
 import io.azmain.jb.repository.PayOrderRepository;
 import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.PayOrderService;
+import io.azmain.jb.service.UserSettingsService;
 import io.azmain.jb.service.dto.PayOrderDTO;
 import io.azmain.jb.service.mapper.PayOrderMapper;
 import java.time.Instant;
@@ -30,15 +31,18 @@ public class PayOrderServiceImpl implements PayOrderService {
     private final PayOrderMapper payOrderMapper;
 
     private final SpringSecurityAuditorAware springSecurityAuditorAware;
+    private final UserSettingsService userSettingsService;
 
     public PayOrderServiceImpl(
         PayOrderRepository payOrderRepository,
         PayOrderMapper payOrderMapper,
-        SpringSecurityAuditorAware springSecurityAuditorAware
+        SpringSecurityAuditorAware springSecurityAuditorAware,
+        UserSettingsService userSettingsService
     ) {
         this.payOrderRepository = payOrderRepository;
         this.payOrderMapper = payOrderMapper;
         this.springSecurityAuditorAware = springSecurityAuditorAware;
+        this.userSettingsService = userSettingsService;
     }
 
     @Override
@@ -48,6 +52,12 @@ public class PayOrderServiceImpl implements PayOrderService {
         payOrder.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         payOrder.createdDate(Instant.now());
         payOrder = payOrderRepository.save(payOrder);
+
+        userSettingsService.updatePayOrderNumSeqAndControlNum(
+            payOrder.getPayOrderNumber().toString(),
+            payOrder.getControllingNo().toString()
+        );
+
         return payOrderMapper.toDto(payOrder);
     }
 

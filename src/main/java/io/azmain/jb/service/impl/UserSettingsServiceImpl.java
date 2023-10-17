@@ -1,10 +1,14 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
 import io.azmain.jb.domain.UserSettings;
 import io.azmain.jb.repository.UserSettingsRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.UserSettingsService;
 import io.azmain.jb.service.dto.UserSettingsDTO;
 import io.azmain.jb.service.mapper.UserSettingsMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +30,28 @@ public class UserSettingsServiceImpl implements UserSettingsService {
 
     private final UserSettingsMapper userSettingsMapper;
 
-    public UserSettingsServiceImpl(UserSettingsRepository userSettingsRepository, UserSettingsMapper userSettingsMapper) {
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
+
+    public UserSettingsServiceImpl(
+        UserSettingsRepository userSettingsRepository,
+        UserSettingsMapper userSettingsMapper,
+        SpringSecurityAuditorAware springSecurityAuditorAware
+    ) {
         this.userSettingsRepository = userSettingsRepository;
         this.userSettingsMapper = userSettingsMapper;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
     }
 
     @Override
     public UserSettingsDTO save(UserSettingsDTO userSettingsDTO) {
         log.debug("Request to save UserSettings : {}", userSettingsDTO);
+        String user = springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM);
+        if (userSettingsRepository.findByCreatedBy(user).isPresent()) {
+            throw new BadRequestAlertException("A userSettings already exists", "UserSettings", user);
+        }
         UserSettings userSettings = userSettingsMapper.toEntity(userSettingsDTO);
+        userSettings.setCreatedBy(user);
+        userSettings.createdDate(Instant.now());
         userSettings = userSettingsRepository.save(userSettings);
         return userSettingsMapper.toDto(userSettings);
     }
@@ -77,8 +94,30 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<UserSettingsDTO> findByUser(String user) {
+        log.debug("Request to get UserSettings by user : {}", user);
+        return userSettingsRepository.findByCreatedBy(user).map(userSettingsMapper::toDto);
+    }
+
+    @Override
     public void delete(Long id) {
         log.debug("Request to delete UserSettings : {}", id);
         userSettingsRepository.deleteById(id);
+    }
+
+    @Override
+    public void updatePayOrderNumSeqAndControlNum(String payOrderNumSeq, String payOrderControlNum) {
+        log.debug("Request to update UserSettings On PayOrder Creation : {} {}", payOrderNumSeq, payOrderControlNum);
+
+        String user = springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM);
+        UserSettings userSettings = userSettingsRepository.findByCreatedBy(user).orElse(new UserSettings());
+
+        if (userSettings.getId() == null) {
+            userSettings.setName(user);
+        }
+        userSettings.setPayOrderNumSeq(payOrderNumSeq);
+        userSettings.setPayOrderControlNum(payOrderControlNum);
+        userSettingsRepository.save(userSettings);
     }
 }

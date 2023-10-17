@@ -25,6 +25,7 @@ export class UserSettingsUpdateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('init form', this.editForm);
     this.activatedRoute.data.subscribe(({ userSettings }) => {
       this.userSettings = userSettings;
       if (userSettings) {

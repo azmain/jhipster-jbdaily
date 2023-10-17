@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IPayOrder, NewPayOrder } from '../pay-order.model';
 
 /**
@@ -19,16 +19,15 @@ type PayOrderFormGroupInput = IPayOrder | PartialWithRequiredKeyOf<NewPayOrder>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IPayOrder | NewPayOrder> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
+type FormValueOf<T extends IPayOrder | NewPayOrder> = Omit<T, 'payOrderDate'> & {
+  payOrderDate?: Date | null;
 };
 
 type PayOrderFormRawValue = FormValueOf<IPayOrder>;
 
 type NewPayOrderFormRawValue = FormValueOf<NewPayOrder>;
 
-type PayOrderFormDefaults = Pick<NewPayOrder, 'id' | 'createdDate' | 'lastModifiedDate'>;
+type PayOrderFormDefaults = Pick<NewPayOrder, 'id' | 'payOrderDate'>;
 
 type PayOrderFormGroupContent = {
   id: FormControl<PayOrderFormRawValue['id'] | NewPayOrder['id']>;
@@ -101,14 +100,16 @@ export class PayOrderFormService {
 
     return {
       id: null,
+      payOrderDate: dayjs(currentTime, DATE_TIME_FORMAT),
     };
   }
 
   private convertPayOrderRawValueToPayOrder(rawPayOrder: PayOrderFormRawValue | NewPayOrderFormRawValue): IPayOrder | NewPayOrder {
+    console.log('convertPayOrderRawValueToPayOrder', rawPayOrder.payOrderDate);
+    console.log(dayjs(rawPayOrder.payOrderDate));
     return {
       ...rawPayOrder,
-      createdDate: dayjs(rawPayOrder.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawPayOrder.lastModifiedDate, DATE_TIME_FORMAT),
+      payOrderDate: dayjs(rawPayOrder.payOrderDate),
     };
   }
 
@@ -117,8 +118,7 @@ export class PayOrderFormService {
   ): PayOrderFormRawValue | PartialWithRequiredKeyOf<NewPayOrderFormRawValue> {
     return {
       ...payOrder,
-      createdDate: payOrder.createdDate ? payOrder.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: payOrder.lastModifiedDate ? payOrder.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      payOrderDate: payOrder.payOrderDate ? new Date(payOrder.payOrderDate.format(DATE_TIME_FORMAT)) : undefined,
     };
   }
 }

@@ -23,11 +23,9 @@ public class UserSettingsDTO implements Serializable {
     @NotNull
     private String payOrderControlNum;
 
-    @NotNull
     @Size(max = 50)
     private String createdBy;
 
-    @NotNull
     private Instant createdDate;
 
     @Size(max = 50)
