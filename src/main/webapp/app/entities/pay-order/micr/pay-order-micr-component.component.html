@@ -1,11 +1,15 @@
 <p>pay-order-micr-component works!</p>
 
 <div>
-  <input type="button" value="Convert" (click)="printPdf()" />
+  <input type="button" value="Convert" (click)="convert(1455850)" />
+
+  <!-- <input type="button" value="Convert" (click)="printPdf()" /> -->
 </div>
 
+<div>{{ words }}</div>
+
 <div id="reportDoc">
-  <div id="page1" style="height: 791px">
+  <div id="page1" style="height: 990px">
     <div class="line1">
       <div class="left">/4468</div>
       <div class="right">/4468</div>
@@ -30,7 +34,7 @@
       </div>
       <div class="center">
         <div class="account">DAP Fertilizer Co LTD</div>
-        <div class="amountWords">এক লক্ষ তেয়াত্তর হাজার আট শত পঞ্চাশ টাকা মাত্র</div>
+        <div class="amountWords">~এক লক্ষ তেয়াত্তর হাজার আট শত পঞ্চাশ টাকা মাত্র~</div>
       </div>
       <div class="right">
         <div class="amount">=১,৭৩,৮৫০/-</div>
@@ -39,44 +43,62 @@
   </div>
 
   <div id="page2">
-    <table>
-      <tbody>
-        <tr>
-          <th>Company</th>
-          <th>Contact</th>
-          <th>Country</th>
-        </tr>
-        <tr>
-          <td>আব্দুল হাকিম</td>
-          <td>Maria Anders</td>
-          <td>Germany</td>
-        </tr>
-        <tr>
-          <td>জসীমউদ্দিন মণ্ডল</td>
-          <td>Francisco Chang</td>
-          <td>Mexico</td>
-        </tr>
-        <tr>
-          <td>আর্মানিটোলা</td>
-          <td>Roland Mendel</td>
-          <td>Austria</td>
-        </tr>
-        <tr>
-          <td>ভৃত্য</td>
-          <td>Helen Bennett</td>
-          <td>UK</td>
-        </tr>
-        <tr>
-          <td>Laughing Bacchus Winecellars</td>
-          <td>Yoshi Tannamuri</td>
-          <td>Canada</td>
-        </tr>
-        <tr>
-          <td>Magazzini Alimentari Riuniti</td>
-          <td>Giovanni Rovelli</td>
-          <td>Italy</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="content">
+      <div class="letterHead">
+        <img src="https://www.jb.com.bd/assets/images/others/jblogo.png" class="img-fluid" alt="logo" />
+      </div>
+
+      <div class="letterAddress">
+        <div class="left">
+          Head Office Janata Bhaban <br />
+          Post Box No:468, 110 Motijheel Comercial Area, <br />
+          Dhaka - 1000 Bangladesh <br />
+          Website: www.janatabank-bd.com <br />
+        </div>
+        <div class="right">
+          Janata Bank Limited <br />
+          Pulhat Branch, Dinajpur <br />
+          Phone: 053163348 <br />
+        </div>
+      </div>
+
+      <div class="headerLine"></div>
+
+      <div class="letterSutro">
+        <div class="sutro">পত্র সূত্র নং : পু শা/বাফার/নি.পা/২০২৩, <span>কন্ট্রলিং নং : ৪৪৮২</span></div>
+
+        <div class="letterDate">তারিখ : ১৭ অক্টোবর ২০২৩</div>
+      </div>
+
+      <div class="letterTo">
+        ভারপ্রাপ্ত কর্মকর্তা, <br />
+        বি. সি. আই. সি, <br />
+        বাফার গুদাম, <br />
+        পুলহাট, দিনাজপুর।
+      </div>
+
+      <div class="letterSubject">বিষয় : আপনাদের হিসাব নং এসিটিড - ৪৯/৭ এ ইউরিয়া (UREA) এর টাকা জমাকরণ প্রসংগে।</div>
+
+      <div class="letterText">
+        জনাব, <br />
+        আপনাদের অবগতির জন্য জানানো যাচ্ছে যে, আপনাদের অনুমোদিত ডিলার কর্তৃক আপনাদের অনুকূলে ক্রয়কৃত পে-অর্ডার এর টাকা আপনাদের হিসাব নং
+        এসটিডি - ৪৯/৭ এ জমা করা হয়েছে। বিবরণী নিম্নরূপ : <br />
+      </div>
+
+      <div class="letterBiboroni">
+        ১) পে-অর্ডারকারীর নাম : মেসার্স সারওয়ারুল ইসলাম <br />
+        ২) উপেজলা : বিরল <span class="district"> জেলা : দিনাজপুর </span> <br />
+        ৩) পে-অর্ডার নং : ২৯২৭৬১৯/৪৪৭৫ <span class="payOrderDate"> পে-অর্ডার তারিখ : ১৬/১০/২০২৩ ইং </span><br />
+        ৪) টাকার পরিমাণ : ১২,২৫,০০০/- <br />
+        ৫) টাকার পরিমাণ কথায় : বার লাখ পঁচিশ হাজার টাকা মাত্র <br />
+        ৬) সংযুক্ত পে-ইন স্লিপের মুডির নম্বর : ০৫৩৫৫১২<br />
+        ৭) সার : ইউিরয়া (Urea) <br />
+        ৮) সারের পরিমাণ : ৪৯ টন <br />
+      </div>
+
+      <div class="letterThanks">ধন্যবাদ সহ</div>
+
+      <div class="letterSeal">(অথরাইজড কর্মকর্তার স্বাক্ষর ও সীল)</div>
+    </div>
   </div>
 </div>

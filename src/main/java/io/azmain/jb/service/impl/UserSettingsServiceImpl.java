@@ -115,6 +115,8 @@ public class UserSettingsServiceImpl implements UserSettingsService {
 
         if (userSettings.getId() == null) {
             userSettings.setName(user);
+            userSettings.setCreatedBy(user);
+            userSettings.setCreatedDate(Instant.now());
         }
         userSettings.setPayOrderNumSeq(payOrderNumSeq);
         userSettings.setPayOrderControlNum(payOrderControlNum);

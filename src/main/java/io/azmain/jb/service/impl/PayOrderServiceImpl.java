@@ -8,6 +8,7 @@ import io.azmain.jb.service.PayOrderService;
 import io.azmain.jb.service.UserSettingsService;
 import io.azmain.jb.service.dto.PayOrderDTO;
 import io.azmain.jb.service.mapper.PayOrderMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -53,10 +54,7 @@ public class PayOrderServiceImpl implements PayOrderService {
         payOrder.createdDate(Instant.now());
         payOrder = payOrderRepository.save(payOrder);
 
-        userSettingsService.updatePayOrderNumSeqAndControlNum(
-            payOrder.getPayOrderNumber().toString(),
-            payOrder.getControllingNo().toString()
-        );
+        userSettingsService.updatePayOrderNumSeqAndControlNum(payOrder.getPayOrderNumber() + 1 + "", payOrder.getControllingNo() + 1 + "");
 
         return payOrderMapper.toDto(payOrder);
     }

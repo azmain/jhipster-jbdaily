@@ -184,14 +184,7 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="jbdailyApp.dealer.upazila" for="field_upazila">Upazila</label>
-          <select
-            class="form-control"
-            id="field_upazila"
-            data-cy="upazila"
-            name="upazila"
-            formControlName="upazila"
-            [compareWith]="compareUpazila"
-          >
+          <select class="form-control" id="field_upazila" data-cy="upazila" name="upazila" formControlName="upazila">
             <option *ngIf="editForm.get(['upazila'])!.value == null" [ngValue]="null" selected></option>
             <option [ngValue]="upazilaOption" *ngFor="let upazilaOption of upazilasSharedCollection">{{ upazilaOption.name }}</option>
           </select>
@@ -212,16 +205,12 @@
           <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
 
-        <button
-          type="submit"
-          id="save-entity"
-          data-cy="entityCreateSaveButton"
-          [disabled]="editForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
+        <button type="submit" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary">
           <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
         </button>
       </div>
     </form>
   </div>
 </div>
+
+<!-- [disabled]="editForm.invalid || isSaving" -->

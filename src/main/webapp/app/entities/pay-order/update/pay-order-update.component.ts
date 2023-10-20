@@ -10,10 +10,11 @@ import { PayOrderService } from '../service/pay-order.service';
 import { IFertilizer } from 'app/entities/fertilizer/fertilizer.model';
 import { FertilizerService } from 'app/entities/fertilizer/service/fertilizer.service';
 import { IDealer } from 'app/entities/dealer/dealer.model';
-import { DealerService } from 'app/entities/dealer/service/dealer.service';
+import { DealerService, RestDealer } from 'app/entities/dealer/service/dealer.service';
 import { RestUserSettings, UserSettingsService } from 'app/entities/user-settings/service/user-settings.service';
 import { AccountService } from 'app/core/auth/account.service';
 import { IUserSettings } from 'app/entities/user-settings/user-settings.model';
+import dayjs, { Dayjs } from 'dayjs';
 
 @Component({
   selector: 'jhi-pay-order-update',
@@ -52,9 +53,12 @@ export class PayOrderUpdateComponent implements OnInit {
     });
 
     this.activatedRoute.data.subscribe(({ payOrder }) => {
+      console.log('payOrder', payOrder);
       this.payOrder = payOrder;
       if (payOrder) {
         this.updateForm(payOrder);
+      } else {
+        this.loadUserSettings();
       }
 
       this.loadRelationshipsOptions();
@@ -72,7 +76,7 @@ export class PayOrderUpdateComponent implements OnInit {
 
     console.log('payorder ', payOrder);
     if (payOrder.id !== null) {
-      this.subscribeToSaveResponse(this.payOrderService.update(payOrder));
+      this.subscribeToSaveResponse(this.payOrderService.partialUpdate(payOrder));
     } else {
       this.subscribeToSaveResponse(this.payOrderService.create(payOrder));
     }
@@ -100,6 +104,7 @@ export class PayOrderUpdateComponent implements OnInit {
   protected updateForm(payOrder: IPayOrder): void {
     this.payOrder = payOrder;
     this.payOrderFormService.resetForm(this.editForm, payOrder);
+    console.log('after update form', this.editForm);
 
     this.fertilizersSharedCollection = this.fertilizerService.addFertilizerToCollectionIfMissing<IFertilizer>(
       this.fertilizersSharedCollection,
@@ -114,20 +119,32 @@ export class PayOrderUpdateComponent implements OnInit {
   protected loadRelationshipsOptions(): void {
     this.fertilizerService
       .query()
-      .pipe(map((res: HttpResponse<IFertilizer[]>) => res.body ?? []))
+      .pipe(
+        map((res: HttpResponse<IDealer[]>) => {
+          return res.body ? res.body.map(item => this.convertFertilizerOption(item)) : [];
+        })
+      )
       .pipe(
         map((fertilizers: IFertilizer[]) =>
           this.fertilizerService.addFertilizerToCollectionIfMissing<IFertilizer>(fertilizers, this.payOrder?.fertilizer)
         )
       )
-      .subscribe((fertilizers: IFertilizer[]) => (this.fertilizersSharedCollection = fertilizers));
+      .subscribe((fertilizers: IFertilizer[]) => {
+        this.fertilizersSharedCollection = fertilizers;
+      });
 
     this.dealerService
       .query()
-      .pipe(map((res: HttpResponse<IDealer[]>) => res.body ?? []))
+      .pipe(
+        map((res: HttpResponse<IDealer[]>) => {
+          return res.body ? res.body.map(item => this.convertDealerOption(item)) : [];
+        })
+      )
       .pipe(map((dealers: IDealer[]) => this.dealerService.addDealerToCollectionIfMissing<IDealer>(dealers, this.payOrder?.dealer)))
       .subscribe((dealers: IDealer[]) => (this.dealersSharedCollection = dealers));
+  }
 
+  protected loadUserSettings(): void {
     const queryObject: any = {
       'createdBy.equals': this.loginUser.login,
     };
@@ -145,5 +162,19 @@ export class PayOrderUpdateComponent implements OnInit {
 
         console.log('settings', userSettings);
       });
+  }
+
+  convertDealerOption(dealer: IDealer): IDealer {
+    return {
+      id: dealer.id,
+      name: dealer.name,
+      shortName: dealer.shortName,
+    };
+  }
+  convertFertilizerOption(fertilizer: IFertilizer): IDealer {
+    return {
+      id: fertilizer.id,
+      name: fertilizer.name,
+    };
   }
 }

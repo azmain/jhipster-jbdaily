@@ -93,6 +93,7 @@ export class PayOrderFormService {
         id: { value: payOrderRawValue.id, disabled: true },
       } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */
     );
+    console.log('after reset ', form);
   }
 
   private getFormDefaults(): PayOrderFormDefaults {
@@ -118,6 +119,8 @@ export class PayOrderFormService {
   ): PayOrderFormRawValue | PartialWithRequiredKeyOf<NewPayOrderFormRawValue> {
     return {
       ...payOrder,
+      fertilizer: payOrder.fertilizer ? { id: payOrder.fertilizer.id, name: payOrder.fertilizer.name } : null,
+      dealer: payOrder.dealer ? { id: payOrder.dealer.id, name: payOrder.dealer.name, shortName: payOrder.dealer.shortName } : null,
       payOrderDate: payOrder.payOrderDate ? new Date(payOrder.payOrderDate.format(DATE_TIME_FORMAT)) : undefined,
     };
   }

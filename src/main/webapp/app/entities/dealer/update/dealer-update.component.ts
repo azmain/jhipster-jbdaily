@@ -48,7 +48,9 @@ export class DealerUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
+    console.log('edit form', this.editForm);
     const dealer = this.dealerFormService.getDealer(this.editForm);
+    console.log('dealer', this.dealer);
     if (dealer.id !== null) {
       this.subscribeToSaveResponse(this.dealerService.update(dealer));
     } else {
@@ -90,6 +92,12 @@ export class DealerUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<IUpazila[]>) => res.body ?? []))
       .pipe(map((upazilas: IUpazila[]) => this.upazilaService.addUpazilaToCollectionIfMissing<IUpazila>(upazilas, this.dealer?.upazila)))
-      .subscribe((upazilas: IUpazila[]) => (this.upazilasSharedCollection = upazilas));
+      .subscribe((upazilas: IUpazila[]) => {
+        console.log('upazila', upazilas);
+        console.log('upazila collection', this.upazilasSharedCollection);
+        this.upazilasSharedCollection = upazilas;
+        console.log('upazila', upazilas);
+        console.log('upazila collection', this.upazilasSharedCollection);
+      });
   }
 }
