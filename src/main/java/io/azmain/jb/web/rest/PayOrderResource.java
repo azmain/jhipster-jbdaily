@@ -69,6 +69,9 @@ public class PayOrderResource {
         if (payOrderDTO.getId() != null) {
             throw new BadRequestAlertException("A new payOrder cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        if (payOrderRepository.existsByPayOrderNumber(payOrderDTO.getPayOrderNumber())) {
+            throw new BadRequestAlertException("A PayOrder already have same PayOrderNumber", ENTITY_NAME, "idexists");
+        }
         PayOrderDTO result = payOrderService.save(payOrderDTO);
         return ResponseEntity
             .created(new URI("/api/pay-orders/" + result.getId()))
@@ -101,6 +104,9 @@ public class PayOrderResource {
 
         if (!payOrderRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+        if (payOrderRepository.existsByPayOrderNumber(payOrderDTO.getPayOrderNumber())) {
+            throw new BadRequestAlertException("A PayOrder already have same PayOrderNumber", ENTITY_NAME, "idexists");
         }
 
         PayOrderDTO result = payOrderService.update(payOrderDTO);

@@ -26,6 +26,8 @@ public interface PayOrderRepository extends JpaRepository<PayOrder, Long>, JpaSp
         return this.findAllWithToOneRelationships(pageable);
     }
 
+    boolean existsByPayOrderNumber(Long payOrderNumber);
+
     @Query(
         value = "select distinct payOrder from PayOrder payOrder left join fetch payOrder.fertilizer left join fetch payOrder.dealer",
         countQuery = "select count(distinct payOrder) from PayOrder payOrder"

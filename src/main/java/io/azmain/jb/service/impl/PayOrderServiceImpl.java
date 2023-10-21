@@ -62,7 +62,15 @@ public class PayOrderServiceImpl implements PayOrderService {
     @Override
     public PayOrderDTO update(PayOrderDTO payOrderDTO) {
         log.debug("Request to update PayOrder : {}", payOrderDTO);
+        PayOrder persistPayOrder = payOrderRepository
+            .findById(payOrderDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "patOrder", "idnotfound"));
         PayOrder payOrder = payOrderMapper.toEntity(payOrderDTO);
+        payOrder.setCreatedDate(persistPayOrder.getCreatedDate());
+        payOrder.setCreatedBy(persistPayOrder.getCreatedBy());
+        payOrder.setLastModifiedDate(Instant.now());
+        payOrder.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         payOrder = payOrderRepository.save(payOrder);
         return payOrderMapper.toDto(payOrder);
     }
@@ -75,7 +83,6 @@ public class PayOrderServiceImpl implements PayOrderService {
             .findById(payOrderDTO.getId())
             .map(existingPayOrder -> {
                 payOrderMapper.partialUpdate(existingPayOrder, payOrderDTO);
-
                 return existingPayOrder;
             })
             .map(payOrderRepository::save)

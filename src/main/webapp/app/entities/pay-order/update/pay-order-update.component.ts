@@ -76,7 +76,7 @@ export class PayOrderUpdateComponent implements OnInit {
 
     console.log('payorder ', payOrder);
     if (payOrder.id !== null) {
-      this.subscribeToSaveResponse(this.payOrderService.partialUpdate(payOrder));
+      this.subscribeToSaveResponse(this.payOrderService.update(payOrder));
     } else {
       this.subscribeToSaveResponse(this.payOrderService.create(payOrder));
     }
