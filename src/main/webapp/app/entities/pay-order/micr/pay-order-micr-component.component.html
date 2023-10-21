@@ -8,20 +8,33 @@
 
 <div>{{ words }}</div>
 
+<div class="button-group">
+  <div class="back-button">
+    <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+      <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+    </button>
+  </div>
+  <div class="print-button">
+    <button type="button" id="save-entity" data-cy="entityCreateSaveButton" class="btn btn-primary" (click)="previousState()">
+      <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+    </button>
+  </div>
+</div>
+
 <div id="reportDoc">
   <div id="page1" style="height: 990px">
     <div class="line1">
-      <div class="left">/4468</div>
-      <div class="right">/4468</div>
+      <div class="left">/{{ payOrder?.controllingNo }}</div>
+      <div class="right">/{{ payOrder?.controllingNo }}</div>
     </div>
 
     <div class="line2">
-      <div class="date">16/10/2023</div>
+      <div class="date">{{ micrPayOrder?.payOrderDate }}</div>
     </div>
 
     <div class="line3">
-      <div class="notOver">Not Over TK=750000/-Only</div>
-      <div class="date">16/10/2023</div>
+      <div class="notOver">Not Over TK={{ payOrder?.amount }}/-Only</div>
+      <div class="date">{{ micrPayOrder?.payOrderDate }}</div>
     </div>
 
     <div class="line4">

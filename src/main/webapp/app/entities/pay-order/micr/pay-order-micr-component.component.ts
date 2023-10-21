@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Converter, bnBD } from 'any-number-to-words';
 import { IPayOrder } from '../pay-order.model';
+import dayjs from 'dayjs';
 const converter = new Converter(bnBD);
 
 @Component({
@@ -18,12 +19,16 @@ export class PayOrderMicrComponentComponent implements OnInit {
 
   payOrder: IPayOrder | null = null;
 
+  micrPayOrder: any = {};
+
   constructor(protected activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ payOrder }) => {
       console.log('payOrder', payOrder);
       this.payOrder = payOrder;
+
+      this.micrPayOrder['payOrderDate'] = dayjs(this.payOrder?.payOrderDate).format('DD/MM/YYYY');
       // if (payOrder) {
       //   this.updateForm(payOrder);
       // }
@@ -83,5 +88,9 @@ export class PayOrderMicrComponentComponent implements OnInit {
     // location.reload();
     document.body.innerHTML = originalContents;
     /this.downloadDivAsPDF('reportDoc', String(new Date().getTime())+'.pdf');/;
+  }
+
+  previousState(): void {
+    window.history.back();
   }
 }
