@@ -6,7 +6,7 @@ import { PayOrderComponent } from '../list/pay-order.component';
 import { PayOrderDetailComponent } from '../detail/pay-order-detail.component';
 import { PayOrderUpdateComponent } from '../update/pay-order-update.component';
 import { PayOrderRoutingResolveService } from './pay-order-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 import { PayOrderMicrComponentComponent } from '../micr/pay-order-micr-component.component';
 
 const payOrderRoute: Routes = [
@@ -14,7 +14,7 @@ const payOrderRoute: Routes = [
     path: '',
     component: PayOrderComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'createdDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

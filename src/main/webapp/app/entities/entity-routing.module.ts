@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { PayOrderReportComponent } from './pay-order/po-report/pay-order-report.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { DESC } from 'app/config/navigation.constants';
 
 @NgModule({
   imports: [
@@ -33,6 +36,12 @@ import { RouterModule } from '@angular/router';
         path: 'pay-order',
         data: { pageTitle: 'jbdailyApp.payOrder.home.title' },
         loadChildren: () => import('./pay-order/pay-order.module').then(m => m.PayOrderModule),
+      },
+      {
+        path: 'pay-order-report',
+        component: PayOrderReportComponent,
+        data: { defaultSort: 'payOrderDate,' + DESC },
+        canActivate: [UserRouteAccessService],
       },
       {
         path: 'fr-remittance',

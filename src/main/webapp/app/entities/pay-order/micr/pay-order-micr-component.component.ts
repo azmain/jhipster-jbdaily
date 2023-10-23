@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Converter, bnBD } from 'any-number-to-words';
 import { IPayOrder } from '../pay-order.model';
 import dayjs from 'dayjs';
+import { EnglishToBanglaNumber } from 'app/helpers/english-to-bangla-number';
 const converter = new Converter(bnBD);
 
 @Component({
@@ -29,20 +30,59 @@ export class PayOrderMicrComponentComponent implements OnInit {
       this.payOrder = payOrder;
 
       this.micrPayOrder['payOrderDate'] = dayjs(this.payOrder?.payOrderDate).format('DD/MM/YYYY');
-      // if (payOrder) {
-      //   this.updateForm(payOrder);
-      // }
-      // else{
-      //   this.loadUserSettings();
-      // }
+      this.micrPayOrder['amountInBangla'] = EnglishToBanglaNumber.convertToBanglaNumber(this.payOrder?.amount, true);
+      this.micrPayOrder['amountInBanglaWords'] = converter.toWords(this.payOrder?.amount);
+      this.micrPayOrder['dealer'] = payOrder?.dealer;
+      this.micrPayOrder['upazila'] = payOrder?.dealer?.upazila;
+      this.micrPayOrder['district'] = payOrder?.dealer?.upazila?.district;
+      this.micrPayOrder['fertilizer'] = payOrder?.fertilizer;
 
-      // this.loadRelationshipsOptions();
+      this.micrPayOrder['controllingNoBangla'] = EnglishToBanglaNumber.convertToBanglaNumber(this.payOrder?.controllingNo);
+      this.micrPayOrder['letterDate'] = EnglishToBanglaNumber.formatDateInfo(dayjs(this.payOrder?.payOrderDate).format('YYYY-MM-DD'));
+      this.micrPayOrder['letterDateBangla'] = EnglishToBanglaNumber.formatDateInfoBangla(
+        dayjs(this.payOrder?.payOrderDate).format('YYYY-MM-DD')
+      );
+
+      this.micrPayOrder['payOrderNoBangla'] = EnglishToBanglaNumber.convertToBanglaNumber(this.payOrder?.payOrderNumber);
+      this.micrPayOrder['slipNoBangla'] = EnglishToBanglaNumber.convertToBanglaNumber(this.payOrder?.slipNo);
+
+      switch (this.payOrder?.fertilizer?.name) {
+        case 'UREA': {
+          this.micrPayOrder['fertilizerAmount'] = this.payOrder?.amount ? (this.payOrder?.amount / 25000).toFixed(2) : 0;
+          break;
+        }
+        case 'DAP': {
+          this.micrPayOrder['fertilizerAmount'] = this.payOrder?.amount ? (this.payOrder?.amount / 25000).toFixed(2) : 0;
+          break;
+        }
+        case 'TSP': {
+          this.micrPayOrder['fertilizerAmount'] = this.payOrder?.amount ? (this.payOrder?.amount / 19000).toFixed(2) : 0;
+          break;
+        }
+        default: {
+          this.micrPayOrder['fertilizerAmount'] = 0;
+          break;
+        }
+      }
     });
   }
 
-  convert(number: any) {
-    console.log(number);
-    this.words = converter.toWords(number);
+  roundTo(n: any, digits: number) {
+    var negative = false;
+    if (digits === undefined) {
+      digits = 0;
+    }
+    if (n < 0) {
+      negative = true;
+      n = n * -1;
+    }
+    var multiplicator = Math.pow(10, digits);
+    n = parseFloat((n * multiplicator).toFixed(11));
+    n = (Math.round(n) / multiplicator).toFixed(digits);
+    if (negative) {
+      n = (n * -1).toFixed(digits);
+    }
+    return n;
   }
 
   public printPdf() {
@@ -86,6 +126,31 @@ export class PayOrderMicrComponentComponent implements OnInit {
     document.head.appendChild(style);
     window.print();
     // location.reload();
+    document.body.innerHTML = originalContents;
+    /this.downloadDivAsPDF('reportDoc', String(new Date().getTime())+'.pdf');/;
+  }
+
+  public printPdf2() {
+    const printContents: any = document.getElementById('reportDoc')?.innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    const style = document.createElement('style');
+    style.innerHTML = `
+    @media print {
+      /* Set the scale of the printed document */
+      body {
+        transform: scale(1);
+        font-size: 11px
+      }
+      footer {
+        page-break-after: always;
+      }
+    }
+  `;
+    // Add the style element to the document head
+    document.head.appendChild(style);
+    window.print();
+    location.reload();
     document.body.innerHTML = originalContents;
     /this.downloadDivAsPDF('reportDoc', String(new Date().getTime())+'.pdf');/;
   }

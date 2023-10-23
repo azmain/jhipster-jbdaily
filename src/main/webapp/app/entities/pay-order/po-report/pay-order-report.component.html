@@ -1,0 +1,127 @@
+<div>
+  <form class="row g-3" [formGroup]="payOrderSearchForm">
+    <div class="col-md-4">
+      <label for="inputEmail4" class="form-label">Dealer</label>
+      <p-dropdown
+        [options]="dealersSharedCollection"
+        formControlName="dealerId"
+        optionLabel="name"
+        [filter]="true"
+        filterBy="name"
+        [showClear]="true"
+        [style]="{ width: '100%' }"
+        placeholder="Select a dealer"
+      >
+      </p-dropdown>
+    </div>
+    <div class="col-md-4">
+      <label for="inputPassword4" class="form-label">Fertilizer</label>
+      <p-dropdown
+        [options]="fertilizersSharedCollection"
+        id="field_fertilizer"
+        data-cy="fertilizer"
+        name="fertilizer"
+        formControlName="fertilizerId"
+        optionLabel="name"
+        [filter]="true"
+        filterBy="name"
+        [showClear]="true"
+        [style]="{ width: '100%' }"
+        placeholder="Select a fertilizer"
+      >
+      </p-dropdown>
+    </div>
+    <div class="col-md-4">
+      <label for="inputPassword4" class="form-label">Controlling No</label>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="controllingNo"> </p-inputNumber>
+    </div>
+    <div class="col-4">
+      <label for="inputPassword4" class="form-label">Slip No</label>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="slipNo"> </p-inputNumber>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="field_payOrderDate">Pay Order Date From</label>
+      <p-calendar
+        name="payOrderDate"
+        id="field_payOrderDate"
+        formControlName="payOrderDateFrom"
+        dateFormat="dd/mm/yy"
+        [style]="{ width: '100%' }"
+      ></p-calendar>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="field_payOrderDate">Pay Order Date To</label>
+      <p-calendar
+        name="payOrderDate"
+        id="field_payOrderDate"
+        formControlName="payOrderDateTo"
+        dateFormat="dd/mm/yy"
+        [style]="{ width: '100%' }"
+      ></p-calendar>
+    </div>
+
+    <div class="col-md-4">
+      <label for="inputPassword4" class="form-label">Pay Order No</label>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumber"> </p-inputNumber>
+    </div>
+    <div class="col-md-4">
+      <label for="inputPassword4" class="form-label">Pay Order No From</label>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumberFrom"> </p-inputNumber>
+    </div>
+    <div class="col-md-4">
+      <label for="inputPassword4" class="form-label">Pay Order No To</label>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumberTo"> </p-inputNumber>
+    </div>
+
+    <div class="col-12">
+      <button type="button" class="btn btn-primary" (click)="onSearch()">Search</button>
+    </div>
+  </form>
+</div>
+
+<br />
+<br />
+
+<p-table
+  [value]="payOrdersDataTable"
+  styleClass="p-datatable-gridlines"
+  [exportHeader]="'customExportHeader'"
+  [tableStyle]="{ 'min-width': '50rem' }"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex">
+      <button
+        type="button"
+        pButton
+        pRipple
+        icon="pi pi-file-pdf"
+        (click)="exportPdf()"
+        class="p-button-warning mr-2"
+        pTooltip="PDF"
+        tooltipPosition="bottom"
+      ></button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Serial</th>
+      <th>Dealer</th>
+      <th>Fertilizer</th>
+      <th>Pay To</th>
+      <th>Slip No</th>
+      <th>Pay Order Date</th>
+      <th>Controlling No</th>
+      <th>Pay Order No</th>
+      <th>Amount</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>{{ product.code }}</td>
+      <td>{{ product.name }}</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.quantity }}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="summary"> Footer </ng-template>
+</p-table>

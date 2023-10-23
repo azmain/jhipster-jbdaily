@@ -8,16 +8,20 @@ import { PayOrderRoutingModule } from './route/pay-order-routing.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TableModule } from 'primeng/table';
 import { PayOrderMicrComponentComponent } from './micr/pay-order-micr-component.component';
+import { PayOrderReportComponent } from './po-report/pay-order-report.component';
 
 @NgModule({
-  imports: [SharedModule, PayOrderRoutingModule, DropdownModule, CalendarModule, InputTextModule],
+  imports: [SharedModule, PayOrderRoutingModule, DropdownModule, CalendarModule, InputTextModule, InputNumberModule, TableModule],
   declarations: [
     PayOrderComponent,
     PayOrderDetailComponent,
     PayOrderUpdateComponent,
     PayOrderDeleteDialogComponent,
     PayOrderMicrComponentComponent,
+    PayOrderReportComponent,
   ],
 })
 export class PayOrderModule {}

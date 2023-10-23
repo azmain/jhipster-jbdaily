@@ -10,6 +10,7 @@ import io.azmain.jb.service.dto.PayOrderDTO;
 import io.azmain.jb.service.mapper.PayOrderMapper;
 import io.azmain.jb.web.rest.errors.BadRequestAlertException;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,13 @@ public class PayOrderServiceImpl implements PayOrderService {
         log.debug("Request to update PayOrder : {}", payOrderDTO);
         PayOrder persistPayOrder = payOrderRepository
             .findById(payOrderDTO.getId())
-            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "patOrder", "idnotfound"));
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "payOrder", "idnotfound"));
+        if (
+            !Objects.equals(payOrderDTO.getPayOrderNumber(), persistPayOrder.getPayOrderNumber()) &&
+            payOrderRepository.existsByPayOrderNumber(payOrderDTO.getPayOrderNumber())
+        ) {
+            throw new BadRequestAlertException("A PayOrder already have same PayOrderNumber", "payOrder", "idexists");
+        }
         PayOrder payOrder = payOrderMapper.toEntity(payOrderDTO);
         payOrder.setCreatedDate(persistPayOrder.getCreatedDate());
         payOrder.setCreatedBy(persistPayOrder.getCreatedBy());

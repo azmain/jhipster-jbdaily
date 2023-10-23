@@ -10,7 +10,7 @@ import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/co
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
 import { EntityArrayResponseType, PayOrderService } from '../service/pay-order.service';
 import { PayOrderDeleteDialogComponent } from '../delete/pay-order-delete-dialog.component';
-import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
+import { FilterOptions, IFilterOptions, IFilterOption, FilterOption } from 'app/shared/filter/filter.model';
 
 @Component({
   selector: 'jhi-pay-order',
@@ -20,13 +20,15 @@ export class PayOrderComponent implements OnInit {
   payOrders?: IPayOrder[];
   isLoading = false;
 
-  predicate = 'id';
-  ascending = true;
+  predicate = 'payOrderDate';
+  ascending = false;
   filters: IFilterOptions = new FilterOptions();
 
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;
   page = 1;
+
+  searchFilter = null;
 
   constructor(
     protected payOrderService: PayOrderService,
@@ -60,6 +62,15 @@ export class PayOrderComponent implements OnInit {
   }
 
   load(): void {
+    this.searchFilter = null;
+    this.loadFromBackendWithRouteInformations().subscribe({
+      next: (res: EntityArrayResponseType) => {
+        this.onResponseSuccess(res);
+      },
+    });
+  }
+
+  search(): void {
     this.loadFromBackendWithRouteInformations().subscribe({
       next: (res: EntityArrayResponseType) => {
         this.onResponseSuccess(res);
@@ -122,6 +133,10 @@ export class PayOrderComponent implements OnInit {
     filterOptions?.forEach(filterOption => {
       queryObject[filterOption.name] = filterOption.values;
     });
+    if (this.searchFilter) {
+      queryObject['payOrderNumber.equals'] = Number(this.searchFilter) ?? -1;
+    }
+
     return this.payOrderService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 

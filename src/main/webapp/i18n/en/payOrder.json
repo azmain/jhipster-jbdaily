@@ -3,7 +3,8 @@
     "payOrder": {
       "home": {
         "title": "Pay Orders",
-        "refreshListLabel": "Refresh list",
+        "refreshListLabel": "Refresh",
+        "searchListLabel": "Search",
         "createLabel": "Create a new Pay Order",
         "createOrEditLabel": "Create or edit a Pay Order",
         "notFound": "No Pay Orders found"
