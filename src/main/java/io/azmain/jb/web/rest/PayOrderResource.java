@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -159,7 +161,11 @@ public class PayOrderResource {
     @GetMapping("/pay-orders")
     public ResponseEntity<List<PayOrderDTO>> getAllPayOrders(
         PayOrderCriteria criteria,
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable
+        @PageableDefault(
+            size = Integer.MAX_VALUE,
+            sort = "createdDate",
+            direction = Sort.Direction.ASC
+        ) @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get PayOrders by criteria: {}", criteria);
         Page<PayOrderDTO> page = payOrderQueryService.findByCriteria(criteria, pageable);

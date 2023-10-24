@@ -6,6 +6,7 @@
         [options]="dealersSharedCollection"
         formControlName="dealerId"
         optionLabel="name"
+        optionValue="id"
         [filter]="true"
         filterBy="name"
         [showClear]="true"
@@ -23,6 +24,7 @@
         name="fertilizer"
         formControlName="fertilizerId"
         optionLabel="name"
+        optionValue="id"
         [filter]="true"
         filterBy="name"
         [showClear]="true"
@@ -83,10 +85,16 @@
 <br />
 
 <p-table
+  #pTableId
   [value]="payOrdersDataTable"
-  styleClass="p-datatable-gridlines"
+  styleClass="p-datatable-gridlines p-datatable-sm"
   [exportHeader]="'customExportHeader'"
   [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="true"
+  [rows]="20"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [rowsPerPageOptions]="[10, 25, 50]"
 >
   <ng-template pTemplate="caption">
     <div class="flex">
@@ -95,7 +103,7 @@
         pButton
         pRipple
         icon="pi pi-file-pdf"
-        (click)="exportPdf()"
+        (click)="export()"
         class="p-button-warning mr-2"
         pTooltip="PDF"
         tooltipPosition="bottom"
@@ -115,13 +123,63 @@
       <th>Amount</th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-product>
+  <ng-template pTemplate="body" let-payOrder>
     <tr>
-      <td>{{ product.code }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.category }}</td>
-      <td>{{ product.quantity }}</td>
+      <td>{{ payOrder.serial }}</td>
+      <td>{{ payOrder.dealer }}</td>
+      <td>{{ payOrder.fertilizer }}</td>
+      <td>{{ payOrder.payTo }}</td>
+      <td>{{ payOrder.slipNo }}</td>
+      <td>{{ payOrder.payOrderDate }}</td>
+      <td>{{ payOrder.controllingNo }}</td>
+      <td>{{ payOrder.payOrderNumber }}</td>
+      <td>{{ payOrder.amount }}</td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="summary"> Footer </ng-template>
+  <ng-template pTemplate="footer">
+    <tr>
+      <td colspan="8" class="text-right">Totals</td>
+      <td>{{ amountTotal | currency: 'BDT' }}</td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="summary"> There are {{ payOrdersDataTable.length }} pay orders. </ng-template>
 </p-table>
+
+<table id="my-table">
+  <tr>
+    <th>Column1</th>
+    <th>Column2</th>
+    <th>Column3</th>
+  </tr>
+  <tr>
+    <td>Row 1</td>
+    <td>Row 1</td>
+    <td>Row 1</td>
+  </tr>
+  <tr>
+    <td>Row 2</td>
+    <td>Row 2</td>
+    <td>Row 2</td>
+  </tr>
+  <tr>
+    <td>Row 3</td>
+    <td>Row 3</td>
+    <td>Row 3</td>
+  </tr>
+  <tr>
+    <td>Row 4</td>
+    <td>Row 4</td>
+    <td>Row 4</td>
+  </tr>
+  <tr>
+    <td>Row 5</td>
+    <td>Row 5</td>
+    <td>Row 5</td>
+  </tr>
+  <tr>
+    <td>Row 6</td>
+    <td>Row 6</td>
+    <td>Row 6</td>
+  </tr>
+</table>

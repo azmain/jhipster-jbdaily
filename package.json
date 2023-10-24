@@ -142,6 +142,7 @@
     "jest-junit": "14.0.1",
     "jest-preset-angular": "12.2.2",
     "jest-sonar": "0.2.12",
+    "jspdf-autotable": "^3.7.0",
     "lint-staged": "13.0.3",
     "merge-jsons-webpack-plugin": "2.0.1",
     "prettier": "2.7.1",

@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -147,7 +149,11 @@ public class DealerResource {
      */
     @GetMapping("/dealers")
     public ResponseEntity<List<DealerDTO>> getAllDealers(
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @PageableDefault(
+            size = Integer.MAX_VALUE,
+            sort = "id",
+            direction = Sort.Direction.ASC
+        ) @org.springdoc.api.annotations.ParameterObject Pageable pageable,
         @RequestParam(required = false, defaultValue = "false") boolean eagerload
     ) {
         log.debug("REST request to get a page of Dealers");
