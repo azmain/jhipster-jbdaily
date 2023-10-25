@@ -123,6 +123,7 @@
     "@angular/service-worker": "14.2.0",
     "@types/jest": "28.1.8",
     "@types/node": "^16.11.56",
+    "@types/pdfmake": "^0.2.7",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.36.1",
     "browser-sync": "2.27.10",

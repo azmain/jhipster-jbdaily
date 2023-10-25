@@ -14,12 +14,13 @@ import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from 'app/config/navigation.constants';
 import dayjs from 'dayjs';
 import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { Table } from 'primeng/table';
-// import { font } from 'content/fonts/custom-font';
-import 'content/fonts/TiroBangla-Regular-normal.js';
-// import 'content/fonts/SolaimanLipi_20-04-07-normal.js';
+
+import { font } from 'content/fonts/custom-font';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'jhi-pay-order-report',
@@ -184,46 +185,50 @@ export class PayOrderReportComponent implements OnInit {
   }
 
   export() {
-    const doc = new jsPDF();
+    console.log(window.location.origin);
 
-    // doc.addFileToVFS('SolaimanLipi_20-04-07-normal.ttf', font);
-    // doc.addFont('SolaimanLipi_20-04-07-normal.ttf', 'SolaimanLipi_20-04-07', 'normal');
+    // console.log(font);
 
-    console.log(doc.getFontList());
+    let docDefinition = {
+      header: 'C#Corner PDF Header',
+      content: [
+        { text: 'Defining column widths', style: 'subheader' },
+        'Tables support the same width definitions as standard columns:',
+        {
+          ul: ['auto', 'star', 'fixed value'],
+        },
+        {
+          style: 'tableExample',
+          table: {
+            widths: [100, '*', 200, '*'],
+            body: [
+              ['width=100', 'star-sized', 'width=200', 'star-sized'],
+              [
+                'fixed-width cells have exactly the specified width',
+                { text: 'nothing interesting here', color: 'gray' },
+                { text: 'nothing interesting here', color: 'gray' },
+                { text: 'nothing interesting here', color: 'gray' },
+              ],
+              ['আব্দুর রহমান সোনার বাংলা', 'অজ্ঞ প্রতিষ্ঠান', 'প্রান', 'Good to Go'],
+            ],
+          },
+        },
+      ],
+      defaultStyle: {
+        font: 'Bangla',
+      },
+    };
+    pdfMake.vfs = {
+      ...pdfFonts.pdfMake.vfs,
+      'Bangla-normal.ttf': font,
+    };
+    pdfMake.fonts = {
+      Bangla: {
+        normal: 'Bangla-normal.ttf',
+      },
+    };
 
-    doc.setFont('TiroBangla-Regular');
-    doc.setFontSize(10);
-
-    // It can parse html:
-    // <table id="my-table"><!-- ... --></table>
-    // autoTable(doc, { html: '#myTableId' })
-
-    // Or use javascript directly:
-    // autoTable(doc, {
-    //   head: [['Name', 'Email', 'Country']],
-    //   body: [
-    //     ['আব্দুর রহমান', 'david@example.com', 'Sweden'],
-    //     ['সোনার বাংলা', 'castille@example.com', 'Spain'],
-    //     // ...
-    //   ],
-    // });
-    doc.text('আব্দুর রহমান সোনার বাংলা', 20, 20, {});
-
-    doc.save('table.pdf');
-
-    // const doc = new jsPDF();
-
-    // // doc.addFileToVFS("Amiri-Regular.ttf", AmiriRegular);
-    // // doc.addFont("Amiri-Regular.ttf", "Amiri", "normal");
-
-    // doc.addFont("content/fonts/Nikosh.ttf", "Nikosh", "normal");
-
-    // doc.setFont("Nikosh");
-    // doc.setFontSize(10);
-
-    // doc.text('আমার সোনার বাংলা', 10, 10);
-
-    // doc.save('test.pdf');
+    pdfMake.createPdf(docDefinition).open();
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
