@@ -17,7 +17,9 @@ import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Table } from 'primeng/table';
-// import 'content/fonts/SolaimanLipi_20-04-07-normal.ts';
+// import { font } from 'content/fonts/custom-font';
+import 'content/fonts/TiroBangla-Regular-normal.js';
+// import 'content/fonts/SolaimanLipi_20-04-07-normal.js';
 
 @Component({
   selector: 'jhi-pay-order-report',
@@ -184,26 +186,28 @@ export class PayOrderReportComponent implements OnInit {
   export() {
     const doc = new jsPDF();
 
-    doc.addFont('content/fonts/Nikosh.ttf', 'Nikosh', 'normal');
-
-    doc.setFont('Nikosh');
-    doc.setFontSize(10);
+    // doc.addFileToVFS('SolaimanLipi_20-04-07-normal.ttf', font);
+    // doc.addFont('SolaimanLipi_20-04-07-normal.ttf', 'SolaimanLipi_20-04-07', 'normal');
 
     console.log(doc.getFontList());
+
+    doc.setFont('TiroBangla-Regular');
+    doc.setFontSize(10);
 
     // It can parse html:
     // <table id="my-table"><!-- ... --></table>
     // autoTable(doc, { html: '#myTableId' })
 
     // Or use javascript directly:
-    autoTable(doc, {
-      head: [['Name', 'Email', 'Country']],
-      body: [
-        ['আব্দুর রহমান', 'david@example.com', 'Sweden'],
-        ['সোনার বাংলা', 'castille@example.com', 'Spain'],
-        // ...
-      ],
-    });
+    // autoTable(doc, {
+    //   head: [['Name', 'Email', 'Country']],
+    //   body: [
+    //     ['আব্দুর রহমান', 'david@example.com', 'Sweden'],
+    //     ['সোনার বাংলা', 'castille@example.com', 'Spain'],
+    //     // ...
+    //   ],
+    // });
+    doc.text('আব্দুর রহমান সোনার বাংলা', 20, 20, {});
 
     doc.save('table.pdf');
 
