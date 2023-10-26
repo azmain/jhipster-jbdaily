@@ -49,6 +49,7 @@
         formControlName="payOrderDateFrom"
         dateFormat="dd/mm/yy"
         [style]="{ width: '100%' }"
+        [showButtonBar]="true"
       ></p-calendar>
     </div>
     <div class="col-md-4">
@@ -59,6 +60,7 @@
         formControlName="payOrderDateTo"
         dateFormat="dd/mm/yy"
         [style]="{ width: '100%' }"
+        [showButtonBar]="true"
       ></p-calendar>
     </div>
 
@@ -76,7 +78,8 @@
     </div>
 
     <div class="col-12">
-      <button type="button" class="btn btn-primary" (click)="onSearch()">Search</button>
+      <p-button label="Search" icon="pi pi-search" iconPos="right" (click)="onSearch()"></p-button>
+      <!-- <button type="button" class="btn btn-primary" (click)="onSearch()">Search</button> -->
     </div>
   </form>
 </div>
@@ -94,10 +97,10 @@
   [rows]="20"
   [showCurrentPageReport]="true"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-  [rowsPerPageOptions]="[10, 25, 50]"
+  [rowsPerPageOptions]="[20, 40, 60]"
 >
   <ng-template pTemplate="caption">
-    <div class="flex">
+    <div class="flex align-items-right" style="text-align: right">
       <button
         type="button"
         pButton
@@ -112,74 +115,38 @@
   </ng-template>
   <ng-template pTemplate="header">
     <tr>
-      <th>Serial</th>
-      <th>Dealer</th>
-      <th>Fertilizer</th>
-      <th>Pay To</th>
-      <th>Slip No</th>
-      <th>Pay Order Date</th>
-      <th>Controlling No</th>
-      <th>Pay Order No</th>
-      <th>Amount</th>
+      <th style="text-align: center">Serial</th>
+      <th style="text-align: center">Dealer</th>
+      <th style="text-align: center">Fertilizer</th>
+      <th style="text-align: center">Pay To</th>
+      <th style="text-align: center">Slip No</th>
+      <th style="text-align: center">Pay Order Date</th>
+      <th style="text-align: center">Controlling No</th>
+      <th style="text-align: center">Pay Order No</th>
+      <th style="text-align: center">Amount</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-payOrder>
     <tr>
-      <td>{{ payOrder.serial }}</td>
-      <td>{{ payOrder.dealer }}</td>
-      <td>{{ payOrder.fertilizer }}</td>
-      <td>{{ payOrder.payTo }}</td>
-      <td>{{ payOrder.slipNo }}</td>
-      <td>{{ payOrder.payOrderDate }}</td>
-      <td>{{ payOrder.controllingNo }}</td>
-      <td>{{ payOrder.payOrderNumber }}</td>
-      <td>{{ payOrder.amount }}</td>
+      <td style="text-align: center">{{ payOrder.serial }}</td>
+      <td style="text-align: center">{{ payOrder.dealer }}</td>
+      <td style="text-align: center">{{ payOrder.fertilizer }}</td>
+      <td style="text-align: center">{{ payOrder.payTo }}</td>
+      <td style="text-align: center">{{ payOrder.slipNo }}</td>
+      <td style="text-align: center">{{ payOrder.payOrderDate }}</td>
+      <td style="text-align: center">{{ payOrder.controllingNo }}</td>
+      <td style="text-align: center">{{ payOrder.payOrderNumber }}</td>
+      <td style="text-align: right">{{ payOrder.amount }}</td>
     </tr>
   </ng-template>
   <ng-template pTemplate="footer">
     <tr>
-      <td colspan="8" class="text-right">Totals</td>
-      <td>{{ amountTotal | currency: 'BDT' }}</td>
+      <td colspan="8" style="text-align: right">Totals</td>
+      <td style="text-align: right">{{ amountTotal | currency: 'BDT' }}</td>
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="summary"> There are {{ payOrdersDataTable.length }} pay orders. </ng-template>
+  <ng-template pTemplate="summary">
+    <div style="text-align: center">There are {{ payOrdersDataTable.length }} pay orders.</div>
+  </ng-template>
 </p-table>
-
-<table id="my-table">
-  <tr>
-    <th>Column1</th>
-    <th>Column2</th>
-    <th>Column3</th>
-  </tr>
-  <tr>
-    <td>Row 1</td>
-    <td>Row 1</td>
-    <td>Row 1</td>
-  </tr>
-  <tr>
-    <td>Row 2</td>
-    <td>Row 2</td>
-    <td>Row 2</td>
-  </tr>
-  <tr>
-    <td>Row 3</td>
-    <td>Row 3</td>
-    <td>Row 3</td>
-  </tr>
-  <tr>
-    <td>Row 4</td>
-    <td>Row 4</td>
-    <td>Row 4</td>
-  </tr>
-  <tr>
-    <td>Row 5</td>
-    <td>Row 5</td>
-    <td>Row 5</td>
-  </tr>
-  <tr>
-    <td>Row 6</td>
-    <td>Row 6</td>
-    <td>Row 6</td>
-  </tr>
-</table>

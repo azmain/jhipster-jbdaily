@@ -9,7 +9,7 @@
       </div>
 
       <button class="btn btn-info me-2" (click)="search()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <fa-icon icon="search" [spin]="isLoading"></fa-icon>
         <span jhiTranslate="jbdailyApp.payOrder.home.searchListLabel">Search</span>
       </button>
 
@@ -112,7 +112,7 @@
             </div>
           </td>
           <td>
-            <a [routerLink]="['/pay-order', payOrder.id, 'view']">{{ payOrder.payOrderNumber }}</a>
+            <a [routerLink]="['/pay-order', payOrder.id, 'view']" style="text-decoration: none">{{ payOrder.payOrderNumber }}</a>
           </td>
           <td>{{ payOrder.payOrderDate | formatMediumDate }}</td>
           <td>{{ payOrder.amount }}</td>
@@ -120,7 +120,7 @@
           <td>{{ payOrder.controllingNo }}</td>
           <td class="text-end">
             <div class="btn-group">
-              <button type="submit" [routerLink]="['/pay-order', payOrder.id, 'micr']" class="btn btn-info btn-sm">
+              <button type="submit" [routerLink]="['/pay-order', payOrder.id, 'micr']" class="btn btn-success btn-sm">
                 <i class="pi pi-credit-card"></i>
                 <span class="d-none d-md-inline">MICR</span>
               </button>

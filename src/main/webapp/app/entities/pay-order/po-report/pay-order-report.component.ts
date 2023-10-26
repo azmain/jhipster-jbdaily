@@ -19,6 +19,8 @@ import { font } from 'content/fonts/custom-font';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { EnglishToBanglaNumber } from 'app/helpers/english-to-bangla-number';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -28,8 +30,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['./pay-order-report.component.scss'],
 })
 export class PayOrderReportComponent implements OnInit {
-  @ViewChild('pTableId') pTableRef: any;
-
   payOrderSearchForm: FormGroup;
 
   fertilizersSharedCollection: IFertilizer[] = [];
@@ -38,6 +38,18 @@ export class PayOrderReportComponent implements OnInit {
   payOrders?: IPayOrder[] = [];
   payOrdersDataTable: any[] = [];
   isLoading = false;
+
+  tableColumns: string[] = [
+    'Serial',
+    'Dealer',
+    'Fertilizer',
+    'Pay To',
+    'Slip No',
+    'Pay Order Date',
+    'Controlling No',
+    'Pay Order No',
+    'Amount',
+  ];
 
   predicate = 'payOrderDate';
   ascending = false;
@@ -72,10 +84,6 @@ export class PayOrderReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRelationshipsOptions();
-  }
-  ngAfterViewInit() {
-    const table = this.pTableRef.el.nativeElement.querySelector('table');
-    table.setAttribute('id', 'myTableId');
   }
 
   onSearch() {
@@ -124,98 +132,83 @@ export class PayOrderReportComponent implements OnInit {
     };
   }
 
-  exportPdf() {
-    // const doc = new jsPDF();
-
-    const tableData = [
-      ['Column 1', 'Column 2', 'Column 3'],
-      ['Row 1, Cell 1', 'Row 1, Cell 2', 'Row 1, Cell 3'],
-      ['Row 2, Cell 1', 'Row 2, Cell 2', 'Row 2, Cell 3'],
-    ];
-    // const d = [{
-    //   'one': 'one'
-    // }];
-    // let styles = {
-    //   autoSize: true,
-    //   printHeaders: false,
-    //   columnWidths: 80
-    // }
-
-    // doc.table(10, 10, d, tableData[0], styles);
-
-    // var doc = new jsPDF('p','pt', 'a4', true);
-    // var header = [1,2,3,4];
-    // doc.table(10, 10, $('#test').get(0), header, {
-    // left:10,
-    // top:10,
-    // bottom: 10,
-    // width: 170,
-    // autoSize:false,
-    // printHeaders: true
-    // });
-    // doc.save('sample-file.pdf');
-
-    // Define the coordinates and width of the table
-    // const tableX = 10;
-    // const tableY = 10;
-    // const tableWidth = 190;
-
-    // // Create the header row
-    // doc.text(tableData[0], tableX, tableY);
-
-    // // Create the data rows
-    // for (let i = 1; i < tableData.length; i++) {
-    //   const rowData = tableData[i];
-    //   doc.text(rowData, tableX, tableY + i * 10);
-    // }
-
-    // Save the PDF
-    // doc.save('sample.pdf');
-
-    // doc.auto
-    // doc.save('a4.pdf');
-
-    // import("jspdf").then(jsPDF => {
-    //     import("jspdf-autotable").then(x => {
-    //         const doc = new jsPDF.default(0,0);
-    //         doc.autoTable(this.exportColumns, this.products);
-    //         doc.save('products.pdf');
-    //     })
-    // })
-  }
-
   export() {
     console.log(window.location.origin);
 
-    // console.log(font);
+    let columns: any[] = [];
+    let tableRows: any[] = [];
 
-    let docDefinition = {
-      header: 'C#Corner PDF Header',
+    // console.log(font);
+    console.log(this.payOrdersDataTable);
+    if (this.payOrdersDataTable.length > 0) {
+      columns = Object.keys(this.payOrdersDataTable[0]);
+      console.log(columns);
+      tableRows = this.payOrdersDataTable.map((payOrder, i) => {
+        return [
+          payOrder[columns[0]] ?? 'N/A',
+          payOrder[columns[1]] ?? 'N/A',
+          payOrder[columns[2]] ?? 'N/A',
+          payOrder[columns[3]] ?? 'N/A',
+          payOrder[columns[4]] ?? 'N/A',
+          payOrder[columns[5]] ?? 'N/A',
+          payOrder[columns[6]] ?? 'N/A',
+          payOrder[columns[7]] ?? 'N/A',
+          { text: payOrder[columns[8]] ?? 'N/A', style: 'amountStyle' },
+        ];
+      });
+
+      console.log(tableRows);
+    } else {
+    }
+
+    let docDefinition: TDocumentDefinitions = {
       content: [
-        { text: 'Defining column widths', style: 'subheader' },
-        'Tables support the same width definitions as standard columns:',
         {
-          ul: ['auto', 'star', 'fixed value'],
+          text: 'Pay Orders Printed On ' + dayjs().format('DD-MM-YYYY'),
+          style: 'header',
         },
         {
-          style: 'tableExample',
+          style: 'payOrderTable',
           table: {
-            widths: [100, '*', 200, '*'],
+            headerRows: 1,
+            dontBreakRows: true,
+            widths: 'auto',
             body: [
-              ['width=100', 'star-sized', 'width=200', 'star-sized'],
+              this.tableColumns,
+              ...tableRows,
               [
-                'fixed-width cells have exactly the specified width',
-                { text: 'nothing interesting here', color: 'gray' },
-                { text: 'nothing interesting here', color: 'gray' },
-                { text: 'nothing interesting here', color: 'gray' },
+                {
+                  text: 'Total',
+                  colSpan: 8,
+                  alignment: 'right',
+                },
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {
+                  text: this.amountTotal.toLocaleString('en-US', { useGrouping: true }),
+                  alignment: 'right',
+                },
               ],
-              ['আব্দুর রহমান সোনার বাংলা', 'অজ্ঞ প্রতিষ্ঠান', 'প্রান', 'Good to Go'],
             ],
           },
         },
       ],
+      styles: {
+        header: {
+          alignment: 'center',
+        },
+        amountStyle: {
+          alignment: 'right',
+        },
+      },
       defaultStyle: {
         font: 'Bangla',
+        alignment: 'center',
       },
     };
     pdfMake.vfs = {
@@ -242,7 +235,7 @@ export class PayOrderReportComponent implements OnInit {
         fertilizer: item.fertilizer?.name,
         payTo: 'JFCL - ' + item.fertilizer?.name,
         slipNo: item.slipNo,
-        payOrderDate: dayjs(item.payOrderDate, 'DD-MM-YYYY'),
+        payOrderDate: dayjs(item.payOrderDate).format('DD/MM/YY'),
         controllingNo: item.controllingNo,
         payOrderNumber: item.payOrderNumber,
         amount: `${item.amount.toLocaleString('en-US', { useGrouping: true })}`,
