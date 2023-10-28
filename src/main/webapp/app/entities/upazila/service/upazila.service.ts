@@ -11,10 +11,7 @@ import { IUpazila, NewUpazila } from '../upazila.model';
 
 export type PartialUpdateUpazila = Partial<IUpazila> & Pick<IUpazila, 'id'>;
 
-type RestOf<T extends IUpazila | NewUpazila> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IUpazila | NewUpazila> = T & {};
 
 export type RestUpazila = RestOf<IUpazila>;
 
@@ -100,8 +97,6 @@ export class UpazilaService {
   protected convertDateFromClient<T extends IUpazila | NewUpazila | PartialUpdateUpazila>(upazila: T): RestOf<T> {
     return {
       ...upazila,
-      createdDate: upazila.createdDate?.toJSON() ?? null,
-      lastModifiedDate: upazila.lastModifiedDate?.toJSON() ?? null,
     };
   }
 

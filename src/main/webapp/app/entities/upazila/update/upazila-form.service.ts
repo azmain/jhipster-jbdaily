@@ -19,10 +19,7 @@ type UpazilaFormGroupInput = IUpazila | PartialWithRequiredKeyOf<NewUpazila>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IUpazila | NewUpazila> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IUpazila | NewUpazila> = T & {};
 
 type UpazilaFormRawValue = FormValueOf<IUpazila>;
 
@@ -34,10 +31,6 @@ type UpazilaFormGroupContent = {
   id: FormControl<UpazilaFormRawValue['id'] | NewUpazila['id']>;
   name: FormControl<UpazilaFormRawValue['name']>;
   bnName: FormControl<UpazilaFormRawValue['bnName']>;
-  createdBy: FormControl<UpazilaFormRawValue['createdBy']>;
-  createdDate: FormControl<UpazilaFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<UpazilaFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<UpazilaFormRawValue['lastModifiedDate']>;
   district: FormControl<UpazilaFormRawValue['district']>;
 };
 
@@ -64,16 +57,6 @@ export class UpazilaFormService {
       bnName: new FormControl(upazilaRawValue.bnName, {
         validators: [Validators.required, Validators.maxLength(255)],
       }),
-      createdBy: new FormControl(upazilaRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(upazilaRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(upazilaRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(upazilaRawValue.lastModifiedDate),
       district: new FormControl(upazilaRawValue.district, {
         validators: [Validators.required],
       }),
@@ -99,16 +82,12 @@ export class UpazilaFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
   private convertUpazilaRawValueToUpazila(rawUpazila: UpazilaFormRawValue | NewUpazilaFormRawValue): IUpazila | NewUpazila {
     return {
       ...rawUpazila,
-      createdDate: dayjs(rawUpazila.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawUpazila.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -117,8 +96,7 @@ export class UpazilaFormService {
   ): UpazilaFormRawValue | PartialWithRequiredKeyOf<NewUpazilaFormRawValue> {
     return {
       ...upazila,
-      createdDate: upazila.createdDate ? upazila.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: upazila.lastModifiedDate ? upazila.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      district: upazila.district ? { id: upazila.district.id, name: upazila.district.name, bnName: upazila.district.bnName } : null,
     };
   }
 }

@@ -9,7 +9,7 @@ export interface IUpazila {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  district?: Pick<IDistrict, 'id' | 'name'> | null;
+  district?: Pick<IDistrict, 'id' | 'name' | 'bnName'> | null;
 }
 
 export type NewUpazila = Omit<IUpazila, 'id'> & { id: null };

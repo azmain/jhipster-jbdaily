@@ -58,14 +58,14 @@ public class DealerServiceImpl implements DealerService {
     public DealerDTO update(DealerDTO dealerDTO) {
         log.debug("Request to update Dealer : {}", dealerDTO);
 
-        Dealer persistFertilizer = dealerRepository
+        Dealer persistDealer = dealerRepository
             .findById(dealerDTO.getId())
             .orElseThrow(() -> new BadRequestAlertException("Entity not found", "dealer", "idnotfound"));
 
         Dealer dealer = dealerMapper.toEntity(dealerDTO);
 
-        dealer.setCreatedDate(persistFertilizer.getCreatedDate());
-        dealer.setCreatedBy(persistFertilizer.getCreatedBy());
+        dealer.setCreatedDate(persistDealer.getCreatedDate());
+        dealer.setCreatedBy(persistDealer.getCreatedBy());
         dealer.setLastModifiedDate(Instant.now());
         dealer.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
 

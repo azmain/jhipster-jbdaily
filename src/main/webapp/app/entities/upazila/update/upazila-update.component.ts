@@ -9,6 +9,9 @@ import { IUpazila } from '../upazila.model';
 import { UpazilaService } from '../service/upazila.service';
 import { IDistrict } from 'app/entities/district/district.model';
 import { DistrictService } from 'app/entities/district/service/district.service';
+import { FilterOptions, IFilterOptions } from 'app/shared/filter/filter.model';
+import { ITEMS_FOR_DROPDOWN } from 'app/config/pagination.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 @Component({
   selector: 'jhi-upazila-update',
@@ -19,6 +22,14 @@ export class UpazilaUpdateComponent implements OnInit {
   upazila: IUpazila | null = null;
 
   districtsSharedCollection: IDistrict[] = [];
+
+  predicate = 'createdDate';
+  ascending = false;
+  filters: IFilterOptions = new FilterOptions();
+
+  itemsPerPage = ITEMS_FOR_DROPDOWN;
+  totalItems = 0;
+  page = 1;
 
   editForm: UpazilaFormGroup = this.upazilaFormService.createUpazilaFormGroup();
 
@@ -86,12 +97,35 @@ export class UpazilaUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const queryObject = {
+      page: this.page - 1,
+      size: this.itemsPerPage,
+      eagerload: false,
+      sort: this.getSortQueryParam(this.predicate, this.ascending),
+    };
     this.districtService
-      .query()
-      .pipe(map((res: HttpResponse<IDistrict[]>) => res.body ?? []))
+      .query(queryObject)
+      .pipe(map((res: HttpResponse<IDistrict[]>) => (res.body ? res.body.map(item => this.convertDistrictOption(item)) : [])))
       .pipe(
         map((districts: IDistrict[]) => this.districtService.addDistrictToCollectionIfMissing<IDistrict>(districts, this.upazila?.district))
       )
       .subscribe((districts: IDistrict[]) => (this.districtsSharedCollection = districts));
+  }
+
+  protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
+    const ascendingQueryParam = ascending ? ASC : DESC;
+    if (predicate === '') {
+      return [];
+    } else {
+      return [predicate + ',' + ascendingQueryParam];
+    }
+  }
+
+  convertDistrictOption(district: IDistrict): IDistrict {
+    return {
+      id: district.id,
+      name: district.name,
+      bnName: district.bnName,
+    };
   }
 }

@@ -18,5 +18,6 @@ public interface UpazilaMapper extends EntityMapper<UpazilaDTO, Upazila> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "bnName", source = "bnName")
     DistrictDTO toDtoDistrictName(District district);
 }

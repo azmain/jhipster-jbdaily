@@ -1,10 +1,15 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
+import io.azmain.jb.domain.Dealer;
 import io.azmain.jb.domain.Upazila;
 import io.azmain.jb.repository.UpazilaRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.UpazilaService;
 import io.azmain.jb.service.dto.UpazilaDTO;
 import io.azmain.jb.service.mapper.UpazilaMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +28,17 @@ public class UpazilaServiceImpl implements UpazilaService {
     private final Logger log = LoggerFactory.getLogger(UpazilaServiceImpl.class);
 
     private final UpazilaRepository upazilaRepository;
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
 
     private final UpazilaMapper upazilaMapper;
 
-    public UpazilaServiceImpl(UpazilaRepository upazilaRepository, UpazilaMapper upazilaMapper) {
+    public UpazilaServiceImpl(
+        UpazilaRepository upazilaRepository,
+        SpringSecurityAuditorAware springSecurityAuditorAware,
+        UpazilaMapper upazilaMapper
+    ) {
         this.upazilaRepository = upazilaRepository;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
         this.upazilaMapper = upazilaMapper;
     }
 
@@ -35,6 +46,10 @@ public class UpazilaServiceImpl implements UpazilaService {
     public UpazilaDTO save(UpazilaDTO upazilaDTO) {
         log.debug("Request to save Upazila : {}", upazilaDTO);
         Upazila upazila = upazilaMapper.toEntity(upazilaDTO);
+
+        upazila.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        upazila.createdDate(Instant.now());
+
         upazila = upazilaRepository.save(upazila);
         return upazilaMapper.toDto(upazila);
     }
@@ -42,7 +57,17 @@ public class UpazilaServiceImpl implements UpazilaService {
     @Override
     public UpazilaDTO update(UpazilaDTO upazilaDTO) {
         log.debug("Request to update Upazila : {}", upazilaDTO);
+
+        Upazila persistDistrict = upazilaRepository
+            .findById(upazilaDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "upazila", "idnotfound"));
+
         Upazila upazila = upazilaMapper.toEntity(upazilaDTO);
+        upazila.setCreatedDate(persistDistrict.getCreatedDate());
+        upazila.setCreatedBy(persistDistrict.getCreatedBy());
+        upazila.setLastModifiedDate(Instant.now());
+        upazila.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         upazila = upazilaRepository.save(upazila);
         return upazilaMapper.toDto(upazila);
     }
