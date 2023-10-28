@@ -11,10 +11,7 @@ import { IFertilizer, NewFertilizer } from '../fertilizer.model';
 
 export type PartialUpdateFertilizer = Partial<IFertilizer> & Pick<IFertilizer, 'id'>;
 
-type RestOf<T extends IFertilizer | NewFertilizer> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IFertilizer | NewFertilizer> = T & {};
 
 export type RestFertilizer = RestOf<IFertilizer>;
 
@@ -100,8 +97,6 @@ export class FertilizerService {
   protected convertDateFromClient<T extends IFertilizer | NewFertilizer | PartialUpdateFertilizer>(fertilizer: T): RestOf<T> {
     return {
       ...fertilizer,
-      createdDate: fertilizer.createdDate?.toJSON() ?? null,
-      lastModifiedDate: fertilizer.lastModifiedDate?.toJSON() ?? null,
     };
   }
 

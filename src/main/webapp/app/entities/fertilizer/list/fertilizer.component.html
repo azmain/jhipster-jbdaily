@@ -62,30 +62,7 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.fertilizer.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.fertilizer.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.fertilizer.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.fertilizer.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col"></th>
         </tr>
       </thead>
@@ -98,10 +75,6 @@
           <td>{{ fertilizer.bnName }}</td>
           <td>{{ fertilizer.accountNo }}</td>
           <td>{{ fertilizer.accountTitle }}</td>
-          <td>{{ fertilizer.createdBy }}</td>
-          <td>{{ fertilizer.createdDate | formatMediumDatetime }}</td>
-          <td>{{ fertilizer.lastModifiedBy }}</td>
-          <td>{{ fertilizer.lastModifiedDate | formatMediumDatetime }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button

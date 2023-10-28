@@ -40,6 +40,7 @@ export class FertilizerUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const fertilizer = this.fertilizerFormService.getFertilizer(this.editForm);
+    console.log('save fertilizer', fertilizer);
     if (fertilizer.id !== null) {
       this.subscribeToSaveResponse(this.fertilizerService.update(fertilizer));
     } else {

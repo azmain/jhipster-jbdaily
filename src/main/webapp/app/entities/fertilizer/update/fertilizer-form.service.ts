@@ -19,16 +19,13 @@ type FertilizerFormGroupInput = IFertilizer | PartialWithRequiredKeyOf<NewFertil
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IFertilizer | NewFertilizer> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IFertilizer | NewFertilizer> = T & {};
 
 type FertilizerFormRawValue = FormValueOf<IFertilizer>;
 
 type NewFertilizerFormRawValue = FormValueOf<NewFertilizer>;
 
-type FertilizerFormDefaults = Pick<NewFertilizer, 'id' | 'createdDate' | 'lastModifiedDate'>;
+type FertilizerFormDefaults = Pick<NewFertilizer, 'id'>;
 
 type FertilizerFormGroupContent = {
   id: FormControl<FertilizerFormRawValue['id'] | NewFertilizer['id']>;
@@ -36,10 +33,6 @@ type FertilizerFormGroupContent = {
   bnName: FormControl<FertilizerFormRawValue['bnName']>;
   accountNo: FormControl<FertilizerFormRawValue['accountNo']>;
   accountTitle: FormControl<FertilizerFormRawValue['accountTitle']>;
-  createdBy: FormControl<FertilizerFormRawValue['createdBy']>;
-  createdDate: FormControl<FertilizerFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<FertilizerFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<FertilizerFormRawValue['lastModifiedDate']>;
 };
 
 export type FertilizerFormGroup = FormGroup<FertilizerFormGroupContent>;
@@ -71,16 +64,6 @@ export class FertilizerFormService {
       accountTitle: new FormControl(fertilizerRawValue.accountTitle, {
         validators: [Validators.required, Validators.maxLength(255)],
       }),
-      createdBy: new FormControl(fertilizerRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(fertilizerRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(fertilizerRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(fertilizerRawValue.lastModifiedDate),
     });
   }
 
@@ -103,8 +86,6 @@ export class FertilizerFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
@@ -113,8 +94,6 @@ export class FertilizerFormService {
   ): IFertilizer | NewFertilizer {
     return {
       ...rawFertilizer,
-      createdDate: dayjs(rawFertilizer.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawFertilizer.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -123,8 +102,6 @@ export class FertilizerFormService {
   ): FertilizerFormRawValue | PartialWithRequiredKeyOf<NewFertilizerFormRawValue> {
     return {
       ...fertilizer,
-      createdDate: fertilizer.createdDate ? fertilizer.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: fertilizer.lastModifiedDate ? fertilizer.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

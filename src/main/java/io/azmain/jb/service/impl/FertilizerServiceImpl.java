@@ -1,10 +1,15 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
 import io.azmain.jb.domain.Fertilizer;
+import io.azmain.jb.domain.PayOrder;
 import io.azmain.jb.repository.FertilizerRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.FertilizerService;
 import io.azmain.jb.service.dto.FertilizerDTO;
 import io.azmain.jb.service.mapper.FertilizerMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +30,27 @@ public class FertilizerServiceImpl implements FertilizerService {
     private final FertilizerRepository fertilizerRepository;
 
     private final FertilizerMapper fertilizerMapper;
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
 
-    public FertilizerServiceImpl(FertilizerRepository fertilizerRepository, FertilizerMapper fertilizerMapper) {
+    public FertilizerServiceImpl(
+        FertilizerRepository fertilizerRepository,
+        FertilizerMapper fertilizerMapper,
+        SpringSecurityAuditorAware springSecurityAuditorAware
+    ) {
         this.fertilizerRepository = fertilizerRepository;
         this.fertilizerMapper = fertilizerMapper;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
     }
 
     @Override
     public FertilizerDTO save(FertilizerDTO fertilizerDTO) {
         log.debug("Request to save Fertilizer : {}", fertilizerDTO);
+
         Fertilizer fertilizer = fertilizerMapper.toEntity(fertilizerDTO);
+
+        fertilizer.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        fertilizer.createdDate(Instant.now());
+
         fertilizer = fertilizerRepository.save(fertilizer);
         return fertilizerMapper.toDto(fertilizer);
     }
@@ -42,7 +58,16 @@ public class FertilizerServiceImpl implements FertilizerService {
     @Override
     public FertilizerDTO update(FertilizerDTO fertilizerDTO) {
         log.debug("Request to update Fertilizer : {}", fertilizerDTO);
+        Fertilizer persistFertilizer = fertilizerRepository
+            .findById(fertilizerDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "fertilizer", "idnotfound"));
+
         Fertilizer fertilizer = fertilizerMapper.toEntity(fertilizerDTO);
+        fertilizer.setCreatedDate(persistFertilizer.getCreatedDate());
+        fertilizer.setCreatedBy(persistFertilizer.getCreatedBy());
+        fertilizer.setLastModifiedDate(Instant.now());
+        fertilizer.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         fertilizer = fertilizerRepository.save(fertilizer);
         return fertilizerMapper.toDto(fertilizer);
     }
