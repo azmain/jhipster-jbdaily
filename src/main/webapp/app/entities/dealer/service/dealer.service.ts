@@ -11,10 +11,7 @@ import { IDealer, NewDealer } from '../dealer.model';
 
 export type PartialUpdateDealer = Partial<IDealer> & Pick<IDealer, 'id'>;
 
-type RestOf<T extends IDealer | NewDealer> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IDealer | NewDealer> = T & {};
 
 export type RestDealer = RestOf<IDealer>;
 
@@ -100,8 +97,6 @@ export class DealerService {
   protected convertDateFromClient<T extends IDealer | NewDealer | PartialUpdateDealer>(dealer: T): RestOf<T> {
     return {
       ...dealer,
-      createdDate: dealer.createdDate?.toJSON() ?? null,
-      lastModifiedDate: dealer.lastModifiedDate?.toJSON() ?? null,
     };
   }
 

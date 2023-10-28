@@ -9,6 +9,9 @@ import { IDealer } from '../dealer.model';
 import { DealerService } from '../service/dealer.service';
 import { IUpazila } from 'app/entities/upazila/upazila.model';
 import { UpazilaService } from 'app/entities/upazila/service/upazila.service';
+import { ITEMS_FOR_DROPDOWN, ITEMS_PER_PAGE } from 'app/config/pagination.constants';
+import { FilterOptions, IFilterOptions } from 'app/shared/filter/filter.model';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 @Component({
   selector: 'jhi-dealer-update',
@@ -19,6 +22,14 @@ export class DealerUpdateComponent implements OnInit {
   dealer: IDealer | null = null;
 
   upazilasSharedCollection: IUpazila[] = [];
+
+  predicate = 'createdDate';
+  ascending = false;
+  filters: IFilterOptions = new FilterOptions();
+
+  itemsPerPage = ITEMS_FOR_DROPDOWN;
+  totalItems = 0;
+  page = 1;
 
   editForm: DealerFormGroup = this.dealerFormService.createDealerFormGroup();
 
@@ -88,9 +99,15 @@ export class DealerUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const queryObject = {
+      page: this.page - 1,
+      size: this.itemsPerPage,
+      eagerload: false,
+      sort: this.getSortQueryParam(this.predicate, this.ascending),
+    };
     this.upazilaService
-      .query()
-      .pipe(map((res: HttpResponse<IUpazila[]>) => res.body ?? []))
+      .query(queryObject)
+      .pipe(map((res: HttpResponse<IUpazila[]>) => (res.body ? res.body.map(item => this.convertUpazilaOption(item)) : [])))
       .pipe(map((upazilas: IUpazila[]) => this.upazilaService.addUpazilaToCollectionIfMissing<IUpazila>(upazilas, this.dealer?.upazila)))
       .subscribe((upazilas: IUpazila[]) => {
         console.log('upazila', upazilas);
@@ -99,5 +116,22 @@ export class DealerUpdateComponent implements OnInit {
         console.log('upazila', upazilas);
         console.log('upazila collection', this.upazilasSharedCollection);
       });
+  }
+
+  protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
+    const ascendingQueryParam = ascending ? ASC : DESC;
+    if (predicate === '') {
+      return [];
+    } else {
+      return [predicate + ',' + ascendingQueryParam];
+    }
+  }
+
+  convertUpazilaOption(upazila: IUpazila): IUpazila {
+    return {
+      id: upazila.id,
+      name: upazila.name,
+      bnName: upazila.bnName,
+    };
   }
 }

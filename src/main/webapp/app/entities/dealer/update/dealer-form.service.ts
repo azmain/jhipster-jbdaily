@@ -19,16 +19,13 @@ type DealerFormGroupInput = IDealer | PartialWithRequiredKeyOf<NewDealer>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IDealer | NewDealer> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IDealer | NewDealer> = T & {};
 
 type DealerFormRawValue = FormValueOf<IDealer>;
 
 type NewDealerFormRawValue = FormValueOf<NewDealer>;
 
-type DealerFormDefaults = Pick<NewDealer, 'id' | 'createdDate' | 'lastModifiedDate'>;
+type DealerFormDefaults = Pick<NewDealer, 'id'>;
 
 type DealerFormGroupContent = {
   id: FormControl<DealerFormRawValue['id'] | NewDealer['id']>;
@@ -36,10 +33,6 @@ type DealerFormGroupContent = {
   bnName: FormControl<DealerFormRawValue['bnName']>;
   shortName: FormControl<DealerFormRawValue['shortName']>;
   mobile: FormControl<DealerFormRawValue['mobile']>;
-  createdBy: FormControl<DealerFormRawValue['createdBy']>;
-  createdDate: FormControl<DealerFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<DealerFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<DealerFormRawValue['lastModifiedDate']>;
   upazila: FormControl<DealerFormRawValue['upazila']>;
 };
 
@@ -72,16 +65,6 @@ export class DealerFormService {
       mobile: new FormControl(dealerRawValue.mobile, {
         validators: [Validators.maxLength(255)],
       }),
-      createdBy: new FormControl(dealerRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(dealerRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(dealerRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(dealerRawValue.lastModifiedDate),
       upazila: new FormControl(dealerRawValue.upazila, {
         validators: [Validators.required],
       }),
@@ -107,16 +90,12 @@ export class DealerFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
   private convertDealerRawValueToDealer(rawDealer: DealerFormRawValue | NewDealerFormRawValue): IDealer | NewDealer {
     return {
       ...rawDealer,
-      createdDate: dayjs(rawDealer.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawDealer.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -125,8 +104,7 @@ export class DealerFormService {
   ): DealerFormRawValue | PartialWithRequiredKeyOf<NewDealerFormRawValue> {
     return {
       ...dealer,
-      createdDate: dealer.createdDate ? dealer.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: dealer.lastModifiedDate ? dealer.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      upazila: dealer.upazila ? { id: dealer.upazila.id, name: dealer.upazila.name, bnName: dealer.upazila.bnName } : null,
     };
   }
 }

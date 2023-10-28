@@ -11,7 +11,7 @@ export interface IDealer {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  upazila?: Pick<IUpazila, 'id' | 'name'> | null;
+  upazila?: Pick<IUpazila, 'id' | 'name' | 'bnName'> | null;
 }
 
 export type NewDealer = Omit<IDealer, 'id'> & { id: null };

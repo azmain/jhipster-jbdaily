@@ -1,10 +1,15 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
 import io.azmain.jb.domain.Dealer;
+import io.azmain.jb.domain.Fertilizer;
 import io.azmain.jb.repository.DealerRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.DealerService;
 import io.azmain.jb.service.dto.DealerDTO;
 import io.azmain.jb.service.mapper.DealerMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +30,26 @@ public class DealerServiceImpl implements DealerService {
     private final DealerRepository dealerRepository;
 
     private final DealerMapper dealerMapper;
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
 
-    public DealerServiceImpl(DealerRepository dealerRepository, DealerMapper dealerMapper) {
+    public DealerServiceImpl(
+        DealerRepository dealerRepository,
+        DealerMapper dealerMapper,
+        SpringSecurityAuditorAware springSecurityAuditorAware
+    ) {
         this.dealerRepository = dealerRepository;
         this.dealerMapper = dealerMapper;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
     }
 
     @Override
     public DealerDTO save(DealerDTO dealerDTO) {
         log.debug("Request to save Dealer : {}", dealerDTO);
         Dealer dealer = dealerMapper.toEntity(dealerDTO);
+
+        dealer.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        dealer.createdDate(Instant.now());
+
         dealer = dealerRepository.save(dealer);
         return dealerMapper.toDto(dealer);
     }
@@ -42,7 +57,18 @@ public class DealerServiceImpl implements DealerService {
     @Override
     public DealerDTO update(DealerDTO dealerDTO) {
         log.debug("Request to update Dealer : {}", dealerDTO);
+
+        Dealer persistFertilizer = dealerRepository
+            .findById(dealerDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "dealer", "idnotfound"));
+
         Dealer dealer = dealerMapper.toEntity(dealerDTO);
+
+        dealer.setCreatedDate(persistFertilizer.getCreatedDate());
+        dealer.setCreatedBy(persistFertilizer.getCreatedBy());
+        dealer.setLastModifiedDate(Instant.now());
+        dealer.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         dealer = dealerRepository.save(dealer);
         return dealerMapper.toDto(dealer);
     }

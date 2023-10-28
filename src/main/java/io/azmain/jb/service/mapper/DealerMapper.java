@@ -18,5 +18,6 @@ public interface DealerMapper extends EntityMapper<DealerDTO, Dealer> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "bnName", source = "bnName")
     UpazilaDTO toDtoUpazilaName(Upazila upazila);
 }
