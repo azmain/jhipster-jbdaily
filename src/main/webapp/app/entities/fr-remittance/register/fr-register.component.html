@@ -1,0 +1,162 @@
+<div>
+  <form class="row g-3" [formGroup]="frRemittanceSearchForm">
+    <div class="col-md-3">
+      <label for="inputEmail4" class="form-label">Transaction Type</label>
+      <p-dropdown
+        [options]="transactionTypeValues | keyvalue"
+        formControlName="transactionType"
+        optionLabel="value"
+        optionValue="value"
+        [filter]="true"
+        filterBy="name"
+        [showClear]="true"
+        [style]="{ width: '100%' }"
+        placeholder="Select a transaction type"
+      >
+      </p-dropdown>
+    </div>
+    <div class="col-md-3">
+      <label for="inputPassword4" class="form-label">Money Exchange</label>
+      <p-dropdown
+        [options]="moneyExchangesSharedCollection"
+        id="field_moneyExchange"
+        data-cy="moneyExchange"
+        name="moneyExchange"
+        formControlName="moneyExchangeId"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+        [showClear]="true"
+        [style]="{ width: '100%' }"
+        placeholder="Select a moneyExchange"
+      >
+      </p-dropdown>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label" for="field_paymentDate">From Paid Date</label>
+      <p-calendar
+        name="paymentDate"
+        id="field_paymentDate"
+        formControlName="paymentDateFrom"
+        dateFormat="dd/mm/yy"
+        [style]="{ width: '100%' }"
+        [showButtonBar]="true"
+        [showIcon]="true"
+      ></p-calendar>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="field_paymentDate">To Paid Date</label>
+      <p-calendar
+        name="paymentDate"
+        id="field_paymentDate"
+        formControlName="paymentDateTo"
+        dateFormat="dd/mm/yy"
+        [style]="{ width: '100%' }"
+        [showButtonBar]="true"
+        [showIcon]="true"
+      ></p-calendar>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label" for="field_incPaymentDate">From Incentive Paid Date</label>
+      <p-calendar
+        name="incPaymentDate"
+        id="field_incPaymentDate"
+        formControlName="incPaymentDateFrom"
+        dateFormat="dd/mm/yy"
+        [style]="{ width: '100%' }"
+        [showButtonBar]="true"
+        [showIcon]="true"
+      ></p-calendar>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="field_incPaymentDate">To Incentive Paid Date</label>
+      <p-calendar
+        name="incPaymentDate"
+        id="field_incPaymentDate"
+        formControlName="incPaymentDateTo"
+        dateFormat="dd/mm/yy"
+        [style]="{ width: '100%' }"
+        [showButtonBar]="true"
+        [showIcon]="true"
+      ></p-calendar>
+    </div>
+
+    <div class="col-md-3">
+      <label for="inputPassword4" class="form-label">Receiver Name</label>
+      <input type="text" pInputText [style]="{ width: '100%' }" formControlName="recvName" />
+    </div>
+
+    <div class="col-12">
+      <p-button label="Search" icon="pi pi-search" iconPos="right" (click)="onSearch()"></p-button>
+    </div>
+  </form>
+</div>
+
+<br />
+<br />
+
+<p-table
+  #pTableId
+  [value]="frRemittancesDataTable"
+  styleClass="p-datatable-gridlines p-datatable-sm"
+  [exportHeader]="'customExportHeader'"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="true"
+  [rows]="20"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [rowsPerPageOptions]="[20, 40, 60]"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-right" style="text-align: right">
+      <button
+        type="button"
+        pButton
+        pRipple
+        icon="pi pi-file-pdf"
+        (click)="export()"
+        class="p-button-warning mr-2"
+        pTooltip="PDF"
+        tooltipPosition="bottom"
+      ></button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="text-align: center">Serial</th>
+      <th style="text-align: center">Transaction Type</th>
+      <th style="text-align: center">Payment Date</th>
+      <th style="text-align: center">NID/PASSPORT</th>
+      <th style="text-align: center">Receiver Name</th>
+      <th style="text-align: center">PIN/ACCOUNT</th>
+      <th style="text-align: center">Amount</th>
+      <th style="text-align: center">Incentive Amount</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-fr>
+    <tr>
+      <td style="text-align: center">{{ fr.id }}</td>
+      <td style="text-align: center">{{ fr.transactionType }}</td>
+      <td style="text-align: center">{{ fr.paymentDate }}</td>
+      <td style="text-align: center">{{ fr.recvLegalId }}</td>
+      <td style="text-align: center">{{ fr.recvName }}</td>
+      <td style="text-align: center">{{ fr.pin }}</td>
+      <td style="text-align: center">{{ fr.amount }}</td>
+      <td style="text-align: right">{{ fr.incentiveAmount }}</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <tr>
+      <td colspan="6" style="text-align: right">Totals</td>
+      <td style="text-align: right">{{ frAmountTotal | currency: 'BDT' }}</td>
+      <td style="text-align: right">{{ frIncAmountTotal | currency: 'BDT' }}</td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="summary">
+    <div style="text-align: center">There are {{ frRemittancesDataTable.length }} remittances.</div>
+  </ng-template>
+</p-table>

@@ -6,7 +6,8 @@ import { FrRemittanceComponent } from '../list/fr-remittance.component';
 import { FrRemittanceDetailComponent } from '../detail/fr-remittance-detail.component';
 import { FrRemittanceUpdateComponent } from '../update/fr-remittance-update.component';
 import { FrRemittanceRoutingResolveService } from './fr-remittance-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
+import { FrRegisterComponent } from '../register/fr-register.component';
 
 const frRemittanceRoute: Routes = [
   {
@@ -39,6 +40,12 @@ const frRemittanceRoute: Routes = [
     resolve: {
       frRemittance: FrRemittanceRoutingResolveService,
     },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'fr-register',
+    component: FrRegisterComponent,
+    data: { defaultSort: 'createdDate,' + DESC },
     canActivate: [UserRouteAccessService],
   },
 ];

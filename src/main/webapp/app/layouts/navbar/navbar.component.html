@@ -139,6 +139,20 @@
                 <span jhiTranslate="global.menu.entities.frRemittance">Fr Remittance</span>
               </a>
             </li>
+
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="fr-remittance/fr-register"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                <span jhiTranslate="global.menu.entities.frRegisterReport">FR Register Report</span>
+              </a>
+            </li>
+
             <li>
               <a
                 class="dropdown-item"

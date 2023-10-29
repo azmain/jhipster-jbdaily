@@ -8,7 +8,7 @@ import { FertilizerService } from 'app/entities/fertilizer/service/fertilizer.se
 import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import { IPayOrder } from '../pay-order.model';
 import { FilterOptions, IFilterOption, IFilterOptions } from 'app/shared/filter/filter.model';
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
+import { ITEMS_FOR_DROPDOWN, ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { EntityArrayResponseType, PayOrderService } from '../service/pay-order.service';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from 'app/config/navigation.constants';
@@ -56,7 +56,7 @@ export class PayOrderReportComponent implements OnInit {
   filters: IFilterOptions = new FilterOptions();
 
   itemsPerPage = ITEMS_PER_PAGE + 10;
-  itemsToFetch = 5000;
+  itemsToFetch = ITEMS_FOR_DROPDOWN;
   totalItems = 0;
   page = 1;
   amountTotal = 0;

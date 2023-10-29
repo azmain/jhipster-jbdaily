@@ -8,9 +8,17 @@ import { FrRemittanceRoutingModule } from './route/fr-remittance-routing.module'
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { FrRegisterComponent } from './register/fr-register.component';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
-  imports: [SharedModule, FrRemittanceRoutingModule, DropdownModule, CalendarModule, InputTextModule],
-  declarations: [FrRemittanceComponent, FrRemittanceDetailComponent, FrRemittanceUpdateComponent, FrRemittanceDeleteDialogComponent],
+  imports: [SharedModule, FrRemittanceRoutingModule, DropdownModule, CalendarModule, InputTextModule, TableModule],
+  declarations: [
+    FrRemittanceComponent,
+    FrRemittanceDetailComponent,
+    FrRemittanceUpdateComponent,
+    FrRemittanceDeleteDialogComponent,
+    FrRegisterComponent,
+  ],
 })
 export class FrRemittanceModule {}
