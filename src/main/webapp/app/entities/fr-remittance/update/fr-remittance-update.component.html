@@ -12,675 +12,647 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
-          <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
-          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
-        </div>
+        <!-- <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+					<label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+					<input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id"
+						[readonly]="true" />
+				</div> -->
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.pin" for="field_pin">Pin</label>
-          <input type="text" class="form-control" name="pin" id="field_pin" data-cy="pin" formControlName="pin" />
-          <div *ngIf="editForm.get('pin')!.invalid && (editForm.get('pin')!.dirty || editForm.get('pin')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('pin')?.errors?.required" jhiTranslate="entity.validation.required">
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('pin')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.transactionType" for="field_transactionType"
+              >Transaction Type</label
             >
-              This field cannot be longer than 256 characters.
-            </small>
+
+            <p-dropdown
+              id="field_transactionType"
+              data-cy="transactionType"
+              name="transactionType"
+              [options]="transactionTypeValues | keyvalue"
+              formControlName="transactionType"
+              optionLabel="value"
+              optionValue="value"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [style]="{ width: '100%' }"
+              placeholder="Select a transaction type"
+            >
+            </p-dropdown>
+
+            <div
+              *ngIf="
+                editForm.get('transactionType')!.invalid &&
+                (editForm.get('transactionType')!.dirty || editForm.get('transactionType')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('transactionType')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incPercentage" for="field_incPercentage">Inc Percentage</label>
+
+            <p-dropdown
+              id="field_incPercentage"
+              data-cy="incPercentage"
+              name="incPercentage"
+              [options]="incPercentagesSharedCollection"
+              formControlName="incPercentage"
+              optionLabel="name"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [style]="{ width: '100%' }"
+              placeholder="Select a incentive percentage"
+            >
+            </p-dropdown>
+
+            <div
+              *ngIf="
+                editForm.get(['incPercentage'])!.invalid &&
+                (editForm.get(['incPercentage'])!.dirty || editForm.get(['incPercentage'])!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get(['incPercentage'])?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
           </div>
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remitersName" for="field_remitersName">Remiters Name</label>
-          <input
-            type="text"
-            class="form-control"
-            name="remitersName"
-            id="field_remitersName"
-            data-cy="remitersName"
-            formControlName="remitersName"
-          />
-          <div
-            *ngIf="editForm.get('remitersName')!.invalid && (editForm.get('remitersName')!.dirty || editForm.get('remitersName')!.touched)"
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('remitersName')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('remitersName')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.amount" for="field_amount">Amount</label>
-          <input type="text" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
-          <div *ngIf="editForm.get('amount')!.invalid && (editForm.get('amount')!.dirty || editForm.get('amount')!.touched)">
-            <small class="form-text text-danger" *ngIf="editForm.get('amount')?.errors?.required" jhiTranslate="entity.validation.required">
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('amount')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incentiveAmount" for="field_incentiveAmount"
-            >Incentive Amount</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="incentiveAmount"
-            id="field_incentiveAmount"
-            data-cy="incentiveAmount"
-            formControlName="incentiveAmount"
-          />
-          <div
-            *ngIf="
-              editForm.get('incentiveAmount')!.invalid &&
-              (editForm.get('incentiveAmount')!.dirty || editForm.get('incentiveAmount')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('incentiveAmount')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('incentiveAmount')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.paymentDate" for="field_paymentDate">Payment Date</label>
-          <div class="input-group">
-            <input
-              id="field_paymentDate"
-              data-cy="paymentDate"
-              type="text"
-              class="form-control"
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.paymentDate" for="field_paymentDate">Payment Date</label>
+            <p-calendar
               name="paymentDate"
-              ngbDatepicker
-              #paymentDateDp="ngbDatepicker"
+              id="field_paymentDate"
               formControlName="paymentDate"
-            />
-            <button type="button" class="btn btn-secondary" (click)="paymentDateDp.toggle()">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
-          </div>
-          <div *ngIf="editForm.get('paymentDate')!.invalid && (editForm.get('paymentDate')!.dirty || editForm.get('paymentDate')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('paymentDate')?.errors?.required"
-              jhiTranslate="entity.validation.required"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              [showIcon]="true"
+              [showButtonBar]="true"
+            ></p-calendar>
+
+            <div
+              *ngIf="editForm.get('paymentDate')!.invalid && (editForm.get('paymentDate')!.dirty || editForm.get('paymentDate')!.touched)"
             >
-              This field is required.
-            </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('paymentDate')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incPaymentDate" for="field_incPaymentDate"
+              >Inc Payment Date</label
+            >
+
+            <p-calendar
+              name="incPaymentDate"
+              id="field_incPaymentDate"
+              formControlName="incPaymentDate"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              [showIcon]="true"
+              [showButtonBar]="true"
+            ></p-calendar>
+
+            <div
+              *ngIf="
+                editForm.get('incPaymentDate')!.invalid &&
+                (editForm.get('incPaymentDate')!.dirty || editForm.get('incPaymentDate')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('incPaymentDate')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
           </div>
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incPaymentDate" for="field_incPaymentDate"
-            >Inc Payment Date</label
-          >
-          <div class="input-group">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.moneyExchange" for="field_moneyExchange">Money Exchange</label>
+            <p-dropdown
+              id="field_moneyExchange"
+              data-cy="moneyExchange"
+              name="moneyExchange"
+              [options]="moneyExchangesSharedCollection"
+              formControlName="moneyExchange"
+              optionLabel="name"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [style]="{ width: '100%' }"
+              placeholder="Select a incentive percentage"
+            >
+            </p-dropdown>
+
+            <div
+              *ngIf="
+                editForm.get(['moneyExchange'])!.invalid &&
+                (editForm.get(['moneyExchange'])!.dirty || editForm.get(['moneyExchange'])!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get(['moneyExchange'])?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.moneyExchangeName" for="field_moneyExchangeName"
+              >Money Exchange Name</label
+            >
+
             <input
-              id="field_incPaymentDate"
-              data-cy="incPaymentDate"
               type="text"
               class="form-control"
-              name="incPaymentDate"
-              ngbDatepicker
-              #incPaymentDateDp="ngbDatepicker"
-              formControlName="incPaymentDate"
+              name="moneyExchangeName"
+              id="field_moneyExchangeName"
+              data-cy="moneyExchangeName"
+              formControlName="moneyExchangeName"
             />
-            <button type="button" class="btn btn-secondary" (click)="incPaymentDateDp.toggle()">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
-          </div>
-          <div
-            *ngIf="
-              editForm.get('incPaymentDate')!.invalid && (editForm.get('incPaymentDate')!.dirty || editForm.get('incPaymentDate')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('incPaymentDate')?.errors?.required"
-              jhiTranslate="entity.validation.required"
+            <div
+              *ngIf="
+                editForm.get('moneyExchangeName')!.invalid &&
+                (editForm.get('moneyExchangeName')!.dirty || editForm.get('moneyExchangeName')!.touched)
+              "
             >
-              This field is required.
-            </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('moneyExchangeName')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
           </div>
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remiSendingDate" for="field_remiSendingDate"
-            >Remi Sending Date</label
-          >
-          <div class="input-group">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.documentType" for="field_documentType">Document Type</label>
+
+            <p-dropdown
+              id="field_documentType"
+              data-cy="documentType"
+              name="documentType"
+              [options]="documentTypeValues | keyvalue"
+              formControlName="documentType"
+              optionLabel="value"
+              optionValue="value"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [style]="{ width: '100%' }"
+              placeholder="Select document type"
+            >
+            </p-dropdown>
+
+            <div
+              *ngIf="
+                editForm.get('documentType')!.invalid && (editForm.get('documentType')!.dirty || editForm.get('documentType')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('documentType')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvLegalId" for="field_recvLegalId">Recv Legal Id</label>
             <input
+              type="text"
+              class="form-control"
+              name="recvLegalId"
+              id="field_recvLegalId"
+              data-cy="recvLegalId"
+              formControlName="recvLegalId"
+            />
+            <div
+              *ngIf="editForm.get('recvLegalId')!.invalid && (editForm.get('recvLegalId')!.dirty || editForm.get('recvLegalId')!.touched)"
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvLegalId')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvLegalId')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 255 }"
+              >
+                This field cannot be longer than 255 characters.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvMobileNo" for="field_recvMobileNo">Recv Mobile No</label>
+            <input
+              type="text"
+              class="form-control"
+              name="recvMobileNo"
+              id="field_recvMobileNo"
+              data-cy="recvMobileNo"
+              formControlName="recvMobileNo"
+            />
+            <div
+              *ngIf="
+                editForm.get('recvMobileNo')!.invalid && (editForm.get('recvMobileNo')!.dirty || editForm.get('recvMobileNo')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvMobileNo')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvMobileNo')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvName" for="field_recvName">Recv Name</label>
+            <input type="text" class="form-control" name="recvName" id="field_recvName" data-cy="recvName" formControlName="recvName" />
+            <div *ngIf="editForm.get('recvName')!.invalid && (editForm.get('recvName')!.dirty || editForm.get('recvName')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvName')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvName')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 255 }"
+              >
+                This field cannot be longer than 255 characters.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvGender" for="field_recvGender">Recv Gender</label>
+
+            <p-dropdown
+              id="field_recvGender"
+              data-cy="recvGender"
+              name="recvGender"
+              [options]="genderValues | keyvalue"
+              formControlName="recvGender"
+              optionLabel="value"
+              optionValue="value"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [style]="{ width: '100%' }"
+              placeholder="Select receiver gender"
+            >
+            </p-dropdown>
+
+            <div *ngIf="editForm.get('recvGender')!.invalid && (editForm.get('recvGender')!.dirty || editForm.get('recvGender')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('recvGender')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.pin" for="field_pin">Pin</label>
+            <input type="text" class="form-control" name="pin" id="field_pin" data-cy="pin" formControlName="pin" />
+            <div *ngIf="editForm.get('pin')!.invalid && (editForm.get('pin')!.dirty || editForm.get('pin')!.touched)">
+              <small class="form-text text-danger" *ngIf="editForm.get('pin')?.errors?.required" jhiTranslate="entity.validation.required">
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('pin')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remitersName" for="field_remitersName">Remiters Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="remitersName"
+              id="field_remitersName"
+              data-cy="remitersName"
+              formControlName="remitersName"
+            />
+            <div
+              *ngIf="
+                editForm.get('remitersName')!.invalid && (editForm.get('remitersName')!.dirty || editForm.get('remitersName')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('remitersName')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('remitersName')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remiGender" for="field_remiGender">Remi Gender</label>
+
+            <p-dropdown
+              id="field_remiGender"
+              data-cy="remiGender"
+              name="remiGender"
+              [options]="genderValues | keyvalue"
+              formControlName="remiGender"
+              optionLabel="value"
+              optionValue="value"
+              [filter]="true"
+              filterBy="name"
+              [showClear]="true"
+              [style]="{ width: '100%' }"
+              placeholder="Select remitter gender"
+            >
+            </p-dropdown>
+
+            <div *ngIf="editForm.get('remiGender')!.invalid && (editForm.get('remiGender')!.dirty || editForm.get('remiGender')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('remiGender')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.amount" for="field_amount">Amount</label>
+            <input type="text" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
+            <div *ngIf="editForm.get('amount')!.invalid && (editForm.get('amount')!.dirty || editForm.get('amount')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('amount')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('amount')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incentiveAmount" for="field_incentiveAmount"
+              >Incentive Amount</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              name="incentiveAmount"
+              id="field_incentiveAmount"
+              data-cy="incentiveAmount"
+              formControlName="incentiveAmount"
+            />
+            <div
+              *ngIf="
+                editForm.get('incentiveAmount')!.invalid &&
+                (editForm.get('incentiveAmount')!.dirty || editForm.get('incentiveAmount')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('incentiveAmount')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                This field is required.
+              </small>
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('incentiveAmount')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remiSendingDate" for="field_remiSendingDate"
+              >Remi Sending Date</label
+            >
+
+            <p-calendar
+              name="remiSendingDate"
               id="field_remiSendingDate"
               data-cy="remiSendingDate"
+              formControlName="remiSendingDate"
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              [showIcon]="true"
+              [showButtonBar]="true"
+            ></p-calendar>
+          </div>
+
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remiFrCurrency" for="field_remiFrCurrency"
+              >Remi Fr Currency</label
+            >
+            <input
               type="text"
               class="form-control"
-              name="remiSendingDate"
-              ngbDatepicker
-              #remiSendingDateDp="ngbDatepicker"
-              formControlName="remiSendingDate"
+              name="remiFrCurrency"
+              id="field_remiFrCurrency"
+              data-cy="remiFrCurrency"
+              formControlName="remiFrCurrency"
             />
-            <button type="button" class="btn btn-secondary" (click)="remiSendingDateDp.toggle()">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
+            <div
+              *ngIf="
+                editForm.get('remiFrCurrency')!.invalid &&
+                (editForm.get('remiFrCurrency')!.dirty || editForm.get('remiFrCurrency')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('remiFrCurrency')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
           </div>
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remiFrCurrency" for="field_remiFrCurrency"
-            >Remi Fr Currency</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="remiFrCurrency"
-            id="field_remiFrCurrency"
-            data-cy="remiFrCurrency"
-            formControlName="remiFrCurrency"
-          />
-          <div
-            *ngIf="
-              editForm.get('remiFrCurrency')!.invalid && (editForm.get('remiFrCurrency')!.dirty || editForm.get('remiFrCurrency')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('remiFrCurrency')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.currency" for="field_currency">Currency</label>
+            <input type="text" class="form-control" name="currency" id="field_currency" data-cy="currency" formControlName="currency" />
+            <div *ngIf="editForm.get('currency')!.invalid && (editForm.get('currency')!.dirty || editForm.get('currency')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('currency')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
           </div>
-        </div>
 
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.currency" for="field_currency">Currency</label>
-          <input type="text" class="form-control" name="currency" id="field_currency" data-cy="currency" formControlName="currency" />
-          <div *ngIf="editForm.get('currency')!.invalid && (editForm.get('currency')!.dirty || editForm.get('currency')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('currency')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.country" for="field_country">Country</label>
+            <input type="text" class="form-control" name="country" id="field_country" data-cy="country" formControlName="country" />
+            <div *ngIf="editForm.get('country')!.invalid && (editForm.get('country')!.dirty || editForm.get('country')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('country')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
           </div>
-        </div>
 
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.country" for="field_country">Country</label>
-          <input type="text" class="form-control" name="country" id="field_country" data-cy="country" formControlName="country" />
-          <div *ngIf="editForm.get('country')!.invalid && (editForm.get('country')!.dirty || editForm.get('country')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('country')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.exchangeRate" for="field_exchangeRate">Exchange Rate</label>
-          <input
-            type="text"
-            class="form-control"
-            name="exchangeRate"
-            id="field_exchangeRate"
-            data-cy="exchangeRate"
-            formControlName="exchangeRate"
-          />
-          <div
-            *ngIf="editForm.get('exchangeRate')!.invalid && (editForm.get('exchangeRate')!.dirty || editForm.get('exchangeRate')!.touched)"
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('exchangeRate')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.transactionType" for="field_transactionType"
-            >Transaction Type</label
-          >
-          <select
-            class="form-control"
-            name="transactionType"
-            formControlName="transactionType"
-            id="field_transactionType"
-            data-cy="transactionType"
-          >
-            <option [ngValue]="null">{{ 'jbdailyApp.TransactionType.null' | translate }}</option>
-            <option *ngFor="let transactionType of transactionTypeValues" [value]="transactionType">
-              {{ 'jbdailyApp.TransactionType.' + transactionType | translate }}
-            </option>
-          </select>
-          <div
-            *ngIf="
-              editForm.get('transactionType')!.invalid &&
-              (editForm.get('transactionType')!.dirty || editForm.get('transactionType')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('transactionType')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvMobileNo" for="field_recvMobileNo">Recv Mobile No</label>
-          <input
-            type="text"
-            class="form-control"
-            name="recvMobileNo"
-            id="field_recvMobileNo"
-            data-cy="recvMobileNo"
-            formControlName="recvMobileNo"
-          />
-          <div
-            *ngIf="editForm.get('recvMobileNo')!.invalid && (editForm.get('recvMobileNo')!.dirty || editForm.get('recvMobileNo')!.touched)"
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvMobileNo')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvMobileNo')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvName" for="field_recvName">Recv Name</label>
-          <input type="text" class="form-control" name="recvName" id="field_recvName" data-cy="recvName" formControlName="recvName" />
-          <div *ngIf="editForm.get('recvName')!.invalid && (editForm.get('recvName')!.dirty || editForm.get('recvName')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvName')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvName')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 255 }"
-            >
-              This field cannot be longer than 255 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvLegalId" for="field_recvLegalId">Recv Legal Id</label>
-          <input
-            type="text"
-            class="form-control"
-            name="recvLegalId"
-            id="field_recvLegalId"
-            data-cy="recvLegalId"
-            formControlName="recvLegalId"
-          />
-          <div *ngIf="editForm.get('recvLegalId')!.invalid && (editForm.get('recvLegalId')!.dirty || editForm.get('recvLegalId')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvLegalId')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvLegalId')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 255 }"
-            >
-              This field cannot be longer than 255 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.moneyExchangeName" for="field_moneyExchangeName"
-            >Money Exchange Name</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="moneyExchangeName"
-            id="field_moneyExchangeName"
-            data-cy="moneyExchangeName"
-            formControlName="moneyExchangeName"
-          />
-          <div
-            *ngIf="
-              editForm.get('moneyExchangeName')!.invalid &&
-              (editForm.get('moneyExchangeName')!.dirty || editForm.get('moneyExchangeName')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('moneyExchangeName')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 256 }"
-            >
-              This field cannot be longer than 256 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.amountReimDate" for="field_amountReimDate"
-            >Amount Reim Date</label
-          >
-          <div class="input-group">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.exchangeRate" for="field_exchangeRate">Exchange Rate</label>
             <input
+              type="text"
+              class="form-control"
+              name="exchangeRate"
+              id="field_exchangeRate"
+              data-cy="exchangeRate"
+              formControlName="exchangeRate"
+            />
+            <div
+              *ngIf="
+                editForm.get('exchangeRate')!.invalid && (editForm.get('exchangeRate')!.dirty || editForm.get('exchangeRate')!.touched)
+              "
+            >
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('exchangeRate')?.errors?.maxlength"
+                jhiTranslate="entity.validation.maxlength"
+                [translateValues]="{ max: 256 }"
+              >
+                This field cannot be longer than 256 characters.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.amountReimDate" for="field_amountReimDate"
+              >Amount Reim Date</label
+            >
+
+            <p-calendar
+              name="amountReimDate"
               id="field_amountReimDate"
               data-cy="amountReimDate"
-              type="text"
-              class="form-control"
-              name="amountReimDate"
-              ngbDatepicker
-              #amountReimDateDp="ngbDatepicker"
               formControlName="amountReimDate"
-            />
-            <button type="button" class="btn btn-secondary" (click)="amountReimDateDp.toggle()">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              [showIcon]="true"
+              [showButtonBar]="true"
+            ></p-calendar>
           </div>
-        </div>
 
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incAmountReimDate" for="field_incAmountReimDate"
-            >Inc Amount Reim Date</label
-          >
-          <div class="input-group">
-            <input
+          <div class="col-sm">
+            <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incAmountReimDate" for="field_incAmountReimDate"
+              >Inc Amount Reim Date</label
+            >
+
+            <p-calendar
+              name="incAmountReimDate"
               id="field_incAmountReimDate"
               data-cy="incAmountReimDate"
-              type="text"
-              class="form-control"
-              name="incAmountReimDate"
-              ngbDatepicker
-              #incAmountReimDateDp="ngbDatepicker"
               formControlName="incAmountReimDate"
-            />
-            <button type="button" class="btn btn-secondary" (click)="incAmountReimDateDp.toggle()">
-              <fa-icon icon="calendar-alt"></fa-icon>
-            </button>
+              dateFormat="dd/mm/yy"
+              [style]="{ width: '100%' }"
+              [showIcon]="true"
+              [showButtonBar]="true"
+            ></p-calendar>
           </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvGender" for="field_recvGender">Recv Gender</label>
-          <select class="form-control" name="recvGender" formControlName="recvGender" id="field_recvGender" data-cy="recvGender">
-            <option [ngValue]="null">{{ 'jbdailyApp.Gender.null' | translate }}</option>
-            <option *ngFor="let gender of genderValues" [value]="gender">{{ 'jbdailyApp.Gender.' + gender | translate }}</option>
-          </select>
-          <div *ngIf="editForm.get('recvGender')!.invalid && (editForm.get('recvGender')!.dirty || editForm.get('recvGender')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('recvGender')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.remiGender" for="field_remiGender">Remi Gender</label>
-          <select class="form-control" name="remiGender" formControlName="remiGender" id="field_remiGender" data-cy="remiGender">
-            <option [ngValue]="null">{{ 'jbdailyApp.Gender.null' | translate }}</option>
-            <option *ngFor="let gender of genderValues" [value]="gender">{{ 'jbdailyApp.Gender.' + gender | translate }}</option>
-          </select>
-          <div *ngIf="editForm.get('remiGender')!.invalid && (editForm.get('remiGender')!.dirty || editForm.get('remiGender')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('remiGender')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.documentType" for="field_documentType">Document Type</label>
-          <select class="form-control" name="documentType" formControlName="documentType" id="field_documentType" data-cy="documentType">
-            <option [ngValue]="null">{{ 'jbdailyApp.DocumentType.null' | translate }}</option>
-            <option *ngFor="let documentType of documentTypeValues" [value]="documentType">
-              {{ 'jbdailyApp.DocumentType.' + documentType | translate }}
-            </option>
-          </select>
-          <div
-            *ngIf="editForm.get('documentType')!.invalid && (editForm.get('documentType')!.dirty || editForm.get('documentType')!.touched)"
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('documentType')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.createdBy" for="field_createdBy">Created By</label>
-          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
-          <div *ngIf="editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('createdBy')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('createdBy')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 50 }"
-            >
-              This field cannot be longer than 50 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.createdDate" for="field_createdDate">Created Date</label>
-          <div class="d-flex">
-            <input
-              id="field_createdDate"
-              data-cy="createdDate"
-              type="datetime-local"
-              class="form-control"
-              name="createdDate"
-              formControlName="createdDate"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-          <div *ngIf="editForm.get('createdDate')!.invalid && (editForm.get('createdDate')!.dirty || editForm.get('createdDate')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('createdDate')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
-              This field is required.
-            </small>
-            <small
-              class="form-text text-danger"
-              [hidden]="!editForm.get('createdDate')?.errors?.datetimelocal"
-              jhiTranslate="entity.validation.datetimelocal"
-            >
-              This field should be a date and time.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.lastModifiedBy" for="field_lastModifiedBy"
-            >Last Modified By</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            name="lastModifiedBy"
-            id="field_lastModifiedBy"
-            data-cy="lastModifiedBy"
-            formControlName="lastModifiedBy"
-          />
-          <div
-            *ngIf="
-              editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
-            "
-          >
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('lastModifiedBy')?.errors?.maxlength"
-              jhiTranslate="entity.validation.maxlength"
-              [translateValues]="{ max: 50 }"
-            >
-              This field cannot be longer than 50 characters.
-            </small>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.lastModifiedDate" for="field_lastModifiedDate"
-            >Last Modified Date</label
-          >
-          <div class="d-flex">
-            <input
-              id="field_lastModifiedDate"
-              data-cy="lastModifiedDate"
-              type="datetime-local"
-              class="form-control"
-              name="lastModifiedDate"
-              formControlName="lastModifiedDate"
-              placeholder="YYYY-MM-DD HH:mm"
-            />
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.moneyExchange" for="field_moneyExchange">Money Exchange</label>
-          <select
-            class="form-control"
-            id="field_moneyExchange"
-            data-cy="moneyExchange"
-            name="moneyExchange"
-            formControlName="moneyExchange"
-            [compareWith]="compareMoneyExchange"
-          >
-            <option *ngIf="!editForm.get('moneyExchange')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="moneyExchangeOption" *ngFor="let moneyExchangeOption of moneyExchangesSharedCollection">
-              {{ moneyExchangeOption.name }}
-            </option>
-          </select>
-        </div>
-        <div
-          *ngIf="
-            editForm.get(['moneyExchange'])!.invalid && (editForm.get(['moneyExchange'])!.dirty || editForm.get(['moneyExchange'])!.touched)
-          "
-        >
-          <small
-            class="form-text text-danger"
-            *ngIf="editForm.get(['moneyExchange'])?.errors?.required"
-            jhiTranslate="entity.validation.required"
-          >
-            This field is required.
-          </small>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.incPercentage" for="field_incPercentage">Inc Percentage</label>
-          <select
-            class="form-control"
-            id="field_incPercentage"
-            data-cy="incPercentage"
-            name="incPercentage"
-            formControlName="incPercentage"
-            [compareWith]="compareIncPercentage"
-          >
-            <option *ngIf="!editForm.get('incPercentage')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="incPercentageOption" *ngFor="let incPercentageOption of incPercentagesSharedCollection">
-              {{ incPercentageOption.name }}
-            </option>
-          </select>
-        </div>
-        <div
-          *ngIf="
-            editForm.get(['incPercentage'])!.invalid && (editForm.get(['incPercentage'])!.dirty || editForm.get(['incPercentage'])!.touched)
-          "
-        >
-          <small
-            class="form-text text-danger"
-            *ngIf="editForm.get(['incPercentage'])?.errors?.required"
-            jhiTranslate="entity.validation.required"
-          >
-            This field is required.
-          </small>
         </div>
       </div>
 

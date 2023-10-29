@@ -32,7 +32,7 @@ export interface IFrRemittance {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  moneyExchange?: Pick<IMoneyExchange, 'id' | 'name'> | null;
+  moneyExchange?: Pick<IMoneyExchange, 'id' | 'name' | 'shortName'> | null;
   incPercentage?: Pick<IIncPercentage, 'id' | 'name'> | null;
 }
 

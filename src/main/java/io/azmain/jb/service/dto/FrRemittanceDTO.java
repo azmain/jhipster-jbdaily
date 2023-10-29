@@ -84,11 +84,9 @@ public class FrRemittanceDTO implements Serializable {
     @NotNull
     private DocumentType documentType;
 
-    @NotNull
     @Size(max = 50)
     private String createdBy;
 
-    @NotNull
     private Instant createdDate;
 
     @Size(max = 50)

@@ -19,16 +19,22 @@ type FrRemittanceFormGroupInput = IFrRemittance | PartialWithRequiredKeyOf<NewFr
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IFrRemittance | NewFrRemittance> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
+type FormValueOf<T extends IFrRemittance | NewFrRemittance> = Omit<
+  T,
+  'paymentDate' | 'incPaymentDate' | 'remiSendingDate' | 'incAmountReimDate' | 'amountReimDate'
+> & {
+  paymentDate?: Date | null;
+  incPaymentDate?: Date | null;
+  remiSendingDate?: Date | null;
+  incAmountReimDate?: Date | null;
+  amountReimDate?: Date | null;
 };
 
 type FrRemittanceFormRawValue = FormValueOf<IFrRemittance>;
 
 type NewFrRemittanceFormRawValue = FormValueOf<NewFrRemittance>;
 
-type FrRemittanceFormDefaults = Pick<NewFrRemittance, 'id' | 'createdDate' | 'lastModifiedDate'>;
+type FrRemittanceFormDefaults = Pick<NewFrRemittance, 'id'>;
 
 type FrRemittanceFormGroupContent = {
   id: FormControl<FrRemittanceFormRawValue['id'] | NewFrRemittance['id']>;
@@ -53,10 +59,6 @@ type FrRemittanceFormGroupContent = {
   recvGender: FormControl<FrRemittanceFormRawValue['recvGender']>;
   remiGender: FormControl<FrRemittanceFormRawValue['remiGender']>;
   documentType: FormControl<FrRemittanceFormRawValue['documentType']>;
-  createdBy: FormControl<FrRemittanceFormRawValue['createdBy']>;
-  createdDate: FormControl<FrRemittanceFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<FrRemittanceFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<FrRemittanceFormRawValue['lastModifiedDate']>;
   moneyExchange: FormControl<FrRemittanceFormRawValue['moneyExchange']>;
   incPercentage: FormControl<FrRemittanceFormRawValue['incPercentage']>;
 };
@@ -135,16 +137,6 @@ export class FrRemittanceFormService {
       documentType: new FormControl(frRemittanceRawValue.documentType, {
         validators: [Validators.required],
       }),
-      createdBy: new FormControl(frRemittanceRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(frRemittanceRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(frRemittanceRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(frRemittanceRawValue.lastModifiedDate),
       moneyExchange: new FormControl(frRemittanceRawValue.moneyExchange, {
         validators: [Validators.required],
       }),
@@ -173,8 +165,6 @@ export class FrRemittanceFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
@@ -183,18 +173,29 @@ export class FrRemittanceFormService {
   ): IFrRemittance | NewFrRemittance {
     return {
       ...rawFrRemittance,
-      createdDate: dayjs(rawFrRemittance.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawFrRemittance.lastModifiedDate, DATE_TIME_FORMAT),
+      paymentDate: rawFrRemittance.paymentDate ? dayjs(rawFrRemittance.paymentDate) : null,
+      incPaymentDate: rawFrRemittance.incPaymentDate ? dayjs(rawFrRemittance.incPaymentDate) : null,
+      remiSendingDate: rawFrRemittance.remiSendingDate ? dayjs(rawFrRemittance.remiSendingDate) : null,
+      amountReimDate: rawFrRemittance.amountReimDate ? dayjs(rawFrRemittance.amountReimDate) : null,
+      incAmountReimDate: rawFrRemittance.incAmountReimDate ? dayjs(rawFrRemittance.incAmountReimDate) : null,
     };
   }
 
   private convertFrRemittanceToFrRemittanceRawValue(
     frRemittance: IFrRemittance | (Partial<NewFrRemittance> & FrRemittanceFormDefaults)
   ): FrRemittanceFormRawValue | PartialWithRequiredKeyOf<NewFrRemittanceFormRawValue> {
+    console.log('from entity to raw dto', frRemittance);
     return {
       ...frRemittance,
-      createdDate: frRemittance.createdDate ? frRemittance.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: frRemittance.lastModifiedDate ? frRemittance.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      moneyExchange: frRemittance.moneyExchange
+        ? { id: frRemittance.moneyExchange.id, name: frRemittance.moneyExchange.name, shortName: frRemittance.moneyExchange.shortName }
+        : null,
+      incPercentage: frRemittance.incPercentage ? { id: frRemittance.incPercentage.id, name: frRemittance.incPercentage.name } : null,
+      paymentDate: frRemittance.paymentDate ? new Date(frRemittance.paymentDate.format(DATE_TIME_FORMAT)) : null,
+      incPaymentDate: frRemittance.incPaymentDate ? new Date(frRemittance.incPaymentDate.format(DATE_TIME_FORMAT)) : null,
+      remiSendingDate: frRemittance.remiSendingDate ? new Date(frRemittance.remiSendingDate.format(DATE_TIME_FORMAT)) : null,
+      amountReimDate: frRemittance.amountReimDate ? new Date(frRemittance.amountReimDate.format(DATE_TIME_FORMAT)) : null,
+      incAmountReimDate: frRemittance.incAmountReimDate ? new Date(frRemittance.incAmountReimDate.format(DATE_TIME_FORMAT)) : null,
     };
   }
 }

@@ -21,6 +21,7 @@ public interface FrRemittanceMapper extends EntityMapper<FrRemittanceDTO, FrRemi
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "shortName", source = "shortName")
     MoneyExchangeDTO toDtoMoneyExchangeName(MoneyExchange moneyExchange);
 
     @Named("incPercentageName")

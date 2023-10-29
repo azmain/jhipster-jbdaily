@@ -5,9 +5,12 @@ import { FrRemittanceDetailComponent } from './detail/fr-remittance-detail.compo
 import { FrRemittanceUpdateComponent } from './update/fr-remittance-update.component';
 import { FrRemittanceDeleteDialogComponent } from './delete/fr-remittance-delete-dialog.component';
 import { FrRemittanceRoutingModule } from './route/fr-remittance-routing.module';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
-  imports: [SharedModule, FrRemittanceRoutingModule],
+  imports: [SharedModule, FrRemittanceRoutingModule, DropdownModule, CalendarModule, InputTextModule],
   declarations: [FrRemittanceComponent, FrRemittanceDetailComponent, FrRemittanceUpdateComponent, FrRemittanceDeleteDialogComponent],
 })
 export class FrRemittanceModule {}

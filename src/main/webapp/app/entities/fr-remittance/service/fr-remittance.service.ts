@@ -14,15 +14,13 @@ export type PartialUpdateFrRemittance = Partial<IFrRemittance> & Pick<IFrRemitta
 
 type RestOf<T extends IFrRemittance | NewFrRemittance> = Omit<
   T,
-  'paymentDate' | 'incPaymentDate' | 'remiSendingDate' | 'amountReimDate' | 'incAmountReimDate' | 'createdDate' | 'lastModifiedDate'
+  'paymentDate' | 'incPaymentDate' | 'remiSendingDate' | 'amountReimDate' | 'incAmountReimDate'
 > & {
   paymentDate?: string | null;
   incPaymentDate?: string | null;
   remiSendingDate?: string | null;
   amountReimDate?: string | null;
   incAmountReimDate?: string | null;
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
 };
 
 export type RestFrRemittance = RestOf<IFrRemittance>;
@@ -116,8 +114,6 @@ export class FrRemittanceService {
       remiSendingDate: frRemittance.remiSendingDate?.format(DATE_FORMAT) ?? null,
       amountReimDate: frRemittance.amountReimDate?.format(DATE_FORMAT) ?? null,
       incAmountReimDate: frRemittance.incAmountReimDate?.format(DATE_FORMAT) ?? null,
-      createdDate: frRemittance.createdDate?.toJSON() ?? null,
-      lastModifiedDate: frRemittance.lastModifiedDate?.toJSON() ?? null,
     };
   }
 

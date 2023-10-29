@@ -40,18 +40,42 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+
+          <th scope="col" jhiSortBy="transactionType">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.transactionType">Transaction Type</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+
+          <th scope="col" jhiSortBy="paymentDate">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.paymentDate">Payment Date</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+
+          <th scope="col" jhiSortBy="recvLegalId">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.recvLegalId">Recv Legal Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+
+          <th scope="col" jhiSortBy="recvName">
+            <div class="d-flex">
+              <span jhiTranslate="jbdailyApp.frRemittance.recvName">Recv Name</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+
           <th scope="col" jhiSortBy="pin">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.frRemittance.pin">Pin</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="remitersName">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.remitersName">Remiters Name</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col" jhiSortBy="amount">
             <div class="d-flex">
               <span jhiTranslate="jbdailyApp.frRemittance.amount">Amount</span>
@@ -64,187 +88,26 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="paymentDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.paymentDate">Payment Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="incPaymentDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.incPaymentDate">Inc Payment Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="remiSendingDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.remiSendingDate">Remi Sending Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="remiFrCurrency">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.remiFrCurrency">Remi Fr Currency</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="currency">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.currency">Currency</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="country">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.country">Country</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="exchangeRate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.exchangeRate">Exchange Rate</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="transactionType">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.transactionType">Transaction Type</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="recvMobileNo">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.recvMobileNo">Recv Mobile No</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="recvName">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.recvName">Recv Name</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="recvLegalId">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.recvLegalId">Recv Legal Id</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="moneyExchangeName">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.moneyExchangeName">Money Exchange Name</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="amountReimDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.amountReimDate">Amount Reim Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="incAmountReimDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.incAmountReimDate">Inc Amount Reim Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="recvGender">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.recvGender">Recv Gender</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="remiGender">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.remiGender">Remi Gender</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="documentType">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.documentType">Document Type</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="moneyExchange.name">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.moneyExchange">Money Exchange</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="incPercentage.name">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.frRemittance.incPercentage">Inc Percentage</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let frRemittance of frRemittances; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/fr-remittance', frRemittance.id, 'view']">{{ frRemittance.id }}</a>
+            <a [routerLink]="['/fr-remittance', frRemittance.id, 'view']" style="text-decoration: none">{{ frRemittance.id }}</a>
           </td>
+
+          <td jhiTranslate="{{ 'jbdailyApp.TransactionType.' + frRemittance.transactionType }}">{{ frRemittance.transactionType }}</td>
+
+          <td>{{ frRemittance.paymentDate | formatMediumDate }}</td>
+          <td>{{ frRemittance.recvLegalId }}</td>
+          <td>{{ frRemittance.recvName }}</td>
           <td>{{ frRemittance.pin }}</td>
-          <td>{{ frRemittance.remitersName }}</td>
+
           <td>{{ frRemittance.amount }}</td>
           <td>{{ frRemittance.incentiveAmount }}</td>
-          <td>{{ frRemittance.paymentDate | formatMediumDate }}</td>
-          <td>{{ frRemittance.incPaymentDate | formatMediumDate }}</td>
-          <td>{{ frRemittance.remiSendingDate | formatMediumDate }}</td>
-          <td>{{ frRemittance.remiFrCurrency }}</td>
-          <td>{{ frRemittance.currency }}</td>
-          <td>{{ frRemittance.country }}</td>
-          <td>{{ frRemittance.exchangeRate }}</td>
-          <td jhiTranslate="{{ 'jbdailyApp.TransactionType.' + frRemittance.transactionType }}">{{ frRemittance.transactionType }}</td>
-          <td>{{ frRemittance.recvMobileNo }}</td>
-          <td>{{ frRemittance.recvName }}</td>
-          <td>{{ frRemittance.recvLegalId }}</td>
-          <td>{{ frRemittance.moneyExchangeName }}</td>
-          <td>{{ frRemittance.amountReimDate | formatMediumDate }}</td>
-          <td>{{ frRemittance.incAmountReimDate | formatMediumDate }}</td>
-          <td jhiTranslate="{{ 'jbdailyApp.Gender.' + frRemittance.recvGender }}">{{ frRemittance.recvGender }}</td>
-          <td jhiTranslate="{{ 'jbdailyApp.Gender.' + frRemittance.remiGender }}">{{ frRemittance.remiGender }}</td>
-          <td jhiTranslate="{{ 'jbdailyApp.DocumentType.' + frRemittance.documentType }}">{{ frRemittance.documentType }}</td>
-          <td>{{ frRemittance.createdBy }}</td>
-          <td>{{ frRemittance.createdDate | formatMediumDatetime }}</td>
-          <td>{{ frRemittance.lastModifiedBy }}</td>
-          <td>{{ frRemittance.lastModifiedDate | formatMediumDatetime }}</td>
-          <td>
-            <div *ngIf="frRemittance.moneyExchange">
-              <a [routerLink]="['/money-exchange', frRemittance.moneyExchange.id, 'view']">{{ frRemittance.moneyExchange.name }}</a>
-            </div>
-          </td>
-          <td>
-            <div *ngIf="frRemittance.incPercentage">
-              <a [routerLink]="['/inc-percentage', frRemittance.incPercentage.id, 'view']">{{ frRemittance.incPercentage.name }}</a>
-            </div>
-          </td>
+
           <td class="text-end">
             <div class="btn-group">
               <button

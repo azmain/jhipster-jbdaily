@@ -14,6 +14,9 @@ import { IncPercentageService } from 'app/entities/inc-percentage/service/inc-pe
 import { TransactionType } from 'app/entities/enumerations/transaction-type.model';
 import { Gender } from 'app/entities/enumerations/gender.model';
 import { DocumentType } from 'app/entities/enumerations/document-type.model';
+import { FilterOptions, IFilterOptions } from 'app/shared/filter/filter.model';
+import { ITEMS_FOR_DROPDOWN } from 'app/config/pagination.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 @Component({
   selector: 'jhi-fr-remittance-update',
@@ -22,12 +25,22 @@ import { DocumentType } from 'app/entities/enumerations/document-type.model';
 export class FrRemittanceUpdateComponent implements OnInit {
   isSaving = false;
   frRemittance: IFrRemittance | null = null;
-  transactionTypeValues = Object.keys(TransactionType);
-  genderValues = Object.keys(Gender);
-  documentTypeValues = Object.keys(DocumentType);
+  // transactionTypeValues = Object.keys(TransactionType);
+  transactionTypeValues = TransactionType;
+
+  genderValues = Gender;
+  documentTypeValues = DocumentType;
 
   moneyExchangesSharedCollection: IMoneyExchange[] = [];
   incPercentagesSharedCollection: IIncPercentage[] = [];
+
+  predicate = 'createdDate';
+  ascending = false;
+  filters: IFilterOptions = new FilterOptions();
+
+  itemsPerPage = ITEMS_FOR_DROPDOWN;
+  totalItems = 0;
+  page = 1;
 
   editForm: FrRemittanceFormGroup = this.frRemittanceFormService.createFrRemittanceFormGroup();
 
@@ -53,6 +66,8 @@ export class FrRemittanceUpdateComponent implements OnInit {
       }
 
       this.loadRelationshipsOptions();
+
+      console.log('tr type', this.transactionTypeValues);
     });
   }
 
@@ -62,7 +77,10 @@ export class FrRemittanceUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
+
+    console.log('form', this.editForm);
     const frRemittance = this.frRemittanceFormService.getFrRemittance(this.editForm);
+    console.log('after make from form', frRemittance);
     if (frRemittance.id !== null) {
       this.subscribeToSaveResponse(this.frRemittanceService.update(frRemittance));
     } else {
@@ -92,6 +110,7 @@ export class FrRemittanceUpdateComponent implements OnInit {
   protected updateForm(frRemittance: IFrRemittance): void {
     this.frRemittance = frRemittance;
     this.frRemittanceFormService.resetForm(this.editForm, frRemittance);
+    console.log('after update form', this.editForm);
 
     this.moneyExchangesSharedCollection = this.moneyExchangeService.addMoneyExchangeToCollectionIfMissing<IMoneyExchange>(
       this.moneyExchangesSharedCollection,
@@ -104,9 +123,15 @@ export class FrRemittanceUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const queryObject = {
+      page: this.page - 1,
+      size: this.itemsPerPage,
+      eagerload: false,
+      sort: this.getSortQueryParam(this.predicate, this.ascending),
+    };
     this.moneyExchangeService
-      .query()
-      .pipe(map((res: HttpResponse<IMoneyExchange[]>) => res.body ?? []))
+      .query(queryObject)
+      .pipe(map((res: HttpResponse<IMoneyExchange[]>) => (res.body ? res.body.map(item => this.convertMoneyExchangeOption(item)) : [])))
       .pipe(
         map((moneyExchanges: IMoneyExchange[]) =>
           this.moneyExchangeService.addMoneyExchangeToCollectionIfMissing<IMoneyExchange>(moneyExchanges, this.frRemittance?.moneyExchange)
@@ -115,13 +140,39 @@ export class FrRemittanceUpdateComponent implements OnInit {
       .subscribe((moneyExchanges: IMoneyExchange[]) => (this.moneyExchangesSharedCollection = moneyExchanges));
 
     this.incPercentageService
-      .query()
-      .pipe(map((res: HttpResponse<IIncPercentage[]>) => res.body ?? []))
+      .query(queryObject)
+      .pipe(
+        map((res: HttpResponse<IIncPercentage[]>) => (res.body ? res.body.map(item => this.convertIncentivePercentageOption(item)) : []))
+      )
       .pipe(
         map((incPercentages: IIncPercentage[]) =>
           this.incPercentageService.addIncPercentageToCollectionIfMissing<IIncPercentage>(incPercentages, this.frRemittance?.incPercentage)
         )
       )
       .subscribe((incPercentages: IIncPercentage[]) => (this.incPercentagesSharedCollection = incPercentages));
+  }
+
+  convertMoneyExchangeOption(moneyExchange: IMoneyExchange): IMoneyExchange {
+    return {
+      id: moneyExchange.id,
+      name: moneyExchange.name,
+      shortName: moneyExchange.shortName,
+    };
+  }
+
+  convertIncentivePercentageOption(incPercentage: IIncPercentage): IIncPercentage {
+    return {
+      id: incPercentage.id,
+      name: incPercentage.name,
+    };
+  }
+
+  protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
+    const ascendingQueryParam = ascending ? ASC : DESC;
+    if (predicate === '') {
+      return [];
+    } else {
+      return [predicate + ',' + ascendingQueryParam];
+    }
   }
 }
