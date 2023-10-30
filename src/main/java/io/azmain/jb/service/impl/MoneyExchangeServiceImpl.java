@@ -1,10 +1,15 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
+import io.azmain.jb.domain.IncPercentage;
 import io.azmain.jb.domain.MoneyExchange;
 import io.azmain.jb.repository.MoneyExchangeRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.MoneyExchangeService;
 import io.azmain.jb.service.dto.MoneyExchangeDTO;
 import io.azmain.jb.service.mapper.MoneyExchangeMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +28,17 @@ public class MoneyExchangeServiceImpl implements MoneyExchangeService {
     private final Logger log = LoggerFactory.getLogger(MoneyExchangeServiceImpl.class);
 
     private final MoneyExchangeRepository moneyExchangeRepository;
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
 
     private final MoneyExchangeMapper moneyExchangeMapper;
 
-    public MoneyExchangeServiceImpl(MoneyExchangeRepository moneyExchangeRepository, MoneyExchangeMapper moneyExchangeMapper) {
+    public MoneyExchangeServiceImpl(
+        MoneyExchangeRepository moneyExchangeRepository,
+        SpringSecurityAuditorAware springSecurityAuditorAware,
+        MoneyExchangeMapper moneyExchangeMapper
+    ) {
         this.moneyExchangeRepository = moneyExchangeRepository;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
         this.moneyExchangeMapper = moneyExchangeMapper;
     }
 
@@ -35,6 +46,10 @@ public class MoneyExchangeServiceImpl implements MoneyExchangeService {
     public MoneyExchangeDTO save(MoneyExchangeDTO moneyExchangeDTO) {
         log.debug("Request to save MoneyExchange : {}", moneyExchangeDTO);
         MoneyExchange moneyExchange = moneyExchangeMapper.toEntity(moneyExchangeDTO);
+
+        moneyExchange.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        moneyExchange.createdDate(Instant.now());
+
         moneyExchange = moneyExchangeRepository.save(moneyExchange);
         return moneyExchangeMapper.toDto(moneyExchange);
     }
@@ -42,7 +57,17 @@ public class MoneyExchangeServiceImpl implements MoneyExchangeService {
     @Override
     public MoneyExchangeDTO update(MoneyExchangeDTO moneyExchangeDTO) {
         log.debug("Request to update MoneyExchange : {}", moneyExchangeDTO);
+        MoneyExchange persistMoneyExchange = moneyExchangeRepository
+            .findById(moneyExchangeDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "moneyExchange", "idnotfound"));
+
         MoneyExchange moneyExchange = moneyExchangeMapper.toEntity(moneyExchangeDTO);
+
+        moneyExchange.setCreatedDate(persistMoneyExchange.getCreatedDate());
+        moneyExchange.setCreatedBy(persistMoneyExchange.getCreatedBy());
+        moneyExchange.setLastModifiedDate(Instant.now());
+        moneyExchange.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         moneyExchange = moneyExchangeRepository.save(moneyExchange);
         return moneyExchangeMapper.toDto(moneyExchange);
     }

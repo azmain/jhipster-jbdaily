@@ -62,46 +62,20 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.moneyExchange.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.moneyExchange.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.moneyExchange.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.moneyExchange.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let moneyExchange of moneyExchanges; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/money-exchange', moneyExchange.id, 'view']">{{ moneyExchange.id }}</a>
+            <a [routerLink]="['/money-exchange', moneyExchange.id, 'view']" style="text-decoration: none">{{ moneyExchange.id }}</a>
           </td>
           <td>{{ moneyExchange.name }}</td>
           <td>{{ moneyExchange.digit }}</td>
           <td>{{ moneyExchange.link }}</td>
           <td>{{ moneyExchange.shortName }}</td>
-          <td>{{ moneyExchange.createdBy }}</td>
-          <td>{{ moneyExchange.createdDate | formatMediumDatetime }}</td>
-          <td>{{ moneyExchange.lastModifiedBy }}</td>
-          <td>{{ moneyExchange.lastModifiedDate | formatMediumDatetime }}</td>
+
           <td class="text-end">
             <div class="btn-group">
               <button

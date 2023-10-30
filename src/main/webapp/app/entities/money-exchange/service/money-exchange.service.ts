@@ -11,10 +11,7 @@ import { IMoneyExchange, NewMoneyExchange } from '../money-exchange.model';
 
 export type PartialUpdateMoneyExchange = Partial<IMoneyExchange> & Pick<IMoneyExchange, 'id'>;
 
-type RestOf<T extends IMoneyExchange | NewMoneyExchange> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IMoneyExchange | NewMoneyExchange> = T & {};
 
 export type RestMoneyExchange = RestOf<IMoneyExchange>;
 
@@ -102,8 +99,6 @@ export class MoneyExchangeService {
   protected convertDateFromClient<T extends IMoneyExchange | NewMoneyExchange | PartialUpdateMoneyExchange>(moneyExchange: T): RestOf<T> {
     return {
       ...moneyExchange,
-      createdDate: moneyExchange.createdDate?.toJSON() ?? null,
-      lastModifiedDate: moneyExchange.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
