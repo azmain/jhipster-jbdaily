@@ -52,17 +52,17 @@ export class FrRegisterComponent implements OnInit {
   frRemittancesDataTable: any[] = [];
   isLoading = false;
 
-  // tableColumns: string[] = [
-  //   'Serial',
-  //   'Dealer',
-  //   'Fertilizer',
-  //   'Pay To',
-  //   'Slip No',
-  //   'Pay Order Date',
-  //   'Controlling No',
-  //   'Pay Order No',
-  //   'Amount',
-  // ];
+  tableColumns: string[] = [
+    'Serial',
+    'Type',
+    'Benificiary Name',
+    'NID / Passport No',
+    'Mobile No',
+    'PIN',
+    'Payment Date',
+    'Amount (BDT)',
+    'Incentive Amount (BDT)',
+  ];
 
   predicate = 'createdDate';
   ascending = false;
@@ -138,90 +138,108 @@ export class FrRegisterComponent implements OnInit {
   }
 
   export() {
-    // console.log(window.location.origin);
-    // let columns: any[] = [];
-    // let tableRows: any[] = [];
-    // // console.log(font);
-    // console.log(this.payOrdersDataTable);
-    // if (this.payOrdersDataTable.length > 0) {
-    //   columns = Object.keys(this.payOrdersDataTable[0]);
-    //   console.log(columns);
-    //   tableRows = this.payOrdersDataTable.map((payOrder, i) => {
-    //     return [
-    //       payOrder[columns[0]] ?? 'N/A',
-    //       payOrder[columns[1]] ?? 'N/A',
-    //       payOrder[columns[2]] ?? 'N/A',
-    //       payOrder[columns[3]] ?? 'N/A',
-    //       payOrder[columns[4]] ?? 'N/A',
-    //       payOrder[columns[5]] ?? 'N/A',
-    //       payOrder[columns[6]] ?? 'N/A',
-    //       payOrder[columns[7]] ?? 'N/A',
-    //       { text: payOrder[columns[8]] ?? 'N/A', style: 'amountStyle' },
-    //     ];
-    //   });
-    //   console.log(tableRows);
-    // } else {
-    // }
-    // let docDefinition: TDocumentDefinitions = {
-    //   content: [
-    //     {
-    //       text: 'Pay Orders Printed On ' + dayjs().format('DD-MM-YYYY'),
-    //       style: 'header',
-    //     },
-    //     {
-    //       style: 'payOrderTable',
-    //       table: {
-    //         headerRows: 1,
-    //         dontBreakRows: true,
-    //         widths: 'auto',
-    //         body: [
-    //           this.tableColumns,
-    //           ...tableRows,
-    //           [
-    //             {
-    //               text: 'Total',
-    //               colSpan: 8,
-    //               alignment: 'right',
-    //             },
-    //             {},
-    //             {},
-    //             {},
-    //             {},
-    //             {},
-    //             {},
-    //             {},
-    //             {
-    //               text: this.amountTotal.toLocaleString('en-US', { useGrouping: true }),
-    //               alignment: 'right',
-    //             },
-    //           ],
-    //         ],
-    //       },
-    //     },
-    //   ],
-    //   styles: {
-    //     header: {
-    //       alignment: 'center',
-    //     },
-    //     amountStyle: {
-    //       alignment: 'right',
-    //     },
-    //   },
-    //   defaultStyle: {
-    //     font: 'Bangla',
-    //     alignment: 'center',
-    //   },
-    // };
-    // pdfMake.vfs = {
-    //   ...pdfFonts.pdfMake.vfs,
-    //   'Bangla-normal.ttf': font,
-    // };
-    // pdfMake.fonts = {
-    //   Bangla: {
-    //     normal: 'Bangla-normal.ttf',
-    //   },
-    // };
+    let columns: any[] = [];
+    let tableRows: any[] = [];
+    // console.log(font);
+    console.log(this.frRemittancesDataTable);
+    if (this.frRemittancesDataTable.length > 0) {
+      columns = Object.keys(this.frRemittancesDataTable[0]);
+      console.log('pdf columns', columns);
+      tableRows = this.frRemittancesDataTable.map((remittance, i) => {
+        return [
+          remittance[columns[0]] ?? 'N/A',
+          remittance[columns[1]] ? (remittance[columns[1]] === 'ACCOUNT' ? 'A/C' : 'SPOT') : 'N/A',
+          remittance[columns[2]] ?? 'N/A',
+          remittance[columns[3]] ?? 'N/A',
+          remittance[columns[4]] ?? 'N/A',
+          remittance[columns[5]] ?? 'N/A',
+          remittance[columns[6]] ?? 'N/A',
+          { text: remittance[columns[7]] ?? 'N/A', style: 'amountStyle' },
+          { text: remittance[columns[8]] ?? 'N/A', style: 'amountStyle' },
+        ];
+      });
+      console.log('pdf rows', tableRows);
+    } else {
+    }
+    let docDefinition: TDocumentDefinitions = {
+      info: {
+        title: 'awesome Document',
+        author: 'john doe',
+        subject: 'subject of document',
+        keywords: 'keywords for document',
+      },
+      content: [
+        {
+          text: 'Foreign Remittance Printed On ' + dayjs().format('DD-MM-YYYY'),
+          style: 'header',
+        },
+        {
+          style: 'payOrderTable',
+          table: {
+            headerRows: 1,
+            dontBreakRows: true,
+            widths: 'auto',
+            body: [
+              this.tableColumns,
+              ...tableRows,
+              [
+                {
+                  text: 'Total',
+                  colSpan: 7,
+                  alignment: 'right',
+                },
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {
+                  text: this.frAmountTotal.toLocaleString('en-US', { useGrouping: true }),
+                  alignment: 'right',
+                },
+                {
+                  text: this.frIncAmountTotal.toLocaleString('en-US', { useGrouping: true }),
+                  alignment: 'right',
+                },
+              ],
+            ],
+          },
+        },
+      ],
+      styles: {
+        header: {
+          alignment: 'center',
+        },
+        amountStyle: {
+          alignment: 'right',
+        },
+      },
+      defaultStyle: {
+        font: 'Roboto',
+        alignment: 'center',
+        fontSize: 8,
+      },
+    };
+    pdfMake.vfs = {
+      ...pdfFonts.pdfMake.vfs,
+      'Bangla-normal.ttf': font,
+    };
+    pdfMake.fonts = {
+      Bangla: {
+        normal: 'Bangla-normal.ttf',
+      },
+      Roboto: {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf',
+      },
+    };
     // pdfMake.createPdf(docDefinition).open();
+    const pdfName = 'FR_REGISTER_IN_' + dayjs().format('YYYY-MM-DD') + '.pdf';
+    pdfMake.createPdf(docDefinition).download(pdfName);
+    // pdfMake.createPdf(docDefinition).print();
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
@@ -232,10 +250,11 @@ export class FrRegisterComponent implements OnInit {
       return {
         id: index + 1,
         transactionType: item.transactionType,
-        paymentDate: dayjs(item.paymentDate).format('DD/MM/YYYY'),
-        recvLegalId: item.recvLegalId,
         recvName: item.recvName,
+        recvLegalId: item.recvLegalId,
+        mobile: item.recvMobileNo,
         pin: item.pin,
+        paymentDate: dayjs(item.paymentDate).format('DD/MM/YYYY'),
         amount: `${item.amount.toLocaleString('en-US', { useGrouping: true })}`,
         incentiveAmount: `${item.incentiveAmount.toLocaleString('en-US', { useGrouping: true })}`,
       };
