@@ -1,6 +1,7 @@
 package io.azmain.jb.service.impl;
 
 import io.azmain.jb.config.Constants;
+import io.azmain.jb.domain.MoneyExchange;
 import io.azmain.jb.domain.UserSettings;
 import io.azmain.jb.repository.UserSettingsRepository;
 import io.azmain.jb.security.SpringSecurityAuditorAware;
@@ -59,7 +60,17 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     @Override
     public UserSettingsDTO update(UserSettingsDTO userSettingsDTO) {
         log.debug("Request to update UserSettings : {}", userSettingsDTO);
+        UserSettings persistUserSettings = userSettingsRepository
+            .findById(userSettingsDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "userSettings", "idnotfound"));
+
         UserSettings userSettings = userSettingsMapper.toEntity(userSettingsDTO);
+
+        userSettings.setCreatedDate(persistUserSettings.getCreatedDate());
+        userSettings.setCreatedBy(persistUserSettings.getCreatedBy());
+        userSettings.setLastModifiedDate(Instant.now());
+        userSettings.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         userSettings = userSettingsRepository.save(userSettings);
         return userSettingsMapper.toDto(userSettings);
     }

@@ -246,8 +246,8 @@ export class FrRegisterComponent implements OnInit {
     let frTotal = 0;
     let frIncTotal = 0;
     for (let fr of data) {
-      frTotal += fr.amount;
-      frIncTotal += fr.incentiveAmount;
+      frTotal += isNaN(+fr.amount) ? 0 : Number(fr.amount);
+      frIncTotal += isNaN(+fr.incentiveAmount) ? 0 : Number(fr.incentiveAmount);
     }
 
     this.frAmountTotal = frTotal;

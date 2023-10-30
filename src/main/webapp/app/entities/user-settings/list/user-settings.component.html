@@ -56,45 +56,19 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.userSettings.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.userSettings.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.userSettings.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.userSettings.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let userSettings of userSettings; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/user-settings', userSettings.id, 'view']">{{ userSettings.id }}</a>
+            <a [routerLink]="['/user-settings', userSettings.id, 'view']" style="text-decoration: none">{{ userSettings.id }}</a>
           </td>
           <td>{{ userSettings.name }}</td>
           <td>{{ userSettings.payOrderNumSeq }}</td>
           <td>{{ userSettings.payOrderControlNum }}</td>
-          <td>{{ userSettings.createdBy }}</td>
-          <td>{{ userSettings.createdDate | formatMediumDatetime }}</td>
-          <td>{{ userSettings.lastModifiedBy }}</td>
-          <td>{{ userSettings.lastModifiedDate | formatMediumDatetime }}</td>
+
           <td class="text-end">
             <div class="btn-group">
               <button
