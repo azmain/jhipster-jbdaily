@@ -11,10 +11,7 @@ import { IDivision, NewDivision } from '../division.model';
 
 export type PartialUpdateDivision = Partial<IDivision> & Pick<IDivision, 'id'>;
 
-type RestOf<T extends IDivision | NewDivision> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IDivision | NewDivision> = T & {};
 
 export type RestDivision = RestOf<IDivision>;
 
@@ -100,8 +97,6 @@ export class DivisionService {
   protected convertDateFromClient<T extends IDivision | NewDivision | PartialUpdateDivision>(division: T): RestOf<T> {
     return {
       ...division,
-      createdDate: division.createdDate?.toJSON() ?? null,
-      lastModifiedDate: division.lastModifiedDate?.toJSON() ?? null,
     };
   }
 

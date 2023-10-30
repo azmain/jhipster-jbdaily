@@ -19,10 +19,7 @@ type DivisionFormGroupInput = IDivision | PartialWithRequiredKeyOf<NewDivision>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IDivision | NewDivision> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IDivision | NewDivision> = T & {};
 
 type DivisionFormRawValue = FormValueOf<IDivision>;
 
@@ -34,10 +31,6 @@ type DivisionFormGroupContent = {
   id: FormControl<DivisionFormRawValue['id'] | NewDivision['id']>;
   name: FormControl<DivisionFormRawValue['name']>;
   bnName: FormControl<DivisionFormRawValue['bnName']>;
-  createdBy: FormControl<DivisionFormRawValue['createdBy']>;
-  createdDate: FormControl<DivisionFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<DivisionFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<DivisionFormRawValue['lastModifiedDate']>;
 };
 
 export type DivisionFormGroup = FormGroup<DivisionFormGroupContent>;
@@ -63,16 +56,6 @@ export class DivisionFormService {
       bnName: new FormControl(divisionRawValue.bnName, {
         validators: [Validators.required, Validators.maxLength(255)],
       }),
-      createdBy: new FormControl(divisionRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(divisionRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(divisionRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(divisionRawValue.lastModifiedDate),
     });
   }
 
@@ -95,16 +78,12 @@ export class DivisionFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
   private convertDivisionRawValueToDivision(rawDivision: DivisionFormRawValue | NewDivisionFormRawValue): IDivision | NewDivision {
     return {
       ...rawDivision,
-      createdDate: dayjs(rawDivision.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawDivision.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -113,8 +92,6 @@ export class DivisionFormService {
   ): DivisionFormRawValue | PartialWithRequiredKeyOf<NewDivisionFormRawValue> {
     return {
       ...division,
-      createdDate: division.createdDate ? division.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: division.lastModifiedDate ? division.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

@@ -50,30 +50,7 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.division.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.division.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.division.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.division.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col"></th>
         </tr>
       </thead>
@@ -84,10 +61,7 @@
           </td>
           <td>{{ division.name }}</td>
           <td>{{ division.bnName }}</td>
-          <td>{{ division.createdBy }}</td>
-          <td>{{ division.createdDate | formatMediumDatetime }}</td>
-          <td>{{ division.lastModifiedBy }}</td>
-          <td>{{ division.lastModifiedDate | formatMediumDatetime }}</td>
+
           <td class="text-end">
             <div class="btn-group">
               <button

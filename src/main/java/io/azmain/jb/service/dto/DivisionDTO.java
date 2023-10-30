@@ -21,11 +21,9 @@ public class DivisionDTO implements Serializable {
     @Size(max = 255)
     private String bnName;
 
-    @NotNull
     @Size(max = 50)
     private String createdBy;
 
-    @NotNull
     private Instant createdDate;
 
     @Size(max = 50)

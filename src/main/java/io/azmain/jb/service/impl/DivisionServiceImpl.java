@@ -1,10 +1,15 @@
 package io.azmain.jb.service.impl;
 
+import io.azmain.jb.config.Constants;
 import io.azmain.jb.domain.Division;
+import io.azmain.jb.domain.Fertilizer;
 import io.azmain.jb.repository.DivisionRepository;
+import io.azmain.jb.security.SpringSecurityAuditorAware;
 import io.azmain.jb.service.DivisionService;
 import io.azmain.jb.service.dto.DivisionDTO;
 import io.azmain.jb.service.mapper.DivisionMapper;
+import io.azmain.jb.web.rest.errors.BadRequestAlertException;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +28,17 @@ public class DivisionServiceImpl implements DivisionService {
     private final Logger log = LoggerFactory.getLogger(DivisionServiceImpl.class);
 
     private final DivisionRepository divisionRepository;
+    private final SpringSecurityAuditorAware springSecurityAuditorAware;
 
     private final DivisionMapper divisionMapper;
 
-    public DivisionServiceImpl(DivisionRepository divisionRepository, DivisionMapper divisionMapper) {
+    public DivisionServiceImpl(
+        DivisionRepository divisionRepository,
+        SpringSecurityAuditorAware springSecurityAuditorAware,
+        DivisionMapper divisionMapper
+    ) {
         this.divisionRepository = divisionRepository;
+        this.springSecurityAuditorAware = springSecurityAuditorAware;
         this.divisionMapper = divisionMapper;
     }
 
@@ -35,6 +46,10 @@ public class DivisionServiceImpl implements DivisionService {
     public DivisionDTO save(DivisionDTO divisionDTO) {
         log.debug("Request to save Division : {}", divisionDTO);
         Division division = divisionMapper.toEntity(divisionDTO);
+
+        division.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        division.createdDate(Instant.now());
+
         division = divisionRepository.save(division);
         return divisionMapper.toDto(division);
     }
@@ -42,7 +57,17 @@ public class DivisionServiceImpl implements DivisionService {
     @Override
     public DivisionDTO update(DivisionDTO divisionDTO) {
         log.debug("Request to update Division : {}", divisionDTO);
+        Division persistDivision = divisionRepository
+            .findById(divisionDTO.getId())
+            .orElseThrow(() -> new BadRequestAlertException("Entity not found", "division", "idnotfound"));
+
         Division division = divisionMapper.toEntity(divisionDTO);
+
+        division.setCreatedDate(persistDivision.getCreatedDate());
+        division.setCreatedBy(persistDivision.getCreatedBy());
+        division.setLastModifiedDate(Instant.now());
+        division.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+
         division = divisionRepository.save(division);
         return divisionMapper.toDto(division);
     }
