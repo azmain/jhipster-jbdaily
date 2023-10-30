@@ -63,7 +63,7 @@
       <tbody>
         <tr *ngFor="let upazila of upazilas; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/upazila', upazila.id, 'view']">{{ upazila.id }}</a>
+            <a [routerLink]="['/upazila', upazila.id, 'view']" style="text-decoration: none">{{ upazila.id }}</a>
           </td>
           <td>{{ upazila.name }}</td>
           <td>{{ upazila.bnName }}</td>

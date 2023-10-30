@@ -11,10 +11,7 @@ import { IIncPercentage, NewIncPercentage } from '../inc-percentage.model';
 
 export type PartialUpdateIncPercentage = Partial<IIncPercentage> & Pick<IIncPercentage, 'id'>;
 
-type RestOf<T extends IIncPercentage | NewIncPercentage> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IIncPercentage | NewIncPercentage> = T & {};
 
 export type RestIncPercentage = RestOf<IIncPercentage>;
 
@@ -102,8 +99,6 @@ export class IncPercentageService {
   protected convertDateFromClient<T extends IIncPercentage | NewIncPercentage | PartialUpdateIncPercentage>(incPercentage: T): RestOf<T> {
     return {
       ...incPercentage,
-      createdDate: incPercentage.createdDate?.toJSON() ?? null,
-      lastModifiedDate: incPercentage.lastModifiedDate?.toJSON() ?? null,
     };
   }
 

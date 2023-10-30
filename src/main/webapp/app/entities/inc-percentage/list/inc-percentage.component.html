@@ -44,43 +44,16 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.incPercentage.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.incPercentage.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.incPercentage.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="jbdailyApp.incPercentage.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let incPercentage of incPercentages; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/inc-percentage', incPercentage.id, 'view']">{{ incPercentage.id }}</a>
+            <a [routerLink]="['/inc-percentage', incPercentage.id, 'view']" style="text-decoration: none">{{ incPercentage.id }}</a>
           </td>
           <td>{{ incPercentage.name }}</td>
-          <td>{{ incPercentage.createdBy }}</td>
-          <td>{{ incPercentage.createdDate | formatMediumDatetime }}</td>
-          <td>{{ incPercentage.lastModifiedBy }}</td>
-          <td>{{ incPercentage.lastModifiedDate | formatMediumDatetime }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button

@@ -19,10 +19,7 @@ type IncPercentageFormGroupInput = IIncPercentage | PartialWithRequiredKeyOf<New
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IIncPercentage | NewIncPercentage> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IIncPercentage | NewIncPercentage> = T & {};
 
 type IncPercentageFormRawValue = FormValueOf<IIncPercentage>;
 
@@ -33,10 +30,6 @@ type IncPercentageFormDefaults = Pick<NewIncPercentage, 'id' | 'createdDate' | '
 type IncPercentageFormGroupContent = {
   id: FormControl<IncPercentageFormRawValue['id'] | NewIncPercentage['id']>;
   name: FormControl<IncPercentageFormRawValue['name']>;
-  createdBy: FormControl<IncPercentageFormRawValue['createdBy']>;
-  createdDate: FormControl<IncPercentageFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<IncPercentageFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<IncPercentageFormRawValue['lastModifiedDate']>;
 };
 
 export type IncPercentageFormGroup = FormGroup<IncPercentageFormGroupContent>;
@@ -59,16 +52,6 @@ export class IncPercentageFormService {
       name: new FormControl(incPercentageRawValue.name, {
         validators: [Validators.required, Validators.maxLength(256)],
       }),
-      createdBy: new FormControl(incPercentageRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(incPercentageRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(incPercentageRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(incPercentageRawValue.lastModifiedDate),
     });
   }
 
@@ -91,8 +74,6 @@ export class IncPercentageFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
@@ -101,8 +82,6 @@ export class IncPercentageFormService {
   ): IIncPercentage | NewIncPercentage {
     return {
       ...rawIncPercentage,
-      createdDate: dayjs(rawIncPercentage.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawIncPercentage.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -111,8 +90,6 @@ export class IncPercentageFormService {
   ): IncPercentageFormRawValue | PartialWithRequiredKeyOf<NewIncPercentageFormRawValue> {
     return {
       ...incPercentage,
-      createdDate: incPercentage.createdDate ? incPercentage.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: incPercentage.lastModifiedDate ? incPercentage.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }
