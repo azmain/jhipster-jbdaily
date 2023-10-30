@@ -9,7 +9,7 @@ export interface IDistrict {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  division?: Pick<IDivision, 'id' | 'name'> | null;
+  division?: Pick<IDivision, 'id' | 'name' | 'bnName'> | null;
 }
 
 export type NewDistrict = Omit<IDistrict, 'id'> & { id: null };

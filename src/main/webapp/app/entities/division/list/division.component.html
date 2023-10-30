@@ -57,7 +57,7 @@
       <tbody>
         <tr *ngFor="let division of divisions; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/division', division.id, 'view']">{{ division.id }}</a>
+            <a [routerLink]="['/division', division.id, 'view']" style="text-decoration: none">{{ division.id }}</a>
           </td>
           <td>{{ division.name }}</td>
           <td>{{ division.bnName }}</td>

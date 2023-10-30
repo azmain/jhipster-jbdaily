@@ -19,10 +19,7 @@ type DistrictFormGroupInput = IDistrict | PartialWithRequiredKeyOf<NewDistrict>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IDistrict | NewDistrict> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type FormValueOf<T extends IDistrict | NewDistrict> = T & {};
 
 type DistrictFormRawValue = FormValueOf<IDistrict>;
 
@@ -34,10 +31,6 @@ type DistrictFormGroupContent = {
   id: FormControl<DistrictFormRawValue['id'] | NewDistrict['id']>;
   name: FormControl<DistrictFormRawValue['name']>;
   bnName: FormControl<DistrictFormRawValue['bnName']>;
-  createdBy: FormControl<DistrictFormRawValue['createdBy']>;
-  createdDate: FormControl<DistrictFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<DistrictFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<DistrictFormRawValue['lastModifiedDate']>;
   division: FormControl<DistrictFormRawValue['division']>;
 };
 
@@ -64,16 +57,6 @@ export class DistrictFormService {
       bnName: new FormControl(districtRawValue.bnName, {
         validators: [Validators.required, Validators.maxLength(255)],
       }),
-      createdBy: new FormControl(districtRawValue.createdBy, {
-        validators: [Validators.required, Validators.maxLength(50)],
-      }),
-      createdDate: new FormControl(districtRawValue.createdDate, {
-        validators: [Validators.required],
-      }),
-      lastModifiedBy: new FormControl(districtRawValue.lastModifiedBy, {
-        validators: [Validators.maxLength(50)],
-      }),
-      lastModifiedDate: new FormControl(districtRawValue.lastModifiedDate),
       division: new FormControl(districtRawValue.division, {
         validators: [Validators.required],
       }),
@@ -99,16 +82,12 @@ export class DistrictFormService {
 
     return {
       id: null,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
   private convertDistrictRawValueToDistrict(rawDistrict: DistrictFormRawValue | NewDistrictFormRawValue): IDistrict | NewDistrict {
     return {
       ...rawDistrict,
-      createdDate: dayjs(rawDistrict.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawDistrict.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -117,8 +96,7 @@ export class DistrictFormService {
   ): DistrictFormRawValue | PartialWithRequiredKeyOf<NewDistrictFormRawValue> {
     return {
       ...district,
-      createdDate: district.createdDate ? district.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: district.lastModifiedDate ? district.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      division: district.division ? { id: district.division.id, name: district.division.name, bnName: district.division.bnName } : null,
     };
   }
 }

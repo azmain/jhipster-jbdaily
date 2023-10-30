@@ -9,6 +9,9 @@ import { IDistrict } from '../district.model';
 import { DistrictService } from '../service/district.service';
 import { IDivision } from 'app/entities/division/division.model';
 import { DivisionService } from 'app/entities/division/service/division.service';
+import { FilterOptions, IFilterOptions } from 'app/shared/filter/filter.model';
+import { ITEMS_FOR_DROPDOWN } from 'app/config/pagination.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 @Component({
   selector: 'jhi-district-update',
@@ -19,6 +22,13 @@ export class DistrictUpdateComponent implements OnInit {
   district: IDistrict | null = null;
 
   divisionsSharedCollection: IDivision[] = [];
+
+  predicate = 'createdDate';
+  ascending = false;
+  filters: IFilterOptions = new FilterOptions();
+  itemsForDropdown = ITEMS_FOR_DROPDOWN;
+  totalItems = 0;
+  page = 1;
 
   editForm: DistrictFormGroup = this.districtFormService.createDistrictFormGroup();
 
@@ -86,14 +96,37 @@ export class DistrictUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    const queryObject = {
+      page: this.page - 1,
+      size: this.itemsForDropdown,
+      eagerload: false,
+      sort: this.getSortQueryParam(this.predicate, this.ascending),
+    };
+
     this.divisionService
       .query()
-      .pipe(map((res: HttpResponse<IDivision[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<IDivision[]>) => (res.body ? res.body.map(item => this.convertDivisionOption(item)) : [])))
       .pipe(
         map((divisions: IDivision[]) =>
           this.divisionService.addDivisionToCollectionIfMissing<IDivision>(divisions, this.district?.division)
         )
       )
       .subscribe((divisions: IDivision[]) => (this.divisionsSharedCollection = divisions));
+  }
+  protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
+    const ascendingQueryParam = ascending ? ASC : DESC;
+    if (predicate === '') {
+      return [];
+    } else {
+      return [predicate + ',' + ascendingQueryParam];
+    }
+  }
+
+  convertDivisionOption(division: IDivision): IDivision {
+    return {
+      id: division.id,
+      name: division.name,
+      bnName: division.bnName,
+    };
   }
 }

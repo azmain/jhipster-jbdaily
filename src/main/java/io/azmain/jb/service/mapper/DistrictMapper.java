@@ -18,5 +18,6 @@ public interface DistrictMapper extends EntityMapper<DistrictDTO, District> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "bnName", source = "bnName")
     DivisionDTO toDtoDivisionName(Division division);
 }

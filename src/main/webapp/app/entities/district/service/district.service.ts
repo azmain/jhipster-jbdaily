@@ -11,10 +11,7 @@ import { IDistrict, NewDistrict } from '../district.model';
 
 export type PartialUpdateDistrict = Partial<IDistrict> & Pick<IDistrict, 'id'>;
 
-type RestOf<T extends IDistrict | NewDistrict> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
-};
+type RestOf<T extends IDistrict | NewDistrict> = T & {};
 
 export type RestDistrict = RestOf<IDistrict>;
 
@@ -100,8 +97,6 @@ export class DistrictService {
   protected convertDateFromClient<T extends IDistrict | NewDistrict | PartialUpdateDistrict>(district: T): RestOf<T> {
     return {
       ...district,
-      createdDate: district.createdDate?.toJSON() ?? null,
-      lastModifiedDate: district.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
