@@ -12,6 +12,17 @@ import { EntityArrayResponseType, FrRemittanceService } from '../service/fr-remi
 import { FrRemittanceDeleteDialogComponent } from '../delete/fr-remittance-delete-dialog.component';
 import { FilterOptions, IFilterOptions, IFilterOption } from 'app/shared/filter/filter.model';
 
+import { Converter, bnBD, enUS } from 'any-number-to-words';
+const converter = new Converter(enUS);
+
+import { font } from 'content/fonts/custom-font';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { EnglishToBanglaNumber } from 'app/helpers/english-to-bangla-number';
+import dayjs from 'dayjs';
+import { FrRemittancePdfService } from '../service/fr-remittance-pdf.service';
+
 @Component({
   selector: 'jhi-fr-remittance',
   templateUrl: './fr-remittance.component.html',
@@ -30,6 +41,7 @@ export class FrRemittanceComponent implements OnInit {
 
   constructor(
     protected frRemittanceService: FrRemittanceService,
+    protected frRemittancePdfService: FrRemittancePdfService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal
@@ -149,5 +161,28 @@ export class FrRemittanceComponent implements OnInit {
     } else {
       return [predicate + ',' + ascendingQueryParam];
     }
+  }
+
+  printFrIncentiveVoucher(frRemittance: IFrRemittance): void {
+    let dd = this.frRemittancePdfService.convertDateFromServer(frRemittance);
+
+    pdfMake.vfs = {
+      ...pdfFonts.pdfMake.vfs,
+      'Bangla-normal.ttf': font,
+    };
+    pdfMake.fonts = {
+      Bangla: {
+        normal: 'Bangla-normal.ttf',
+        bold: 'Bangla-normal.ttf',
+      },
+      Roboto: {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf',
+      },
+    };
+
+    pdfMake.createPdf(dd).open();
   }
 }
