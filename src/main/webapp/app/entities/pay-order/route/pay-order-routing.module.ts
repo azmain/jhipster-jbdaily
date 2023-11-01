@@ -14,7 +14,7 @@ const payOrderRoute: Routes = [
     path: '',
     component: PayOrderComponent,
     data: {
-      defaultSort: 'createdDate,' + DESC,
+      defaultSort: 'lastModifiedDate,' + DESC + '&id,' + ASC,
     },
     canActivate: [UserRouteAccessService],
   },

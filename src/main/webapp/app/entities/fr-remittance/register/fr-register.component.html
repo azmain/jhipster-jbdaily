@@ -90,7 +90,7 @@
     </div>
 
     <div class="col-12">
-      <p-button label="Search" icon="pi pi-search" iconPos="right" (click)="onSearch()"></p-button>
+      <p-button label="Search" icon="pi pi-search" iconPos="right" (click)="onSearch()" [disabled]="isLoading"></p-button>
     </div>
   </form>
 </div>

@@ -154,24 +154,29 @@ export class FrRegisterComponent implements OnInit {
           remittance[columns[4]] ?? 'N/A',
           remittance[columns[5]] ?? 'N/A',
           remittance[columns[6]] ?? 'N/A',
-          { text: remittance[columns[7]] ?? 'N/A', style: 'amountStyle' },
-          { text: remittance[columns[8]] ?? 'N/A', style: 'amountStyle' },
+          { text: remittance[columns[7]] ?? 'N/A', style: 'amountStyle', font: 'Bangla' },
+          { text: remittance[columns[8]] ?? 'N/A', style: 'amountStyle', font: 'Bangla' },
         ];
       });
       console.log('pdf rows', tableRows);
     } else {
     }
+
+    const pdfName = 'FR_REGISTER_IN_' + dayjs().format('YYYY-MM-DD') + '.pdf';
+
     let docDefinition: TDocumentDefinitions = {
       info: {
-        title: 'awesome Document',
-        author: 'john doe',
-        subject: 'subject of document',
-        keywords: 'keywords for document',
+        title: 'FR_REGISTER_IN_' + dayjs().format('YYYY-MM-DD') + '.pdf',
+        author: 'Pulhat Branch, AO Dinajpur',
+        subject: 'Foreign Remittance',
+        keywords: 'Foreign Remittance',
       },
       content: [
         {
           text: 'Foreign Remittance Printed On ' + dayjs().format('DD-MM-YYYY'),
           style: 'header',
+          fontSize: 15,
+          marginBottom: 10,
         },
         {
           style: 'payOrderTable',
@@ -195,11 +200,11 @@ export class FrRegisterComponent implements OnInit {
                 {},
                 {},
                 {
-                  text: this.frAmountTotal.toLocaleString('en-US', { useGrouping: true }),
+                  text: this.frAmountTotal.toLocaleString('en-IN', { useGrouping: true }),
                   alignment: 'right',
                 },
                 {
-                  text: this.frIncAmountTotal.toLocaleString('en-US', { useGrouping: true }),
+                  text: this.frIncAmountTotal.toLocaleString('en-IN', { useGrouping: true }),
                   alignment: 'right',
                 },
               ],
@@ -237,7 +242,7 @@ export class FrRegisterComponent implements OnInit {
       },
     };
     // pdfMake.createPdf(docDefinition).open();
-    const pdfName = 'FR_REGISTER_IN_' + dayjs().format('YYYY-MM-DD') + '.pdf';
+
     pdfMake.createPdf(docDefinition).download(pdfName);
     // pdfMake.createPdf(docDefinition).print();
   }
@@ -255,8 +260,8 @@ export class FrRegisterComponent implements OnInit {
         mobile: item.recvMobileNo,
         pin: item.pin,
         paymentDate: dayjs(item.paymentDate).format('DD/MM/YYYY'),
-        amount: `${item.amount.toLocaleString('en-US', { useGrouping: true })}`,
-        incentiveAmount: `${item.incentiveAmount.toLocaleString('en-US', { useGrouping: true })}`,
+        amount: `${item.amount.toLocaleString('en-IN', { useGrouping: true })}`,
+        incentiveAmount: `${item.incentiveAmount.toLocaleString('en-IN', { useGrouping: true })}`,
       };
     });
     this.calculateTotalAmount(dataFromBody);

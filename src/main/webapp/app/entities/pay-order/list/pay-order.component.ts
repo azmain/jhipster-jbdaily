@@ -12,6 +12,11 @@ import { EntityArrayResponseType, PayOrderService } from '../service/pay-order.s
 import { PayOrderDeleteDialogComponent } from '../delete/pay-order-delete-dialog.component';
 import { FilterOptions, IFilterOptions, IFilterOption, FilterOption } from 'app/shared/filter/filter.model';
 
+import { font } from 'content/fonts/custom-font';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { PayOrderPdfService } from '../service/pay-order-pdf.service';
+
 @Component({
   selector: 'jhi-pay-order',
   templateUrl: './pay-order.component.html',
@@ -32,6 +37,7 @@ export class PayOrderComponent implements OnInit {
 
   constructor(
     protected payOrderService: PayOrderService,
+    protected payOrderPdfService: PayOrderPdfService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal
@@ -164,5 +170,31 @@ export class PayOrderComponent implements OnInit {
     } else {
       return [predicate + ',' + ascendingQueryParam];
     }
+  }
+
+  protected printMicrCheque(payOrder: any): void {
+    // makeMICRCheckForPayOrder
+    console.log('print pay order', payOrder);
+
+    let dd = this.payOrderPdfService.makeMICRCheckForPayOrder(payOrder);
+
+    pdfMake.vfs = {
+      ...pdfFonts.pdfMake.vfs,
+      'Bangla-normal.ttf': font,
+    };
+    pdfMake.fonts = {
+      Bangla: {
+        normal: 'Bangla-normal.ttf',
+        bold: 'Bangla-normal.ttf',
+      },
+      Roboto: {
+        normal: 'Roboto-Regular.ttf',
+        bold: 'Roboto-Medium.ttf',
+        italics: 'Roboto-Italic.ttf',
+        bolditalics: 'Roboto-MediumItalic.ttf',
+      },
+    };
+
+    pdfMake.createPdf(dd).open();
   }
 }
