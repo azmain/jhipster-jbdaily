@@ -6,14 +6,14 @@ import { IncPercentageComponent } from '../list/inc-percentage.component';
 import { IncPercentageDetailComponent } from '../detail/inc-percentage-detail.component';
 import { IncPercentageUpdateComponent } from '../update/inc-percentage-update.component';
 import { IncPercentageRoutingResolveService } from './inc-percentage-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 const incPercentageRoute: Routes = [
   {
     path: '',
     component: IncPercentageComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

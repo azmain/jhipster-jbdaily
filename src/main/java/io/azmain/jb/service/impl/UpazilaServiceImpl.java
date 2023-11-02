@@ -50,6 +50,9 @@ public class UpazilaServiceImpl implements UpazilaService {
         upazila.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         upazila.createdDate(Instant.now());
 
+        upazila.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        upazila.setLastModifiedDate(Instant.now());
+
         upazila = upazilaRepository.save(upazila);
         return upazilaMapper.toDto(upazila);
     }

@@ -50,6 +50,9 @@ public class DealerServiceImpl implements DealerService {
         dealer.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         dealer.createdDate(Instant.now());
 
+        dealer.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        dealer.setLastModifiedDate(Instant.now());
+
         dealer = dealerRepository.save(dealer);
         return dealerMapper.toDto(dealer);
     }

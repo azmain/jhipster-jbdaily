@@ -51,6 +51,9 @@ public class FertilizerServiceImpl implements FertilizerService {
         fertilizer.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         fertilizer.createdDate(Instant.now());
 
+        fertilizer.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        fertilizer.setLastModifiedDate(Instant.now());
+
         fertilizer = fertilizerRepository.save(fertilizer);
         return fertilizerMapper.toDto(fertilizer);
     }

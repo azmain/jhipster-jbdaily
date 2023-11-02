@@ -53,6 +53,10 @@ public class PayOrderServiceImpl implements PayOrderService {
         PayOrder payOrder = payOrderMapper.toEntity(payOrderDTO);
         payOrder.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         payOrder.createdDate(Instant.now());
+
+        payOrder.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        payOrder.setLastModifiedDate(Instant.now());
+
         payOrder = payOrderRepository.save(payOrder);
 
         userSettingsService.updatePayOrderNumSeqAndControlNum(payOrder.getPayOrderNumber() + 1 + "", payOrder.getControllingNo() + 1 + "");

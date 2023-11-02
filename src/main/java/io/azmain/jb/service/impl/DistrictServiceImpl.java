@@ -50,6 +50,9 @@ public class DistrictServiceImpl implements DistrictService {
         district.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         district.createdDate(Instant.now());
 
+        district.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        district.setLastModifiedDate(Instant.now());
+
         district = districtRepository.save(district);
         return districtMapper.toDto(district);
     }

@@ -6,14 +6,14 @@ import { UserSettingsComponent } from '../list/user-settings.component';
 import { UserSettingsDetailComponent } from '../detail/user-settings-detail.component';
 import { UserSettingsUpdateComponent } from '../update/user-settings-update.component';
 import { UserSettingsRoutingResolveService } from './user-settings-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 const userSettingsRoute: Routes = [
   {
     path: '',
     component: UserSettingsComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

@@ -50,6 +50,9 @@ public class DivisionServiceImpl implements DivisionService {
         division.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         division.createdDate(Instant.now());
 
+        division.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        division.setLastModifiedDate(Instant.now());
+
         division = divisionRepository.save(division);
         return divisionMapper.toDto(division);
     }

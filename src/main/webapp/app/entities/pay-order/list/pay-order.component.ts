@@ -25,7 +25,7 @@ export class PayOrderComponent implements OnInit {
   payOrders?: IPayOrder[];
   isLoading = false;
 
-  predicate = 'payOrderDate';
+  predicate = 'lastModifiedDate';
   ascending = false;
   filters: IFilterOptions = new FilterOptions();
 

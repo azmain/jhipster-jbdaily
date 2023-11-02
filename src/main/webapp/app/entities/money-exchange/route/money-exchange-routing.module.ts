@@ -6,14 +6,14 @@ import { MoneyExchangeComponent } from '../list/money-exchange.component';
 import { MoneyExchangeDetailComponent } from '../detail/money-exchange-detail.component';
 import { MoneyExchangeUpdateComponent } from '../update/money-exchange-update.component';
 import { MoneyExchangeRoutingResolveService } from './money-exchange-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 const moneyExchangeRoute: Routes = [
   {
     path: '',
     component: MoneyExchangeComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

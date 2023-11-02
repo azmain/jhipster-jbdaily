@@ -31,8 +31,8 @@ export class FrRemittanceComponent implements OnInit {
   frRemittances?: IFrRemittance[];
   isLoading = false;
 
-  predicate = 'id';
-  ascending = true;
+  predicate = 'lastModifiedDate';
+  ascending = false;
   filters: IFilterOptions = new FilterOptions();
 
   itemsPerPage = ITEMS_PER_PAGE;

@@ -6,14 +6,14 @@ import { DivisionComponent } from '../list/division.component';
 import { DivisionDetailComponent } from '../detail/division-detail.component';
 import { DivisionUpdateComponent } from '../update/division-update.component';
 import { DivisionRoutingResolveService } from './division-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 const divisionRoute: Routes = [
   {
     path: '',
     component: DivisionComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

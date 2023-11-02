@@ -50,6 +50,9 @@ public class FrRemittanceServiceImpl implements FrRemittanceService {
         frRemittance.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         frRemittance.createdDate(Instant.now());
 
+        frRemittance.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        frRemittance.setLastModifiedDate(Instant.now());
+
         frRemittance = frRemittanceRepository.save(frRemittance);
         return frRemittanceMapper.toDto(frRemittance);
     }

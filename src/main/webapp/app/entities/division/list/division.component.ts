@@ -19,8 +19,8 @@ export class DivisionComponent implements OnInit {
   divisions?: IDivision[];
   isLoading = false;
 
-  predicate = 'id';
-  ascending = true;
+  predicate = 'lastModifiedDate';
+  ascending = false;
 
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;

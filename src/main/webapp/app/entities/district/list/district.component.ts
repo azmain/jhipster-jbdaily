@@ -19,8 +19,8 @@ export class DistrictComponent implements OnInit {
   districts?: IDistrict[];
   isLoading = false;
 
-  predicate = 'id';
-  ascending = true;
+  predicate = 'lastModifiedDate';
+  ascending = false;
 
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;

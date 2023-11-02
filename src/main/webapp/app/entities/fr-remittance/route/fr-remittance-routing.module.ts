@@ -14,7 +14,7 @@ const frRemittanceRoute: Routes = [
     path: '',
     component: FrRemittanceComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

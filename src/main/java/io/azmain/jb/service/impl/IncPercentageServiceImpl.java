@@ -50,6 +50,9 @@ public class IncPercentageServiceImpl implements IncPercentageService {
         incPercentage.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         incPercentage.createdDate(Instant.now());
 
+        incPercentage.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        incPercentage.setLastModifiedDate(Instant.now());
+
         incPercentage = incPercentageRepository.save(incPercentage);
         return incPercentageMapper.toDto(incPercentage);
     }

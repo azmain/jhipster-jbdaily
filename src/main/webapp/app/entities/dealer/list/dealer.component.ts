@@ -19,8 +19,8 @@ export class DealerComponent implements OnInit {
   dealers?: IDealer[];
   isLoading = false;
 
-  predicate = 'id';
-  ascending = true;
+  predicate = 'lastModifiedDate';
+  ascending = false;
 
   itemsPerPage = ITEMS_PER_PAGE;
   totalItems = 0;

@@ -6,14 +6,14 @@ import { DistrictComponent } from '../list/district.component';
 import { DistrictDetailComponent } from '../detail/district-detail.component';
 import { DistrictUpdateComponent } from '../update/district-update.component';
 import { DistrictRoutingResolveService } from './district-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 const districtRoute: Routes = [
   {
     path: '',
     component: DistrictComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

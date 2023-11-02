@@ -6,14 +6,14 @@ import { UpazilaComponent } from '../list/upazila.component';
 import { UpazilaDetailComponent } from '../detail/upazila-detail.component';
 import { UpazilaUpdateComponent } from '../update/upazila-update.component';
 import { UpazilaRoutingResolveService } from './upazila-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
+import { ASC, DESC } from 'app/config/navigation.constants';
 
 const upazilaRoute: Routes = [
   {
     path: '',
     component: UpazilaComponent,
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: 'lastModifiedDate,' + DESC,
     },
     canActivate: [UserRouteAccessService],
   },

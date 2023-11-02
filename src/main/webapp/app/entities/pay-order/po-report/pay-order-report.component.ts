@@ -59,7 +59,7 @@ export class PayOrderReportComponent implements OnInit {
   itemsToFetch = ITEMS_FOR_DROPDOWN;
   totalItems = 0;
   page = 1;
-  amountTotal = 0;
+  amountTotal = '0';
 
   constructor(
     private fb: FormBuilder,
@@ -166,6 +166,8 @@ export class PayOrderReportComponent implements OnInit {
         {
           text: 'Pay Orders Printed On ' + dayjs().format('DD-MM-YYYY'),
           style: 'header',
+          fontSize: 14,
+          marginBottom: 5,
         },
         {
           style: 'payOrderTable',
@@ -190,7 +192,7 @@ export class PayOrderReportComponent implements OnInit {
                 {},
                 {},
                 {
-                  text: this.amountTotal.toLocaleString('en-US', { useGrouping: true }),
+                  text: this.amountTotal,
                   alignment: 'right',
                 },
               ],
@@ -208,6 +210,7 @@ export class PayOrderReportComponent implements OnInit {
       },
       defaultStyle: {
         font: 'Bangla',
+        fontSize: 10,
         alignment: 'center',
       },
     };
@@ -238,7 +241,7 @@ export class PayOrderReportComponent implements OnInit {
         payOrderDate: dayjs(item.payOrderDate).format('DD/MM/YY'),
         controllingNo: item.controllingNo,
         payOrderNumber: item.payOrderNumber,
-        amount: `${item.amount.toLocaleString('en-US', { useGrouping: true })}`,
+        amount: `${item.amount.toLocaleString('en-IN', { useGrouping: true })}`,
       };
     });
     this.calculateTotalAmount(dataFromBody);
@@ -248,8 +251,10 @@ export class PayOrderReportComponent implements OnInit {
     for (let payOrder of data) {
       total += payOrder.amount;
     }
+    console.log('total', total);
+    this.amountTotal = total.toLocaleString('en-IN', { useGrouping: true });
 
-    this.amountTotal = total;
+    console.log('amountTotal', this.amountTotal);
   }
 
   protected fillComponentAttributesFromResponseBody(data: IPayOrder[] | null): IPayOrder[] {

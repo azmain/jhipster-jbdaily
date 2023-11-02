@@ -53,6 +53,10 @@ public class UserSettingsServiceImpl implements UserSettingsService {
         UserSettings userSettings = userSettingsMapper.toEntity(userSettingsDTO);
         userSettings.setCreatedBy(user);
         userSettings.createdDate(Instant.now());
+
+        userSettings.setLastModifiedBy(user);
+        userSettings.setLastModifiedDate(Instant.now());
+
         userSettings = userSettingsRepository.save(userSettings);
         return userSettingsMapper.toDto(userSettings);
     }

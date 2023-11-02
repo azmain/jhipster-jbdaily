@@ -50,6 +50,9 @@ public class MoneyExchangeServiceImpl implements MoneyExchangeService {
         moneyExchange.setCreatedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
         moneyExchange.createdDate(Instant.now());
 
+        moneyExchange.setLastModifiedBy(springSecurityAuditorAware.getCurrentAuditor().orElse(Constants.SYSTEM));
+        moneyExchange.lastModifiedDate(Instant.now());
+
         moneyExchange = moneyExchangeRepository.save(moneyExchange);
         return moneyExchangeMapper.toDto(moneyExchange);
     }
