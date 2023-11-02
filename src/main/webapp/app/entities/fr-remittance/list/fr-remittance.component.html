@@ -31,8 +31,8 @@
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="frRemittances && frRemittances.length > 0">
-    <table class="table table-striped" aria-describedby="page-heading">
-      <thead>
+    <table class="table table-striped table-bordered table-sm" aria-describedby="page-heading">
+      <thead class="table-primary">
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
           <th scope="col" jhiSortBy="id">
             <div class="d-flex">

@@ -42,7 +42,7 @@
 
   <div class="table-responsive table-entities" id="entities" *ngIf="payOrders && payOrders.length > 0">
     <table class="table table-striped table-bordered table-sm" aria-describedby="page-heading">
-      <thead class="thead-light">
+      <thead class="table-primary">
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
           <th scope="col" jhiSortBy="id">
             <div class="d-flex">
@@ -101,23 +101,23 @@
           <td>
             {{ payOrder.id }}
           </td>
-          <td>
+          <td class="text-center">
             <div *ngIf="payOrder.dealer">
               {{ payOrder.dealer.shortName }}
             </div>
           </td>
-          <td>
+          <td class="text-center">
             <div *ngIf="payOrder.fertilizer">
               {{ payOrder.fertilizer.name }}
             </div>
           </td>
-          <td>
+          <td class="text-center">
             <a [routerLink]="['/pay-order', payOrder.id, 'view']" style="text-decoration: none">{{ payOrder.payOrderNumber }}</a>
           </td>
-          <td>{{ payOrder.payOrderDate | formatMediumDate }}</td>
-          <td>{{ payOrder.amount }}</td>
-          <td>{{ payOrder.slipNo }}</td>
-          <td>{{ payOrder.controllingNo }}</td>
+          <td class="text-center">{{ payOrder.payOrderDate | formatMediumDate }}</td>
+          <td class="text-end">{{ payOrder.amount }}</td>
+          <td class="text-center">{{ payOrder.slipNo }}</td>
+          <td class="text-center">{{ payOrder.controllingNo }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button type="submit" (click)="printMicrCheque(payOrder)" class="btn btn-success btn-sm">
