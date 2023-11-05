@@ -39,6 +39,8 @@ export class FrRemittanceComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  searchFilter = null;
+
   constructor(
     protected frRemittanceService: FrRemittanceService,
     protected frRemittancePdfService: FrRemittancePdfService,
@@ -72,6 +74,7 @@ export class FrRemittanceComponent implements OnInit {
   }
 
   load(): void {
+    this.searchFilter = null;
     this.loadFromBackendWithRouteInformations().subscribe({
       next: (res: EntityArrayResponseType) => {
         this.onResponseSuccess(res);
@@ -134,6 +137,18 @@ export class FrRemittanceComponent implements OnInit {
     filterOptions?.forEach(filterOption => {
       queryObject[filterOption.name] = filterOption.values;
     });
+
+    if (this.searchFilter) {
+      // queryObject['pin.contains'] = this.searchFilter;
+      // queryObject['remitersName.contains'] = this.searchFilter;
+      // queryObject['paymentDate.contains'] = this.searchFilter;
+      // queryObject['transactionType.contains'] = this.searchFilter;
+      // queryObject['recvMobileNo.contains'] = this.searchFilter;
+      queryObject['recvName.contains'] = this.searchFilter;
+      // queryObject['recvLegalId.contains'] = this.searchFilter;
+      // queryObject['documentType.contains'] = this.searchFilter;
+    }
+
     return this.frRemittanceService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
 
@@ -184,5 +199,13 @@ export class FrRemittanceComponent implements OnInit {
     };
 
     pdfMake.createPdf(dd).open();
+  }
+
+  search(): void {
+    this.loadFromBackendWithRouteInformations().subscribe({
+      next: (res: EntityArrayResponseType) => {
+        this.onResponseSuccess(res);
+      },
+    });
   }
 }

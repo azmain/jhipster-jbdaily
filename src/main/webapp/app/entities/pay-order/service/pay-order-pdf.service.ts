@@ -33,6 +33,7 @@ export class PayOrderPdfService {
     this.micrPayOrder.letterDate = dayMonthYearArrayInBangla[0] + ' ' + dayMonthYearArrayInBangla[1] + ' ' + dayMonthYearArrayInBangla[2];
     this.micrPayOrder.letterDateBangla = EnglishToBanglaNumber.formatDateInfoBangla(dayjs(payOrder?.payOrderDate).format('YYYY-MM-DD'));
 
+    this.micrPayOrder.payOrderNumber = payOrder?.payOrderNumber;
     this.micrPayOrder.payOrderNoBangla = EnglishToBanglaNumber.convertToBanglaNumber(payOrder?.payOrderNumber) ?? '';
     this.micrPayOrder.slipNoBangla = EnglishToBanglaNumber.convertToBanglaString(payOrder?.slipNo) ?? '';
 

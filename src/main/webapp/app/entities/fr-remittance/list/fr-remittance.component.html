@@ -3,6 +3,22 @@
     <span jhiTranslate="jbdailyApp.frRemittance.home.title">Fr Remittances</span>
 
     <div class="d-flex justify-content-end">
+      <div class="col-auto me-2">
+        <label class="visually-hidden" for="autoSizingInput">Pay Order Number</label>
+        <input
+          type="text"
+          class="form-control"
+          id="autoSizingInput"
+          [(ngModel)]="searchFilter"
+          placeholder="Name or Pin Or DocumentId or Mobile"
+        />
+      </div>
+
+      <button class="btn btn-info me-2" (click)="search()" [disabled]="isLoading">
+        <fa-icon icon="search" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="jbdailyApp.payOrder.home.searchListLabel">Search</span>
+      </button>
+
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span jhiTranslate="jbdailyApp.frRemittance.home.refreshListLabel">Refresh list</span>

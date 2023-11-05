@@ -62,8 +62,8 @@ class PayOrderResourceIT {
     private static final BigDecimal UPDATED_AMOUNT = new BigDecimal(2);
     private static final BigDecimal SMALLER_AMOUNT = new BigDecimal(1 - 1);
 
-    private static final Long DEFAULT_SLIP_NO = 1L;
-    private static final Long UPDATED_SLIP_NO = 2L;
+    private static final String DEFAULT_SLIP_NO = "AAAAAAAAAA";
+    private static final String UPDATED_SLIP_NO = "BBBBBBBBBB";
     private static final Long SMALLER_SLIP_NO = 1L - 1L;
 
     private static final Long DEFAULT_CONTROLLING_NO = 1L;
@@ -378,7 +378,7 @@ class PayOrderResourceIT {
             .andExpect(jsonPath("$.[*].payOrderNumber").value(hasItem(DEFAULT_PAY_ORDER_NUMBER.intValue())))
             .andExpect(jsonPath("$.[*].payOrderDate").value(hasItem(DEFAULT_PAY_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(sameNumber(DEFAULT_AMOUNT))))
-            .andExpect(jsonPath("$.[*].slipNo").value(hasItem(DEFAULT_SLIP_NO.intValue())))
+            .andExpect(jsonPath("$.[*].slipNo").value(hasItem(DEFAULT_SLIP_NO)))
             .andExpect(jsonPath("$.[*].controllingNo").value(hasItem(DEFAULT_CONTROLLING_NO.intValue())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
@@ -418,7 +418,7 @@ class PayOrderResourceIT {
             .andExpect(jsonPath("$.payOrderNumber").value(DEFAULT_PAY_ORDER_NUMBER.intValue()))
             .andExpect(jsonPath("$.payOrderDate").value(DEFAULT_PAY_ORDER_DATE.toString()))
             .andExpect(jsonPath("$.amount").value(sameNumber(DEFAULT_AMOUNT)))
-            .andExpect(jsonPath("$.slipNo").value(DEFAULT_SLIP_NO.intValue()))
+            .andExpect(jsonPath("$.slipNo").value(DEFAULT_SLIP_NO))
             .andExpect(jsonPath("$.controllingNo").value(DEFAULT_CONTROLLING_NO.intValue()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
@@ -758,54 +758,28 @@ class PayOrderResourceIT {
 
     @Test
     @Transactional
-    void getAllPayOrdersBySlipNoIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllPayOrdersBySlipNoContainsSomething() throws Exception {
         // Initialize the database
         payOrderRepository.saveAndFlush(payOrder);
 
-        // Get all the payOrderList where slipNo is greater than or equal to DEFAULT_SLIP_NO
-        defaultPayOrderShouldBeFound("slipNo.greaterThanOrEqual=" + DEFAULT_SLIP_NO);
+        // Get all the payOrderList where createdBy contains DEFAULT_CREATED_BY
+        defaultPayOrderShouldBeFound("slipNo.contains=" + DEFAULT_SLIP_NO);
 
-        // Get all the payOrderList where slipNo is greater than or equal to UPDATED_SLIP_NO
-        defaultPayOrderShouldNotBeFound("slipNo.greaterThanOrEqual=" + UPDATED_SLIP_NO);
+        // Get all the payOrderList where createdBy contains UPDATED_CREATED_BY
+        defaultPayOrderShouldNotBeFound("slipNo.contains=" + UPDATED_SLIP_NO);
     }
 
     @Test
     @Transactional
-    void getAllPayOrdersBySlipNoIsLessThanOrEqualToSomething() throws Exception {
+    void getAllPayOrdersBySlipNoNotContainsSomething() throws Exception {
         // Initialize the database
         payOrderRepository.saveAndFlush(payOrder);
 
-        // Get all the payOrderList where slipNo is less than or equal to DEFAULT_SLIP_NO
-        defaultPayOrderShouldBeFound("slipNo.lessThanOrEqual=" + DEFAULT_SLIP_NO);
+        // Get all the payOrderList where createdBy does not contain DEFAULT_CREATED_BY
+        defaultPayOrderShouldNotBeFound("slipNo.doesNotContain=" + DEFAULT_SLIP_NO);
 
-        // Get all the payOrderList where slipNo is less than or equal to SMALLER_SLIP_NO
-        defaultPayOrderShouldNotBeFound("slipNo.lessThanOrEqual=" + SMALLER_SLIP_NO);
-    }
-
-    @Test
-    @Transactional
-    void getAllPayOrdersBySlipNoIsLessThanSomething() throws Exception {
-        // Initialize the database
-        payOrderRepository.saveAndFlush(payOrder);
-
-        // Get all the payOrderList where slipNo is less than DEFAULT_SLIP_NO
-        defaultPayOrderShouldNotBeFound("slipNo.lessThan=" + DEFAULT_SLIP_NO);
-
-        // Get all the payOrderList where slipNo is less than UPDATED_SLIP_NO
-        defaultPayOrderShouldBeFound("slipNo.lessThan=" + UPDATED_SLIP_NO);
-    }
-
-    @Test
-    @Transactional
-    void getAllPayOrdersBySlipNoIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        payOrderRepository.saveAndFlush(payOrder);
-
-        // Get all the payOrderList where slipNo is greater than DEFAULT_SLIP_NO
-        defaultPayOrderShouldNotBeFound("slipNo.greaterThan=" + DEFAULT_SLIP_NO);
-
-        // Get all the payOrderList where slipNo is greater than SMALLER_SLIP_NO
-        defaultPayOrderShouldBeFound("slipNo.greaterThan=" + SMALLER_SLIP_NO);
+        // Get all the payOrderList where createdBy does not contain UPDATED_CREATED_BY
+        defaultPayOrderShouldBeFound("slipNo.doesNotContain=" + UPDATED_SLIP_NO);
     }
 
     @Test
@@ -1165,7 +1139,7 @@ class PayOrderResourceIT {
             .andExpect(jsonPath("$.[*].payOrderNumber").value(hasItem(DEFAULT_PAY_ORDER_NUMBER.intValue())))
             .andExpect(jsonPath("$.[*].payOrderDate").value(hasItem(DEFAULT_PAY_ORDER_DATE.toString())))
             .andExpect(jsonPath("$.[*].amount").value(hasItem(sameNumber(DEFAULT_AMOUNT))))
-            .andExpect(jsonPath("$.[*].slipNo").value(hasItem(DEFAULT_SLIP_NO.intValue())))
+            .andExpect(jsonPath("$.[*].slipNo").value(hasItem(DEFAULT_SLIP_NO)))
             .andExpect(jsonPath("$.[*].controllingNo").value(hasItem(DEFAULT_CONTROLLING_NO.intValue())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
