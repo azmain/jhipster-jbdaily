@@ -34,7 +34,7 @@ export class PayOrderPdfService {
     this.micrPayOrder.letterDateBangla = EnglishToBanglaNumber.formatDateInfoBangla(dayjs(payOrder?.payOrderDate).format('YYYY-MM-DD'));
 
     this.micrPayOrder.payOrderNoBangla = EnglishToBanglaNumber.convertToBanglaNumber(payOrder?.payOrderNumber) ?? '';
-    this.micrPayOrder.slipNoBangla = EnglishToBanglaNumber.convertToBanglaNumber(payOrder?.slipNo) ?? '';
+    this.micrPayOrder.slipNoBangla = EnglishToBanglaNumber.convertToBanglaString(payOrder?.slipNo) ?? '';
 
     switch (payOrder?.fertilizer?.name) {
       case 'Urea': {

@@ -44,7 +44,7 @@ export class PayOrderMicrComponentComponent implements OnInit {
       );
 
       this.micrPayOrder['payOrderNoBangla'] = EnglishToBanglaNumber.convertToBanglaNumber(this.payOrder?.payOrderNumber);
-      this.micrPayOrder['slipNoBangla'] = EnglishToBanglaNumber.convertToBanglaNumber(this.payOrder?.slipNo);
+      this.micrPayOrder['slipNoBangla'] = EnglishToBanglaNumber.convertToBanglaString(this.payOrder?.slipNo ?? '');
 
       switch (this.payOrder?.fertilizer?.name) {
         case 'UREA': {
