@@ -395,6 +395,12 @@ export class PayOrderPdfService {
         // alignment: 'justify'
         fontSize: 12,
       },
+      info: {
+        title: 'JBDaily_Pay_Order_Forwarding_' + this.micrPayOrder.payOrderNumber + '.pdf',
+        author: 'Pulhat Branch, AO Dinajpur',
+        subject: 'Foreign Remittance',
+        keywords: 'Foreign Remittance',
+      },
     };
 
     return micrPayOrderPdfPrint;
