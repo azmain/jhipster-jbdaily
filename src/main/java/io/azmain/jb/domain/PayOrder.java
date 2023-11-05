@@ -36,8 +36,9 @@ public class PayOrder implements Serializable {
     private BigDecimal amount;
 
     @NotNull
-    @Column(name = "slip_no", nullable = false)
-    private Long slipNo;
+    @Size(max = 50)
+    @Column(name = "slip_no", length = 50, nullable = false)
+    private String slipNo;
 
     @NotNull
     @Column(name = "controlling_no", nullable = false)
@@ -123,16 +124,16 @@ public class PayOrder implements Serializable {
         this.amount = amount;
     }
 
-    public Long getSlipNo() {
+    public String getSlipNo() {
         return this.slipNo;
     }
 
-    public PayOrder slipNo(Long slipNo) {
+    public PayOrder slipNo(String slipNo) {
         this.setSlipNo(slipNo);
         return this;
     }
 
-    public void setSlipNo(Long slipNo) {
+    public void setSlipNo(String slipNo) {
         this.slipNo = slipNo;
     }
 

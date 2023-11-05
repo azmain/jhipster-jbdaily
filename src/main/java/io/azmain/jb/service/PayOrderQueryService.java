@@ -100,7 +100,7 @@ public class PayOrderQueryService extends QueryService<PayOrder> {
                 specification = specification.and(buildRangeSpecification(criteria.getAmount(), PayOrder_.amount));
             }
             if (criteria.getSlipNo() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getSlipNo(), PayOrder_.slipNo));
+                specification = specification.and(buildStringSpecification(criteria.getSlipNo(), PayOrder_.slipNo));
             }
             if (criteria.getControllingNo() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getControllingNo(), PayOrder_.controllingNo));

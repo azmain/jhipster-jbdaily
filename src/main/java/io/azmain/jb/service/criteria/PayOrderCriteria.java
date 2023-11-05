@@ -29,7 +29,7 @@ public class PayOrderCriteria implements Serializable, Criteria {
 
     private BigDecimalFilter amount;
 
-    private LongFilter slipNo;
+    private StringFilter slipNo;
 
     private LongFilter controllingNo;
 
@@ -130,18 +130,18 @@ public class PayOrderCriteria implements Serializable, Criteria {
         this.amount = amount;
     }
 
-    public LongFilter getSlipNo() {
+    public StringFilter getSlipNo() {
         return slipNo;
     }
 
-    public LongFilter slipNo() {
+    public StringFilter slipNo() {
         if (slipNo == null) {
-            slipNo = new LongFilter();
+            slipNo = new StringFilter();
         }
         return slipNo;
     }
 
-    public void setSlipNo(LongFilter slipNo) {
+    public void setSlipNo(StringFilter slipNo) {
         this.slipNo = slipNo;
     }
 

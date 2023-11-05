@@ -25,7 +25,7 @@ public class PayOrderDTO implements Serializable {
     private BigDecimal amount;
 
     @NotNull
-    private Long slipNo;
+    private String slipNo;
 
     @NotNull
     private Long controllingNo;
@@ -76,11 +76,11 @@ public class PayOrderDTO implements Serializable {
         this.amount = amount;
     }
 
-    public Long getSlipNo() {
+    public String getSlipNo() {
         return slipNo;
     }
 
-    public void setSlipNo(Long slipNo) {
+    public void setSlipNo(String slipNo) {
         this.slipNo = slipNo;
     }
 

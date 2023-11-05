@@ -23,7 +23,7 @@
             <column name="amount" type="decimal(21,2)">
                 <constraints nullable="false" />
             </column>
-            <column name="slip_no" type="bigint">
+            <column name="slip_no" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
             <column name="controlling_no" type="bigint">
@@ -73,7 +73,7 @@
             <column name="pay_order_number" type="numeric"/>
             <column name="pay_order_date" type="date"/>
             <column name="amount" type="numeric"/>
-            <column name="slip_no" type="numeric"/>
+            <column name="slip_no" type="string"/>
             <column name="controlling_no" type="numeric"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="date"/>

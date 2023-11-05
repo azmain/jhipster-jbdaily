@@ -8,7 +8,7 @@ export interface IPayOrder {
   payOrderNumber?: number | null;
   payOrderDate?: dayjs.Dayjs | null;
   amount?: number | null;
-  slipNo?: number | null;
+  slipNo?: string | null;
   controllingNo?: number | null;
   createdBy?: string | null;
   createdDate?: dayjs.Dayjs | null;

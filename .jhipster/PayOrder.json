@@ -22,8 +22,9 @@
     },
     {
       "fieldName": "slipNo",
-      "fieldType": "Long",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "50"
     },
     {
       "fieldName": "controllingNo",
