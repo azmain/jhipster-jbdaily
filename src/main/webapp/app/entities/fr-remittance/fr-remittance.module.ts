@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { FrRegisterComponent } from './register/fr-register.component';
 import { TableModule } from 'primeng/table';
+import { FrBBReportComponent } from './bb-report/fr-bbreport.component';
 
 @NgModule({
   imports: [SharedModule, FrRemittanceRoutingModule, DropdownModule, CalendarModule, InputTextModule, TableModule],
@@ -19,6 +20,7 @@ import { TableModule } from 'primeng/table';
     FrRemittanceUpdateComponent,
     FrRemittanceDeleteDialogComponent,
     FrRegisterComponent,
+    FrBBReportComponent,
   ],
 })
 export class FrRemittanceModule {}

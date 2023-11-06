@@ -8,6 +8,7 @@ import { FrRemittanceUpdateComponent } from '../update/fr-remittance-update.comp
 import { FrRemittanceRoutingResolveService } from './fr-remittance-routing-resolve.service';
 import { ASC, DESC } from 'app/config/navigation.constants';
 import { FrRegisterComponent } from '../register/fr-register.component';
+import { FrBBReportComponent } from '../bb-report/fr-bbreport.component';
 
 const frRemittanceRoute: Routes = [
   {
@@ -45,6 +46,12 @@ const frRemittanceRoute: Routes = [
   {
     path: 'fr-register',
     component: FrRegisterComponent,
+    data: { defaultSort: 'createdDate,' + DESC },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'bb-report',
+    component: FrBBReportComponent,
     data: { defaultSort: 'createdDate,' + DESC },
     canActivate: [UserRouteAccessService],
   },

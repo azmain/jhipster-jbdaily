@@ -64,7 +64,7 @@ export class FrRegisterComponent implements OnInit {
     'Incentive Amount (BDT)',
   ];
 
-  predicate = 'createdDate';
+  predicate = 'lastModifiedDate';
   ascending = false;
   filters: IFilterOptions = new FilterOptions();
 
