@@ -35,11 +35,12 @@
     </div>
     <div class="col-md-4">
       <label for="inputPassword4" class="form-label">Controlling No</label>
-      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="controllingNo"> </p-inputNumber>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="controllingNo" placeholder="Ex.4723">
+      </p-inputNumber>
     </div>
     <div class="col-4">
       <label for="inputPassword4" class="form-label">Slip No</label>
-      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="slipNo"> </p-inputNumber>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="slipNo" placeholder="Ex.0725433"> </p-inputNumber>
     </div>
     <div class="col-md-4">
       <label class="form-label" for="field_payOrderDate">Pay Order Date From</label>
@@ -51,6 +52,7 @@
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
+        placeholder="Ex.01/01/2023"
       ></p-calendar>
     </div>
     <div class="col-md-4">
@@ -63,24 +65,28 @@
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
+        placeholder="Ex.31/12/2023"
       ></p-calendar>
     </div>
 
     <div class="col-md-4">
       <label for="inputPassword4" class="form-label">Pay Order No</label>
-      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumber"> </p-inputNumber>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumber" placeholder="Ex.2929869">
+      </p-inputNumber>
     </div>
     <div class="col-md-4">
       <label for="inputPassword4" class="form-label">Pay Order No From</label>
-      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumberFrom"> </p-inputNumber>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumberFrom" placeholder="Ex.2929869">
+      </p-inputNumber>
     </div>
     <div class="col-md-4">
       <label for="inputPassword4" class="form-label">Pay Order No To</label>
-      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumberTo"> </p-inputNumber>
+      <p-inputNumber inputId="integeronly" [style]="{ width: '100%' }" formControlName="payOrderNumberTo" placeholder="Ex.2929869">
+      </p-inputNumber>
     </div>
 
     <div class="col-12">
-      <p-button label="Search" icon="pi pi-search" iconPos="right" (click)="onSearch()"></p-button>
+      <p-button label="Search" icon="pi pi-search" iconPos="right" (click)="onSearch()" [disabled]="isLoading"></p-button>
       <!-- <button type="button" class="btn btn-primary" (click)="onSearch()">Search</button> -->
     </div>
   </form>

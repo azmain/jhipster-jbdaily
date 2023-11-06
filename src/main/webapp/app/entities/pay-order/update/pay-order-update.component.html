@@ -167,7 +167,7 @@
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="jbdailyApp.payOrder.slipNo" for="field_slipNo">Slip No</label>
 
-          <input type="number" name="slipNo" id="field_slipNo" data-cy="slipNo" formControlName="slipNo" pInputText />
+          <input type="text" name="slipNo" id="field_slipNo" data-cy="slipNo" formControlName="slipNo" pInputText />
           <div *ngIf="editForm.get('slipNo')!.invalid && (editForm.get('slipNo')!.dirty || editForm.get('slipNo')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('slipNo')?.errors?.required" jhiTranslate="entity.validation.required">
               This field is required.
