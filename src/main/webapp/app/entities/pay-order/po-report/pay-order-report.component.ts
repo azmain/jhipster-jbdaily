@@ -266,7 +266,6 @@ export class PayOrderReportComponent implements OnInit {
   }
 
   protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
-    this.isLoading = true;
     const pageToLoad: number = page ?? 1;
     const queryObject: any = {
       page: pageToLoad - 1,
@@ -305,6 +304,8 @@ export class PayOrderReportComponent implements OnInit {
         }
       }
     });
+
+    this.isLoading = true;
 
     return this.payOrderService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
   }
