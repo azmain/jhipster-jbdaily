@@ -136,7 +136,96 @@ export class FrBBReportComponent implements OnInit {
     // XLSX.writeFile(wb, 'SheetJS.xlsx');
   }
 
-  export() {}
+  /* Tried excel creation using xlsx(sheetjs) but couldn't complete it because of bad documentation */
+  export() {
+    let firstHeading = [['Incentive Received']];
+    let secondHeading = [['Pulhat Branch']];
+    let thirdHeading = [['Janata Bank PLC']];
+
+    let groupedHeaders = [
+      { name: "Cash Incentive Receiver's Information", origin: 'B4' },
+      { name: "Remitter's Information", origin: 'I4' },
+      { name: 'Remittance Information', origin: 'M4' },
+      {
+        name: 'Cash Incentive Information',
+        origin: 'S4',
+      },
+      {
+        name: 'Remarks',
+        origin: 'V4',
+      },
+    ];
+
+    //Had to create a new workbook and then add the header
+    const wb = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+
+    ws['!merges'] = [
+      XLSX.utils.decode_range('A1:V1'),
+      XLSX.utils.decode_range('A2:V2'),
+      XLSX.utils.decode_range('A3:V3'),
+
+      XLSX.utils.decode_range('B4:H4'),
+      XLSX.utils.decode_range('I4:L4'),
+      XLSX.utils.decode_range('M4:R4'),
+      XLSX.utils.decode_range('S4:U4'),
+    ];
+
+    ws['!cols'] = [{ wch: 12 }];
+
+    XLSX.utils.sheet_add_aoa(ws, firstHeading, { origin: 'A1', cellStyles: true });
+    XLSX.utils.sheet_add_aoa(ws, secondHeading, { origin: 'A2', cellStyles: true });
+    XLSX.utils.sheet_add_aoa(ws, thirdHeading, { origin: 'A3', cellStyles: true });
+
+    groupedHeaders.forEach(({ name, origin }) => {
+      console.log('LOG1', name, origin);
+      XLSX.utils.sheet_add_aoa(ws, [[name]], { origin });
+    });
+
+    XLSX.utils.sheet_add_aoa(
+      ws,
+      [
+        [
+          'SN',
+
+          'Name*',
+          'Gender',
+          'Document Type',
+          'Document/Account',
+          'Name of Bank/MFS*',
+          'Type of Transaction*',
+          'Mobile*',
+
+          'Name*',
+          'Gender',
+          'Profesion',
+          'Country',
+
+          'Name of Bank/ Exchange Co*',
+          'Remittance Sending Date',
+          'Amount of Remittance in Foreign Currency',
+          'Exchange Rate',
+          'Amount (BDT)*',
+          'Amount Reimburse Date',
+
+          'Amount of Incentive (BDT)*',
+          'Payment Date of Incentive*',
+          'Incentive Amount Reimburse Date',
+          '',
+        ],
+      ],
+      { origin: 'A5' }
+    );
+
+    // XLSX.utils.sheet_add_aoa(ws, Heading);
+
+    //Starting in the second row to avoid overriding and skipping headers
+    XLSX.utils.sheet_add_json(ws, this.frRemittancesDataTable, { origin: 'A6', skipHeader: true });
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    XLSX.writeFile(wb, 'filename.xlsx');
+  }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
