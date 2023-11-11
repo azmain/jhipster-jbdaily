@@ -24,6 +24,9 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import * as XLSX from 'xlsx';
 
+import * as ExcelJS from 'exceljs';
+// import * as saveAs from 'file-saver';
+
 @Component({
   selector: 'jhi-bbreport',
   templateUrl: './fr-bbreport.component.html',
@@ -45,15 +48,31 @@ export class FrBBReportComponent implements OnInit {
   isLoading = false;
 
   tableColumns: string[] = [
-    'Serial',
-    'Type',
-    'Benificiary Name',
-    'NID / Passport No',
-    'Mobile No',
-    'PIN',
-    'Payment Date',
-    'Amount (BDT)',
-    'Incentive Amount (BDT)',
+    'SN',
+
+    'Name*',
+    'Gender',
+    'Document Type',
+    'Document/Account',
+    'Name of Bank/MFS*',
+    'Type of Transaction*',
+    'Mobile*',
+
+    'Name*',
+    'Gender',
+    'Profesion',
+    'Country',
+
+    'Name of Bank/ Exchange Co*',
+    'Remittance Sending Date',
+    'Amount of Remittance in Foreign Currency',
+    'Exchange Rate',
+    'Amount (BDT)*',
+    'Amount Reimburse Date',
+
+    'Amount of Incentive (BDT)*',
+    'Payment Date of Incentive*',
+    'Incentive Amount Reimburse Date',
   ];
 
   predicate = 'lastModifiedDate';
@@ -225,6 +244,403 @@ export class FrBBReportComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     XLSX.writeFile(wb, 'filename.xlsx');
+  }
+
+  runExcelJSExport() {
+    let frRemittanceData = [
+      {
+        'salesman-name': 'Jim Smith',
+        sales: 12345,
+        uri: 'https://www.google.com',
+        'met-target': true,
+        status: 'Employee',
+        dob: new Date(),
+        level: 1.1,
+      },
+    ];
+
+    let wb = new ExcelJS.Workbook();
+    let workbookName = 'FR_BB_REGISTER_' + dayjs().format('YYYY_MM_DD') + '.xlsx';
+    let worksheetName = 'Foreign Remittance';
+
+    let ws = wb.addWorksheet(worksheetName, {
+      properties: {
+        tabColor: { argb: 'FFFF0000' },
+      },
+    });
+
+    ws.mergeCells('A1:W1');
+    ws.getCell('A1').style = {
+      font: {
+        size: 20,
+        bold: true,
+      },
+      alignment: {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      },
+    };
+    ws.getCell('A1').value = 'Foreign Remittance Incentive Report as On ' + dayjs().format('DD-MM-YYYY');
+
+    ws.mergeCells('A2:W2');
+    ws.getCell('A2').style = {
+      font: {
+        size: 16,
+        bold: true,
+      },
+      alignment: {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      },
+    };
+    ws.getCell('A2').value = 'Janata Bank Limited';
+
+    ws.mergeCells('A3:W3');
+    ws.getCell('A3').style = {
+      font: {
+        size: 16,
+        bold: true,
+      },
+      alignment: {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      },
+    };
+    ws.getCell('A3').value = 'Pulhat Branch';
+
+    ws.mergeCells('B4:H4');
+    ws.getCell('B4').value = "Cash Incentive Receiver's Information";
+
+    ws.mergeCells('I4:L4');
+    ws.getCell('I4').value = "Remitter's Information";
+
+    ws.mergeCells('M4:S4');
+    ws.getCell('M4').value = 'Remittance Information';
+
+    ws.mergeCells('T4:V4');
+    ws.getCell('T4').value = 'Cash Incentive Information';
+
+    ws.getCell('W4').value = 'Remarks';
+
+    [2, 3, 4].map(x => {
+      ws.getRow(x).font = { size: 16, bold: true };
+      ws.getRow(x).alignment = {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      };
+    });
+
+    // Array of { key, header, width } objects for column headers
+    const columnHeaders = [
+      { key: 'salesman-name', header: 'Salesman Name', width: 20 },
+      { key: 'sales', header: 'Sales', width: 25 },
+      { key: 'status', header: 'Status', width: 20 },
+      { key: 'met-target', header: 'Met Traget', width: 25 },
+      { key: 'uri', header: 'URI', width: 20 },
+      { key: 'dob', header: 'Date of Birth', width: 25 },
+      { key: 'level', header: 'Level', width: 25 },
+
+      // Add more headers as needed
+    ];
+
+    // Add headers to the worksheet
+    columnHeaders.forEach((column, index) => {
+      console.log('column index', column, index);
+      const cell: ExcelJS.Cell = ws.getCell(5, index + 1); // Row 5, Column 1 (A)
+      cell.name = column.key;
+      cell.value = column.header;
+      cell.alignment = { horizontal: 'center' };
+    });
+
+    // Set column widths
+    ws.columns = columnHeaders.map(column => ({ key: column.key, width: column.width, wrapText: true }));
+
+    // Add data to the worksheet starting from row 6
+    // frRemittanceData.forEach((rowData, rowIndex) => {
+    //   columnHeaders.forEach((column, columnIndex) => {
+    //     const cell = ws.getCell(rowIndex + 6, columnIndex + 1); // Starting from Row 6, Column 1 (A)
+    //     cell.value = rowData[column.key];
+    //   });
+    // });
+
+    ws.addRows(frRemittanceData);
+
+    const dataRange = ws.getCell(6, 1).address + ':' + ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address;
+
+    console.log('range', ws.getCell(6, 1).address, ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address, dataRange);
+
+    // ws.getCell(dataRange).alignment = { horizontal: 'center', wrapText: true };
+    const rows = ws.getRows(6, frRemittanceData.length);
+    console.log('rows', rows);
+
+    ws.eachRow(function (row, rowNumber) {
+      console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
+    });
+    // ws.eachCell(dataRange, { horizontal: 'center', wrapText: true });
+    // for (const row of ws.getRows(dataRange)) {
+    //   for (const cell of row) {
+    //     cell.alignment = { horizontal: 'center', wrapText: true };
+    //   }
+    // }
+    // frRemittanceData.forEach((rowData, rowIndex) => {
+    //   columnHeaders.forEach((column, columnIndex) => {
+    //     const cell = ws.getCell(rowIndex + 6, columnIndex + 1); // Starting from Row 6, Column 1 (A)
+    //     cell.alignment = { horizontal: 'center', wrapText: true };
+    //   });
+    // });
+
+    // ws.addRow([
+    //   'SN',
+    //   {
+    //     header: 'Name*',
+    //     key: 'name',
+    //     width: 32
+    //   }, 'Gender', 'Document Type', 'Document/Account', 'Name of Bank / MFS*',
+    //   'Type of Transaction*', 'Extra1',
+    //   'Name*', 'Gender', 'Profession', 'Country',
+    //   'Name of Bank/ Exchange Co*', 'Remittance Sending Date', 'Amount of Remittance in Foreign Currency', 'Exchange Rate', 'Amount (BDT)*', 'Extra2', 'Extra3',
+    //   'Amount of Incentive (BDT)*', 'Payment Date of Incentive*', 'Remarks'
+    // ]);
+
+    // ws.addRows(frRemittanceData);
+
+    // ws.columns = [
+    //   { header: 'Id', key: 'id', width: 10 },
+    //   { header: 'Name', key: 'name', width: 32 },
+    //   { header: 'D.O.B.', key: 'DOB', width: 10, outlineLevel: 1 }
+    // ];
+
+    // ws.addRow(5, {id: 3, name: 'john doe', dob: 'date'});
+
+    // available in latest version
+    // ws.getRows(1, 4).forEach((row) => {
+    //   // for(let i = 1; i <= 7; i++) {
+    //   //   row.getCell(i).value = 'hello';
+    //   // }
+    //   row.font = {
+    //     size: 16,
+    //     bold: true
+    //   };
+    // });
+
+    // let col = ws.getRow();
+    // col.eachCell(function(cell, rowNumber) {
+    //   if (rowNumber > 1) {
+    //     if (cell.value) {
+    //       cell.value = "\u2713";
+    //     } else {
+    //       cell.value = null;
+    //     }
+    //   }
+    // });
+
+    // ws.columns = []
+
+    // ws.columns = [
+    //   {
+    //     key: "salesman-name",
+    //     header: "Salesman-Name",
+    //     width: 20
+    //   },
+    //   {
+    //     key: "sales",
+    //     header: "Sales",
+    //     width: 15,
+    //     style: { numFmt: '"$"#,##0.00;[Red]-"$"#,##0.00' }
+    //   },
+    //   {
+    //     key: "uri",
+    //     header: "URI",
+    //     width: 30,
+    //     outlineLevel: 1 ,
+    //     hidden: false
+    //   },
+    //   {
+    //     key: "met target",
+    //     header: "Met Target?",
+    //     width: 12,
+    //     style: {
+    //       alignment: { horizontal: "center" },
+    //       font: { color: { argb: "008000" } }
+    //     }
+    //   },
+    //   {
+    //     key: "status",
+    //     header: "Status"
+    //   },
+    //   {
+    //     key: "dob",
+    //     header: "Date of Birth",
+    //     width: 12,
+    //     style: { numFmt: "dd/mm/yyyy" }
+    //   },
+    //   {
+    //     key: "level",
+    //     header: "Level",
+    //     width: 5,
+    //     style: { numFmt: "0.0" }
+    //   },
+    //   {
+    //     key: "comments",
+    //     header: "Comments",
+    //     width: 30,
+    //     style: { alignment: { wrapText: true }, numFmt: '@' },
+    //     outlineLevel: 1 ,
+    //     hidden: false
+    //   },
+    //   {
+    //     key: "dob_linked",
+    //     header: "Date of Birth (Linked and Formatted)",
+    //     width: 35,
+    //     style: { numFmt: "dddd, MMMM dd, yyyy" },
+    //     outlineLevel: 2,
+    //     hidden: false
+    //   },
+
+    // ];
+
+    // ws.getRow(1).font = { bold: true };
+    // ws.getCell("B1").alignment = { horizontal: "right" };
+    // ws.getCell('F1').alignment = { textRotation: 90 };
+    // ws.views = [{ state: "frozen", ySplit: 2 }];
+
+    // ws.addRows(data);
+
+    // ws.getCell("C2").value = {
+    //   text: "www.google.com",
+    //   hyperlink: "http://www.google.com",
+    //   tooltip: "Click to go to google.com"
+    // };
+    // ws.getCell("C2").font = {
+    //   color: { argb: "0000FF" },
+    //   underline: true
+    // };
+
+    // let totCell = "B" + (data.length + 2);
+    // let totFormula = "SUM(B2:B" + (data.length + 1) + ")";
+    // ws.getCell(totCell).value = { formula: totFormula };
+    // ws.getCell(totCell).border = {
+    //   top: { style: "thin" },
+    //   bottom: { style: "double" }
+    // };
+    // // We can name this cell to make it easier to reference later
+    // ws.getCell(totCell).name = 'salestotal';
+
+    // let col = ws.getColumn("D");
+    // col.eachCell(function(cell, rowNumber) {
+    //   if (rowNumber > 1) {
+    //     if (cell.value) {
+    //       cell.value = "\u2713";
+    //     } else {
+    //       cell.value = null;
+    //     }
+    //   }
+    // });
+
+    // col = ws.getColumn("E");
+    // col.eachCell(function(cell, rowNumber) {
+    //   if (rowNumber > 1) {
+    //     cell.dataValidation = {
+    //       type: "list",
+    //       allowBlank: false,
+    //       formulae: ['"Employee,Freelance"']
+    //     };
+    //   }
+    // });
+
+    // col = ws.getColumn("F");
+    // col.eachCell(function(cell, rowNumber) {
+    //   if (rowNumber > 1) {
+    //     cell.dataValidation = {
+    //       type: 'date',
+    //       operator: 'lessThan',
+    //       showErrorMessage: true,
+    //       allowBlank: false,
+    //       formulae: [new Date(1981,1,1)],
+    //       errorStyle: 'error',
+    //       errorTitle: 'Date is too soon!',
+    //       error: 'The dob value must be before 01/01/1981'
+    //     };
+    //   }
+    // });
+
+    // // Remove all HTML from the comments field
+    // col = ws.getColumn("H");
+    // col.eachCell(function(cell, rowNumber) {
+    //   if (cell.value !== null && String(cell.value).trim() !== '') {
+    //     let doc = new DOMParser().parseFromString(cell.value, "text/html");
+    //     cell.value = doc.documentElement.textContent;
+    //   }
+    // });
+
+    // col = ws.getColumn("I");
+    // col.eachCell(function(cell, rowNumber) {
+    //   if (rowNumber > 1) {
+    //     cell.value = {formula: 'F' + rowNumber};
+    //   }
+    // });
+
+    // // Reference cell by rownum, colnum
+    // ws.getCell(5,1).fill = {
+    //   type: "pattern",
+    //   pattern: "solid",
+    //   fgColor: { argb: "F3FF33" }
+    // };
+
+    // ws.getCell("G4").value = {
+    //   richText: [
+    //     { text: "This " },
+    //     { font: { italic: true }, text: "is" },
+    //     {
+    //       font: {
+    //         size: 14,
+    //         color: { argb: "FF00FF00" },
+    //         bold: true
+    //       },
+    //       text: "rich"
+    //     },
+    //     { font: { underline: true }, text: " text!" }
+    //   ]
+    // };
+
+    // // Merge cells
+    // ws.mergeCells('A15:I17');
+    // ws.getCell('A15').style = {
+    //   font: {
+    //     size: 20,
+    //     bold: true
+    //   },
+    //   alignment: {
+    //     horizontal: 'center',
+    //     vertical: 'middle',
+    //     wrapText: true
+    //   }
+    // };
+    // ws.getCell('A15').value = 'This is merged cells (A15:I17), with large bold text, vertically and horizontally aligned';
+
+    // ws.getRow(15).outlineLevel = 1;
+    // ws.getRow(16).outlineLevel = 1;
+    // ws.getRow(17).outlineLevel = 1;
+
+    // ws.getColumn('I').hidden = true;
+    // ws.getRow(4).hidden = true;
+
+    // // Retrieve a named cell value from another worksheet
+    // ws2.getColumn('A').width = 25;
+    // ws2.getCell('A3').value = 'Value from 1st sheet:';
+    // ws2.getCell('B3').value = { formula: 'salestotal' };
+
+    console.log(ws.getRow(5).getCell(9).address);
+
+    var FileSaver = require('file-saver');
+
+    wb.xlsx.writeBuffer().then(function (buffer) {
+      FileSaver.saveAs(new Blob([buffer], { type: 'application/octet-stream' }), workbookName);
+    });
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
