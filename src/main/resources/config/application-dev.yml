@@ -30,6 +30,7 @@ spring:
   jackson:
     serialization:
       indent-output: true
+    timezone: Asia/Dhaka
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource

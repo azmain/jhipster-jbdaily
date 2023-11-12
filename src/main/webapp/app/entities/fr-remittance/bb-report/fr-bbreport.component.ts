@@ -47,32 +47,35 @@ export class FrBBReportComponent implements OnInit {
   frRemittancesDataTable: any[] = [];
   isLoading = false;
 
-  tableColumns: string[] = [
-    'SN',
+  tableColumns: any[] = [
+    { key: 'id', header: 'SN', width: 20 },
 
-    'Name*',
-    'Gender',
-    'Document Type',
-    'Document/Account',
-    'Name of Bank/MFS*',
-    'Type of Transaction*',
-    'Mobile*',
+    { key: 'recvName', header: 'Name*', width: 20 },
+    { key: 'recvGender', header: 'Gender', width: 20 },
+    { key: 'documentType', header: 'Document Type', width: 20 },
+    { key: 'documentId', header: 'Document/Account', width: 20 },
+    { key: 'bankName', header: 'Name of Bank/MFS*', width: 20 },
+    { key: 'transactionType', header: 'Type of Transaction*', width: 20 },
+    { key: 'recvMobileNo', header: 'Mobile*', width: 20 },
 
-    'Name*',
-    'Gender',
-    'Profesion',
-    'Country',
+    { key: 'remitersName', header: 'Name*', width: 20 },
+    { key: 'remitersGender', header: 'Gender', width: 20 },
+    { key: 'remitersProfession', header: 'Profesion', width: 20 },
+    { key: 'remitersCountry', header: 'Country', width: 20 },
 
-    'Name of Bank/ Exchange Co*',
-    'Remittance Sending Date',
-    'Amount of Remittance in Foreign Currency',
-    'Exchange Rate',
-    'Amount (BDT)*',
-    'Amount Reimburse Date',
+    { key: 'exchangeCompany', header: 'Name of Bank/ Exchange Co*', width: 20 },
+    { key: 'remiSendingDate', header: 'Remittance Sending Date', width: 20 },
+    { key: 'remiFrCurrency', header: 'Amount of Remittance in Foreign Currency', width: 20 },
+    { key: 'exchangeRate', header: 'Exchange Rate', width: 20 },
+    { key: 'remitanceAmount', header: 'Amount (BDT)*', width: 20 },
+    { key: 'remiAmountReimDate', header: 'Amount Reimburse Date', width: 20 },
 
-    'Amount of Incentive (BDT)*',
-    'Payment Date of Incentive*',
-    'Incentive Amount Reimburse Date',
+    { key: 'incentivePercentage', header: 'Incentive Percentage*', width: 20 },
+    { key: 'incentiveAmount', header: 'Amount of Incentive (BDT)*', width: 20 },
+    { key: 'incPaymentDate', header: 'Payment Date of Incentive*', width: 20 },
+    { key: 'incAmountReimDate', header: 'Incentive Amount Reimburse Date', width: 20 },
+
+    { key: 'remarks', header: 'Remarks', width: 20 },
   ];
 
   predicate = 'lastModifiedDate';
@@ -317,11 +320,11 @@ export class FrBBReportComponent implements OnInit {
     ws.mergeCells('I4:L4');
     ws.getCell('I4').value = "Remitter's Information";
 
-    ws.mergeCells('M4:S4');
+    ws.mergeCells('M4:R4');
     ws.getCell('M4').value = 'Remittance Information';
 
-    ws.mergeCells('T4:V4');
-    ws.getCell('T4').value = 'Cash Incentive Information';
+    ws.mergeCells('S4:V4');
+    ws.getCell('S4').value = 'Cash Incentive Information';
 
     ws.getCell('W4').value = 'Remarks';
 
@@ -348,16 +351,16 @@ export class FrBBReportComponent implements OnInit {
     ];
 
     // Add headers to the worksheet
-    columnHeaders.forEach((column, index) => {
+    this.tableColumns.forEach((column, index) => {
       console.log('column index', column, index);
       const cell: ExcelJS.Cell = ws.getCell(5, index + 1); // Row 5, Column 1 (A)
       cell.name = column.key;
       cell.value = column.header;
-      cell.alignment = { horizontal: 'center' };
+      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
     });
 
     // Set column widths
-    ws.columns = columnHeaders.map(column => ({ key: column.key, width: column.width, wrapText: true }));
+    ws.columns = this.tableColumns.map(column => ({ key: column.key, width: column.width, wrapText: true }));
 
     // Add data to the worksheet starting from row 6
     // frRemittanceData.forEach((rowData, rowIndex) => {
@@ -367,7 +370,7 @@ export class FrBBReportComponent implements OnInit {
     //   });
     // });
 
-    ws.addRows(frRemittanceData);
+    ws.addRows(this.frRemittancesDataTable);
 
     const dataRange = ws.getCell(6, 1).address + ':' + ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address;
 
@@ -661,19 +664,20 @@ export class FrBBReportComponent implements OnInit {
 
         //remitters info
         remitersName: item.remitersName,
-        remitersGender: item.remitersGender,
+        remitersGender: item.remiGender,
         remitersProfession: '',
-        remitersCountry: item.remitersCountry,
+        remitersCountry: item.country,
 
         //remittance info
         exchangeCompany: item.moneyExchange.name,
         remiSendingDate: item.remiSendingDate ? dayjs(item.remiSendingDate).format('DD/MM/YYYY') : '',
-        remiFrCurrency: item.remiFrCurrency,
+        remiFrCurrency: item.remiFrCurrency, // amount
         exchangeRate: item.exchangeRate,
         remitanceAmount: item.amount,
         remiAmountReimDate: item.amountReimDate ? dayjs(item.amountReimDate).format('DD/MM/YYYY') : '',
 
         //cash incentive info
+        incentivePercentage: item.incPercentage.name,
         incentiveAmount: item.incentiveAmount,
         incPaymentDate: item.incPaymentDate ? dayjs(item.incPaymentDate).format('DD/MM/YYYY') : '',
         incAmountReimDate: item.incAmountReimDate ? dayjs(item.incAmountReimDate).format('DD/MM/YYYY') : '',
