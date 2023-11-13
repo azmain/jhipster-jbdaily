@@ -1,6 +1,7 @@
 package io.azmain.jb.repository;
 
 import io.azmain.jb.domain.Dealer;
+import io.azmain.jb.domain.PayOrder;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the Dealer entity.
  */
 @Repository
-public interface DealerRepository extends JpaRepository<Dealer, Long> {
+public interface DealerRepository extends JpaRepository<Dealer, Long>, JpaSpecificationExecutor<Dealer> {
     default Optional<Dealer> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }

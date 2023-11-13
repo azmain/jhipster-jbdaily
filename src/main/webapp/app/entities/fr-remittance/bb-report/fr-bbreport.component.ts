@@ -33,8 +33,6 @@ import * as ExcelJS from 'exceljs';
   styleUrls: ['./fr-bbreport.component.scss'],
 })
 export class FrBBReportComponent implements OnInit {
-  @ViewChild('TABLE') table: ElementRef | undefined;
-
   frRemittanceSearchForm: FormGroup;
 
   transactionTypeValues = TransactionType;
@@ -149,119 +147,9 @@ export class FrBBReportComponent implements OnInit {
         this.onResponseSuccess(res);
       },
     });
-
-    // const ws: XLSX.WorkSheet=XLSX.utils.table_to_sheet(this.table?.nativeElement);
-    // const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    // /* save to file */
-    // XLSX.writeFile(wb, 'SheetJS.xlsx');
-  }
-
-  /* Tried excel creation using xlsx(sheetjs) but couldn't complete it because of bad documentation */
-  export() {
-    let firstHeading = [['Incentive Received']];
-    let secondHeading = [['Pulhat Branch']];
-    let thirdHeading = [['Janata Bank PLC']];
-
-    let groupedHeaders = [
-      { name: "Cash Incentive Receiver's Information", origin: 'B4' },
-      { name: "Remitter's Information", origin: 'I4' },
-      { name: 'Remittance Information', origin: 'M4' },
-      {
-        name: 'Cash Incentive Information',
-        origin: 'S4',
-      },
-      {
-        name: 'Remarks',
-        origin: 'V4',
-      },
-    ];
-
-    //Had to create a new workbook and then add the header
-    const wb = XLSX.utils.book_new();
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
-
-    ws['!merges'] = [
-      XLSX.utils.decode_range('A1:V1'),
-      XLSX.utils.decode_range('A2:V2'),
-      XLSX.utils.decode_range('A3:V3'),
-
-      XLSX.utils.decode_range('B4:H4'),
-      XLSX.utils.decode_range('I4:L4'),
-      XLSX.utils.decode_range('M4:R4'),
-      XLSX.utils.decode_range('S4:U4'),
-    ];
-
-    ws['!cols'] = [{ wch: 12 }];
-
-    XLSX.utils.sheet_add_aoa(ws, firstHeading, { origin: 'A1', cellStyles: true });
-    XLSX.utils.sheet_add_aoa(ws, secondHeading, { origin: 'A2', cellStyles: true });
-    XLSX.utils.sheet_add_aoa(ws, thirdHeading, { origin: 'A3', cellStyles: true });
-
-    groupedHeaders.forEach(({ name, origin }) => {
-      console.log('LOG1', name, origin);
-      XLSX.utils.sheet_add_aoa(ws, [[name]], { origin });
-    });
-
-    XLSX.utils.sheet_add_aoa(
-      ws,
-      [
-        [
-          'SN',
-
-          'Name*',
-          'Gender',
-          'Document Type',
-          'Document/Account',
-          'Name of Bank/MFS*',
-          'Type of Transaction*',
-          'Mobile*',
-
-          'Name*',
-          'Gender',
-          'Profesion',
-          'Country',
-
-          'Name of Bank/ Exchange Co*',
-          'Remittance Sending Date',
-          'Amount of Remittance in Foreign Currency',
-          'Exchange Rate',
-          'Amount (BDT)*',
-          'Amount Reimburse Date',
-
-          'Amount of Incentive (BDT)*',
-          'Payment Date of Incentive*',
-          'Incentive Amount Reimburse Date',
-          '',
-        ],
-      ],
-      { origin: 'A5' }
-    );
-
-    // XLSX.utils.sheet_add_aoa(ws, Heading);
-
-    //Starting in the second row to avoid overriding and skipping headers
-    XLSX.utils.sheet_add_json(ws, this.frRemittancesDataTable, { origin: 'A6', skipHeader: true });
-
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-    XLSX.writeFile(wb, 'filename.xlsx');
   }
 
   runExcelJSExport() {
-    let frRemittanceData = [
-      {
-        'salesman-name': 'Jim Smith',
-        sales: 12345,
-        uri: 'https://www.google.com',
-        'met-target': true,
-        status: 'Employee',
-        dob: new Date(),
-        level: 1.1,
-      },
-    ];
-
     let wb = new ExcelJS.Workbook();
     let workbookName = 'FR_BB_REGISTER_' + dayjs().format('YYYY_MM_DD') + '.xlsx';
     let worksheetName = 'Foreign Remittance';
@@ -284,6 +172,9 @@ export class FrBBReportComponent implements OnInit {
         wrapText: true,
       },
     };
+    const firstRow = ws.getRow(1);
+    firstRow.height = 42.5;
+
     ws.getCell('A1').value = 'Foreign Remittance Incentive Report as On ' + dayjs().format('DD-MM-YYYY');
 
     ws.mergeCells('A2:W2');
@@ -338,211 +229,70 @@ export class FrBBReportComponent implements OnInit {
     });
 
     // Array of { key, header, width } objects for column headers
-    const columnHeaders = [
-      { key: 'salesman-name', header: 'Salesman Name', width: 20 },
-      { key: 'sales', header: 'Sales', width: 25 },
-      { key: 'status', header: 'Status', width: 20 },
-      { key: 'met-target', header: 'Met Traget', width: 25 },
-      { key: 'uri', header: 'URI', width: 20 },
-      { key: 'dob', header: 'Date of Birth', width: 25 },
-      { key: 'level', header: 'Level', width: 25 },
-
-      // Add more headers as needed
-    ];
-
     // Add headers to the worksheet
     this.tableColumns.forEach((column, index) => {
-      console.log('column index', column, index);
+      // console.log('column index', column, index);
       const cell: ExcelJS.Cell = ws.getCell(5, index + 1); // Row 5, Column 1 (A)
       cell.name = column.key;
       cell.value = column.header;
       cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
     });
-
     // Set column widths
     ws.columns = this.tableColumns.map(column => ({ key: column.key, width: column.width, wrapText: true }));
 
-    // Add data to the worksheet starting from row 6
-    // frRemittanceData.forEach((rowData, rowIndex) => {
-    //   columnHeaders.forEach((column, columnIndex) => {
-    //     const cell = ws.getCell(rowIndex + 6, columnIndex + 1); // Starting from Row 6, Column 1 (A)
-    //     cell.value = rowData[column.key];
-    //   });
-    // });
-
+    // adding data
     ws.addRows(this.frRemittancesDataTable);
 
-    const dataRange = ws.getCell(6, 1).address + ':' + ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address;
+    // const dataRange = ws.getCell(6, 1).address + ':' + ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address;
 
-    console.log('range', ws.getCell(6, 1).address, ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address, dataRange);
+    // console.log('range', ws.getCell(6, 1).address, ws.getCell(frRemittanceData.length + 5, columnHeaders.length).address, dataRange);
 
-    // ws.getCell(dataRange).alignment = { horizontal: 'center', wrapText: true };
-    const rows = ws.getRows(6, frRemittanceData.length);
-    console.log('rows', rows);
+    ws.getCell('B6', 'W6').alignment = { horizontal: 'center', wrapText: true };
 
-    ws.eachRow(function (row, rowNumber) {
-      console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
+    const dataRows: ExcelJS.Row[] = ws.getRows(6, this.frRemittancesDataTable.length) ?? [];
+    // console.log('rows', dataRows);
+    dataRows.forEach((row, index) => {
+      // console.log('row index', row, index);
+      row.eachCell(cell => {
+        cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      });
     });
-    // ws.eachCell(dataRange, { horizontal: 'center', wrapText: true });
-    // for (const row of ws.getRows(dataRange)) {
-    //   for (const cell of row) {
-    //     cell.alignment = { horizontal: 'center', wrapText: true };
-    //   }
-    // }
-    // frRemittanceData.forEach((rowData, rowIndex) => {
-    //   columnHeaders.forEach((column, columnIndex) => {
-    //     const cell = ws.getCell(rowIndex + 6, columnIndex + 1); // Starting from Row 6, Column 1 (A)
-    //     cell.alignment = { horizontal: 'center', wrapText: true };
-    //   });
-    // });
 
-    // ws.addRow([
-    //   'SN',
-    //   {
-    //     header: 'Name*',
-    //     key: 'name',
-    //     width: 32
-    //   }, 'Gender', 'Document Type', 'Document/Account', 'Name of Bank / MFS*',
-    //   'Type of Transaction*', 'Extra1',
-    //   'Name*', 'Gender', 'Profession', 'Country',
-    //   'Name of Bank/ Exchange Co*', 'Remittance Sending Date', 'Amount of Remittance in Foreign Currency', 'Exchange Rate', 'Amount (BDT)*', 'Extra2', 'Extra3',
-    //   'Amount of Incentive (BDT)*', 'Payment Date of Incentive*', 'Remarks'
-    // ]);
+    // Row index to apply formatting
+    const lastRowIndex = this.frRemittancesDataTable.length + 6;
+    const totalFormula = `SUM(Q6:Q${lastRowIndex - 1})`;
+    console.log(totalFormula);
 
-    // ws.addRows(frRemittanceData);
+    ws.getCell(`P${lastRowIndex}`).value = 'TOTAL';
+    ws.getCell(`P${lastRowIndex}`).style = {
+      font: {
+        size: 12,
+        bold: true,
+      },
+      alignment: {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      },
+    };
+    ws.getCell(`Q${lastRowIndex}`).value = { formula: `SUM(Q6:Q${lastRowIndex - 1})` };
 
-    // ws.columns = [
-    //   { header: 'Id', key: 'id', width: 10 },
-    //   { header: 'Name', key: 'name', width: 32 },
-    //   { header: 'D.O.B.', key: 'DOB', width: 10, outlineLevel: 1 }
-    // ];
+    ws.getCell(`S${lastRowIndex}`).value = 'TOTAL';
+    ws.getCell(`S${lastRowIndex}`).style = {
+      font: {
+        size: 12,
+        bold: true,
+      },
+      alignment: {
+        horizontal: 'center',
+        vertical: 'middle',
+        wrapText: true,
+      },
+    };
+    ws.getCell(`T${lastRowIndex}`).value = { formula: `SUM(T6:T${lastRowIndex - 1})` };
 
-    // ws.addRow(5, {id: 3, name: 'john doe', dob: 'date'});
-
-    // available in latest version
-    // ws.getRows(1, 4).forEach((row) => {
-    //   // for(let i = 1; i <= 7; i++) {
-    //   //   row.getCell(i).value = 'hello';
-    //   // }
-    //   row.font = {
-    //     size: 16,
-    //     bold: true
-    //   };
-    // });
-
-    // let col = ws.getRow();
-    // col.eachCell(function(cell, rowNumber) {
-    //   if (rowNumber > 1) {
-    //     if (cell.value) {
-    //       cell.value = "\u2713";
-    //     } else {
-    //       cell.value = null;
-    //     }
-    //   }
-    // });
-
-    // ws.columns = []
-
-    // ws.columns = [
-    //   {
-    //     key: "salesman-name",
-    //     header: "Salesman-Name",
-    //     width: 20
-    //   },
-    //   {
-    //     key: "sales",
-    //     header: "Sales",
-    //     width: 15,
-    //     style: { numFmt: '"$"#,##0.00;[Red]-"$"#,##0.00' }
-    //   },
-    //   {
-    //     key: "uri",
-    //     header: "URI",
-    //     width: 30,
-    //     outlineLevel: 1 ,
-    //     hidden: false
-    //   },
-    //   {
-    //     key: "met target",
-    //     header: "Met Target?",
-    //     width: 12,
-    //     style: {
-    //       alignment: { horizontal: "center" },
-    //       font: { color: { argb: "008000" } }
-    //     }
-    //   },
-    //   {
-    //     key: "status",
-    //     header: "Status"
-    //   },
-    //   {
-    //     key: "dob",
-    //     header: "Date of Birth",
-    //     width: 12,
-    //     style: { numFmt: "dd/mm/yyyy" }
-    //   },
-    //   {
-    //     key: "level",
-    //     header: "Level",
-    //     width: 5,
-    //     style: { numFmt: "0.0" }
-    //   },
-    //   {
-    //     key: "comments",
-    //     header: "Comments",
-    //     width: 30,
-    //     style: { alignment: { wrapText: true }, numFmt: '@' },
-    //     outlineLevel: 1 ,
-    //     hidden: false
-    //   },
-    //   {
-    //     key: "dob_linked",
-    //     header: "Date of Birth (Linked and Formatted)",
-    //     width: 35,
-    //     style: { numFmt: "dddd, MMMM dd, yyyy" },
-    //     outlineLevel: 2,
-    //     hidden: false
-    //   },
-
-    // ];
-
-    // ws.getRow(1).font = { bold: true };
-    // ws.getCell("B1").alignment = { horizontal: "right" };
-    // ws.getCell('F1').alignment = { textRotation: 90 };
-    // ws.views = [{ state: "frozen", ySplit: 2 }];
-
-    // ws.addRows(data);
-
-    // ws.getCell("C2").value = {
-    //   text: "www.google.com",
-    //   hyperlink: "http://www.google.com",
-    //   tooltip: "Click to go to google.com"
-    // };
-    // ws.getCell("C2").font = {
-    //   color: { argb: "0000FF" },
-    //   underline: true
-    // };
-
-    // let totCell = "B" + (data.length + 2);
-    // let totFormula = "SUM(B2:B" + (data.length + 1) + ")";
-    // ws.getCell(totCell).value = { formula: totFormula };
-    // ws.getCell(totCell).border = {
-    //   top: { style: "thin" },
-    //   bottom: { style: "double" }
-    // };
-    // // We can name this cell to make it easier to reference later
-    // ws.getCell(totCell).name = 'salestotal';
-
-    // let col = ws.getColumn("D");
-    // col.eachCell(function(cell, rowNumber) {
-    //   if (rowNumber > 1) {
-    //     if (cell.value) {
-    //       cell.value = "\u2713";
-    //     } else {
-    //       cell.value = null;
-    //     }
-    //   }
-    // });
+    // ws.getCell("Q6").alignment = { horizontal: "right" };
+    ws.views = [{ state: 'frozen', ySplit: 5 }];
 
     // col = ws.getColumn("E");
     // col.eachCell(function(cell, rowNumber) {
@@ -571,79 +321,19 @@ export class FrBBReportComponent implements OnInit {
     //   }
     // });
 
-    // // Remove all HTML from the comments field
-    // col = ws.getColumn("H");
-    // col.eachCell(function(cell, rowNumber) {
-    //   if (cell.value !== null && String(cell.value).trim() !== '') {
-    //     let doc = new DOMParser().parseFromString(cell.value, "text/html");
-    //     cell.value = doc.documentElement.textContent;
-    //   }
-    // });
+    // console.log(ws.getRow(5).getCell(9).address);
 
-    // col = ws.getColumn("I");
-    // col.eachCell(function(cell, rowNumber) {
-    //   if (rowNumber > 1) {
-    //     cell.value = {formula: 'F' + rowNumber};
-    //   }
-    // });
-
-    // // Reference cell by rownum, colnum
-    // ws.getCell(5,1).fill = {
-    //   type: "pattern",
-    //   pattern: "solid",
-    //   fgColor: { argb: "F3FF33" }
-    // };
-
-    // ws.getCell("G4").value = {
-    //   richText: [
-    //     { text: "This " },
-    //     { font: { italic: true }, text: "is" },
-    //     {
-    //       font: {
-    //         size: 14,
-    //         color: { argb: "FF00FF00" },
-    //         bold: true
-    //       },
-    //       text: "rich"
-    //     },
-    //     { font: { underline: true }, text: " text!" }
-    //   ]
-    // };
-
-    // // Merge cells
-    // ws.mergeCells('A15:I17');
-    // ws.getCell('A15').style = {
-    //   font: {
-    //     size: 20,
-    //     bold: true
-    //   },
-    //   alignment: {
-    //     horizontal: 'center',
-    //     vertical: 'middle',
-    //     wrapText: true
-    //   }
-    // };
-    // ws.getCell('A15').value = 'This is merged cells (A15:I17), with large bold text, vertically and horizontally aligned';
-
-    // ws.getRow(15).outlineLevel = 1;
-    // ws.getRow(16).outlineLevel = 1;
-    // ws.getRow(17).outlineLevel = 1;
-
-    // ws.getColumn('I').hidden = true;
-    // ws.getRow(4).hidden = true;
-
-    // // Retrieve a named cell value from another worksheet
-    // ws2.getColumn('A').width = 25;
-    // ws2.getCell('A3').value = 'Value from 1st sheet:';
-    // ws2.getCell('B3').value = { formula: 'salestotal' };
-
-    console.log(ws.getRow(5).getCell(9).address);
-
-    var FileSaver = require('file-saver');
-
-    wb.xlsx.writeBuffer().then(function (buffer) {
-      FileSaver.saveAs(new Blob([buffer], { type: 'application/octet-stream' }), workbookName);
+    // Save the Excel file
+    wb.xlsx.writeBuffer().then(buffer => {
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = workbookName + '.xlsx';
+      link.click();
     });
+    // wb.xlsx.writeBuffer().then(function (buffer) {
+    //   FileSaver.saveAs(new Blob([buffer], { type: 'application/octet-stream' }), workbookName);
+    // });
   }
 
   protected onResponseSuccess(response: EntityArrayResponseType): void {
@@ -673,12 +363,12 @@ export class FrBBReportComponent implements OnInit {
         remiSendingDate: item.remiSendingDate ? dayjs(item.remiSendingDate).format('DD/MM/YYYY') : '',
         remiFrCurrency: item.remiFrCurrency, // amount
         exchangeRate: item.exchangeRate,
-        remitanceAmount: item.amount,
+        remitanceAmount: Number(item.amount),
         remiAmountReimDate: item.amountReimDate ? dayjs(item.amountReimDate).format('DD/MM/YYYY') : '',
 
         //cash incentive info
         incentivePercentage: item.incPercentage.name,
-        incentiveAmount: item.incentiveAmount,
+        incentiveAmount: Number(item.incentiveAmount),
         incPaymentDate: item.incPaymentDate ? dayjs(item.incPaymentDate).format('DD/MM/YYYY') : '',
         incAmountReimDate: item.incAmountReimDate ? dayjs(item.incAmountReimDate).format('DD/MM/YYYY') : '',
       };
@@ -696,13 +386,7 @@ export class FrBBReportComponent implements OnInit {
     this.frAmountTotal = frTotal;
     this.frIncAmountTotal = frIncTotal;
 
-    import('xlsx').then(xlsx => {
-      const worksheet = xlsx.utils.json_to_sheet(this.frRemittancesDataTable);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      XLSX.writeFile(workbook, 'SheetJS.xlsx');
-      // this.saveAsExcelFile(excelBuffer, "products");
-    });
+    this.runExcelJSExport();
   }
 
   protected fillComponentAttributesFromResponseBody(data: IFrRemittance[] | null): IFrRemittance[] {

@@ -3,6 +3,16 @@
     <span jhiTranslate="jbdailyApp.dealer.home.title">Dealers</span>
 
     <div class="d-flex justify-content-end">
+      <div class="col-auto me-2">
+        <label class="visually-hidden" for="autoSizingInput">Dealer Name</label>
+        <input type="text" class="form-control" id="autoSizingInput" [(ngModel)]="searchFilter" placeholder="Dealer Name" />
+      </div>
+
+      <button class="btn btn-info me-2" (click)="search()" [disabled]="isLoading">
+        <fa-icon icon="search" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="jbdailyApp.payOrder.home.searchListLabel">Search</span>
+      </button>
+
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
         <span jhiTranslate="jbdailyApp.dealer.home.refreshListLabel">Refresh list</span>
@@ -23,6 +33,8 @@
   <jhi-alert-error></jhi-alert-error>
 
   <jhi-alert></jhi-alert>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
 
   <div class="alert alert-warning" id="no-result" *ngIf="dealers?.length === 0">
     <span jhiTranslate="jbdailyApp.dealer.home.notFound">No Dealers found</span>

@@ -1,7 +1,9 @@
 package io.azmain.jb.web.rest;
 
 import io.azmain.jb.repository.DealerRepository;
+import io.azmain.jb.service.DealerQueryService;
 import io.azmain.jb.service.DealerService;
+import io.azmain.jb.service.criteria.DealerCriteria;
 import io.azmain.jb.service.dto.DealerDTO;
 import io.azmain.jb.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -19,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -42,11 +43,13 @@ public class DealerResource {
     private String applicationName;
 
     private final DealerService dealerService;
+    private final DealerQueryService dealerQueryService;
 
     private final DealerRepository dealerRepository;
 
-    public DealerResource(DealerService dealerService, DealerRepository dealerRepository) {
+    public DealerResource(DealerService dealerService, DealerQueryService dealerQueryService, DealerRepository dealerRepository) {
         this.dealerService = dealerService;
+        this.dealerQueryService = dealerQueryService;
         this.dealerRepository = dealerRepository;
     }
 
@@ -149,20 +152,15 @@ public class DealerResource {
      */
     @GetMapping("/dealers")
     public ResponseEntity<List<DealerDTO>> getAllDealers(
+        DealerCriteria criteria,
         @PageableDefault(
             size = Integer.MAX_VALUE,
-            sort = "id",
-            direction = Sort.Direction.ASC
-        ) @org.springdoc.api.annotations.ParameterObject Pageable pageable,
-        @RequestParam(required = false, defaultValue = "false") boolean eagerload
+            sort = "lastModifiedDate",
+            direction = Sort.Direction.DESC
+        ) @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get a page of Dealers");
-        Page<DealerDTO> page;
-        if (eagerload) {
-            page = dealerService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = dealerService.findAll(pageable);
-        }
+        log.debug("REST request to get a page of Dealers: {}", criteria);
+        Page<DealerDTO> page = dealerQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

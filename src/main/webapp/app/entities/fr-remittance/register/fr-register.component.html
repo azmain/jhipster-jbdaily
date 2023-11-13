@@ -41,6 +41,7 @@
         id="field_paymentDate"
         formControlName="paymentDateFrom"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -53,6 +54,7 @@
         id="field_paymentDate"
         formControlName="paymentDateTo"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -66,6 +68,7 @@
         id="field_incPaymentDate"
         formControlName="incPaymentDateFrom"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -78,6 +81,7 @@
         id="field_incPaymentDate"
         formControlName="incPaymentDateTo"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -86,7 +90,7 @@
 
     <div class="col-md-3">
       <label for="inputPassword4" class="form-label">Receiver Name</label>
-      <input type="text" pInputText [style]="{ width: '100%' }" formControlName="recvName" />
+      <input type="text" pInputText [style]="{ width: '100%' }" formControlName="recvName" placeholder="Receiver Name" />
     </div>
 
     <div class="col-12">

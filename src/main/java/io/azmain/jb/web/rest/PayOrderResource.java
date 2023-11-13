@@ -163,8 +163,8 @@ public class PayOrderResource {
         PayOrderCriteria criteria,
         @PageableDefault(
             size = Integer.MAX_VALUE,
-            sort = "createdDate",
-            direction = Sort.Direction.ASC
+            sort = "lastModifiedDate",
+            direction = Sort.Direction.DESC
         ) @org.springdoc.api.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get PayOrders by criteria: {}", criteria);

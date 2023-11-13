@@ -41,6 +41,7 @@
         id="field_paymentDate"
         formControlName="paymentDateFrom"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -53,6 +54,7 @@
         id="field_paymentDate"
         formControlName="paymentDateTo"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -66,6 +68,7 @@
         id="field_incPaymentDate"
         formControlName="incPaymentDateFrom"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -78,6 +81,7 @@
         id="field_incPaymentDate"
         formControlName="incPaymentDateTo"
         dateFormat="dd/mm/yy"
+        placeholder="DD/MM/YYYY"
         [style]="{ width: '100%' }"
         [showButtonBar]="true"
         [showIcon]="true"
@@ -86,7 +90,7 @@
 
     <div class="col-md-3">
       <label for="inputPassword4" class="form-label">Receiver Name</label>
-      <input type="text" pInputText [style]="{ width: '100%' }" formControlName="recvName" />
+      <input type="text" pInputText [style]="{ width: '100%' }" formControlName="recvName" placeholder="Receiver Name" />
     </div>
 
     <div class="col-12">
@@ -166,6 +170,7 @@
       <th style="text-align: center">Amount (BDT)*</th>
       <th style="text-align: center">Amount Reimburse Date</th>
 
+      <th style="text-align: center">Incentive Percentage*</th>
       <th style="text-align: center">Amount of Incentive (BDT)*</th>
       <th style="text-align: center">Payment Date of Incentive*</th>
       <th style="text-align: center">Incentive Amount Reimburse Date</th>
@@ -196,6 +201,7 @@
       <td style="text-align: center">{{ fr.remitanceAmount }}</td>
       <td style="text-align: center">{{ fr.remiAmountReimDate }}</td>
 
+      <td style="text-align: center">{{ fr.incentivePercentage }}</td>
       <td style="text-align: center">{{ fr.incentiveAmount }}</td>
       <td style="text-align: center">{{ fr.incPaymentDate }}</td>
       <td style="text-align: center">{{ fr.incAmountReimDate }}</td>
@@ -203,115 +209,18 @@
       <td></td>
     </tr>
   </ng-template>
-  <!-- <ng-template pTemplate="footer">
-      <tr>
-        <td colspan="6" style="text-align: right">Totals</td>
-        <td style="text-align: right">{{ frAmountTotal | currency: 'BDT' }}</td>
-        <td style="text-align: right">{{ frIncAmountTotal | currency: 'BDT' }}</td>
-      </tr>
-    </ng-template> -->
+  <ng-template pTemplate="footer">
+    <tr>
+      <td colspan="16" style="text-align: right">Totals</td>
+      <td style="text-align: right">{{ frAmountTotal | currency: 'BDT' }}</td>
+      <td colspan="2" style="text-align: right">Totals</td>
+      <td style="text-align: right">{{ frIncAmountTotal | currency: 'BDT' }}</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </ng-template>
 
   <ng-template pTemplate="summary">
     <div style="text-align: center">There are {{ frRemittancesDataTable.length }} remittances.</div>
   </ng-template>
 </p-table>
-
-<table #TABLE>
-  <tr>
-    <th colspan="22" style="text-align: center">Satement of 2% Cash Incentive paid against inward Foreign Remittance For</th>
-  </tr>
-  <tr>
-    <th colspan="22" style="text-align: center">Janata Bank Limited</th>
-  </tr>
-  <tr>
-    <th colspan="22" style="text-align: center">Pulhat Branch</th>
-  </tr>
-  <tr>
-    <th></th>
-    <th colspan="7" style="text-align: center">Cash Incentive Receiver's Information</th>
-    <th colspan="4" style="text-align: center">Remitter's Information</th>
-    <th colspan="6" style="text-align: center">Remittance Information</th>
-    <th colspan="3" style="text-align: center">Cash Incentive Information</th>
-    <th>Remark</th>
-  </tr>
-  <tr>
-    <td style="text-align: center">SN</td>
-
-    <td style="text-align: center">Name*</td>
-    <td style="text-align: center">Gender</td>
-    <td style="text-align: center">Document Type</td>
-    <td style="text-align: center">Document/Account</td>
-    <td style="text-align: center">Name of Bank/MFS*</td>
-    <td style="text-align: center">Type of Transaction*</td>
-    <td style="text-align: center">Mobile*</td>
-
-    <td style="text-align: center">Name*</td>
-    <td style="text-align: center">Gender</td>
-    <td style="text-align: center">Profesion</td>
-    <td style="text-align: center">Country</td>
-
-    <td style="text-align: center">Name of Bank/ Exchange Co*</td>
-    <td style="text-align: center">Remittance Sending Date</td>
-    <td style="text-align: center">Amount of Remittance in Foreign Currency</td>
-    <td style="text-align: center">Exchange Rate</td>
-    <td style="text-align: center">Amount (BDT)*</td>
-    <td style="text-align: center">Amount Reimburse Date</td>
-
-    <td style="text-align: center">Amount of Incentive (BDT)*</td>
-    <td style="text-align: center">Payment Date of Incentive*</td>
-    <td style="text-align: center">Incentive Amount Reimburse Date</td>
-    <td></td>
-  </tr>
-
-  <tr>
-    <td>{{ '1' }}</td>
-    <td>{{ '$fr_remitance->recv_name' }}</td>
-    <td style="text-align: center">{{ '$fr_remitance->recv_legal_id' }}</td>
-    <!-- @if($fr_remitance->transaction_type == 'A/C') -->
-    <td style="text-align: center">{{ '$fr_remitance->pin' }}</td>
-    <td style="text-align: center">Janata Bank Limited</td>
-    <!-- @else -->
-    <td></td>
-    <td></td>
-    <!-- @endif -->
-
-    <td>{{ '$fr_remitance->remiters_name' }}</td>
-    <td></td>
-    <!-- @if($fr_remitance->money_exchange_id>0) -->
-    <td style="text-align: center">{{ 'App\Models\Money_Exchange::find($fr_remitance->money_exchange_id)->name' }}</td>
-    <!-- @else -->
-    <td style="text-align: center">{{ '$fr_remitance->money_exchange_name' }}</td>
-    <!-- @endif  -->
-    <td>{{ '$fr_remitance->remi_sending_date' }}</td>
-    <td>{{ '$fr_remitance->remi_fr_currency' }}</td>
-    <td>{{ '$fr_remitance->exchange_rate' }}</td>
-    <td style="text-align: right">{{ '$fr_remitance->amount' }}</td>
-    <td style="text-align: center">{{ '$fr_remitance->transaction_type' }}</td>
-    <td style="text-align: right">{{ '$fr_remitance->incentive_amount' }}</td>
-    <td style="text-align: center">{{ 'incPaymentDate' }}</td>
-  </tr>
-  <!-- @endif -->
-  <!-- @endforeach -->
-  <tr>
-    <!-- <td colspan="11" style="text-align: right;"><b>Total Amount (BDT)</b></td> -->
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td style="text-align: right">
-      <b>{{ '$total_amount' }}</b>
-    </td>
-    <!-- <td style="text-align: right;"><b>Total Incentive Amount</b></td> -->
-    <td></td>
-    <td style="text-align: right">
-      <b>{{ '$total_incentive_amount' }}</b>
-    </td>
-  </tr>
-</table>

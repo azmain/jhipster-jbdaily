@@ -99,6 +99,7 @@
               id="field_paymentDate"
               formControlName="paymentDate"
               dateFormat="dd/mm/yy"
+              placeholder="DD/MM/YYYY"
               [style]="{ width: '100%' }"
               [showIcon]="true"
               [showButtonBar]="true"
@@ -127,6 +128,7 @@
               id="field_incPaymentDate"
               formControlName="incPaymentDate"
               dateFormat="dd/mm/yy"
+              placeholder="DD/MM/YYYY"
               [style]="{ width: '100%' }"
               [showIcon]="true"
               [showButtonBar]="true"
@@ -195,6 +197,7 @@
               id="field_moneyExchangeName"
               data-cy="moneyExchangeName"
               formControlName="moneyExchangeName"
+              placeholder="Money Exchange Name"
             />
             <div
               *ngIf="
@@ -258,6 +261,7 @@
               id="field_recvLegalId"
               data-cy="recvLegalId"
               formControlName="recvLegalId"
+              placeholder="NID/PASSPORT/LEGAL ID"
             />
             <div
               *ngIf="editForm.get('recvLegalId')!.invalid && (editForm.get('recvLegalId')!.dirty || editForm.get('recvLegalId')!.touched)"
@@ -291,6 +295,7 @@
               id="field_recvMobileNo"
               data-cy="recvMobileNo"
               formControlName="recvMobileNo"
+              placeholder="Receiver Mobile No"
             />
             <div
               *ngIf="
@@ -317,7 +322,15 @@
 
           <div class="col-sm">
             <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.recvName" for="field_recvName">Recv Name</label>
-            <input type="text" class="form-control" name="recvName" id="field_recvName" data-cy="recvName" formControlName="recvName" />
+            <input
+              type="text"
+              class="form-control"
+              name="recvName"
+              id="field_recvName"
+              data-cy="recvName"
+              formControlName="recvName"
+              placeholder="Receiver Name"
+            />
             <div *ngIf="editForm.get('recvName')!.invalid && (editForm.get('recvName')!.dirty || editForm.get('recvName')!.touched)">
               <small
                 class="form-text text-danger"
@@ -371,7 +384,15 @@
 
           <div class="col-sm">
             <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.pin" for="field_pin">Pin</label>
-            <input type="text" class="form-control" name="pin" id="field_pin" data-cy="pin" formControlName="pin" />
+            <input
+              type="text"
+              class="form-control"
+              name="pin"
+              id="field_pin"
+              data-cy="pin"
+              formControlName="pin"
+              placeholder="PIN/ACCOUNT"
+            />
             <div *ngIf="editForm.get('pin')!.invalid && (editForm.get('pin')!.dirty || editForm.get('pin')!.touched)">
               <small class="form-text text-danger" *ngIf="editForm.get('pin')?.errors?.required" jhiTranslate="entity.validation.required">
                 This field is required.
@@ -398,6 +419,7 @@
               id="field_remitersName"
               data-cy="remitersName"
               formControlName="remitersName"
+              placeholder="Remitter's Name"
             />
             <div
               *ngIf="
@@ -456,7 +478,15 @@
         <div class="row mb-3">
           <div class="col-sm">
             <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.amount" for="field_amount">Amount</label>
-            <input type="text" class="form-control" name="amount" id="field_amount" data-cy="amount" formControlName="amount" />
+            <input
+              type="text"
+              class="form-control"
+              name="amount"
+              id="field_amount"
+              data-cy="amount"
+              formControlName="amount"
+              placeholder="Remittance Amount"
+            />
             <div *ngIf="editForm.get('amount')!.invalid && (editForm.get('amount')!.dirty || editForm.get('amount')!.touched)">
               <small
                 class="form-text text-danger"
@@ -487,6 +517,7 @@
               id="field_incentiveAmount"
               data-cy="incentiveAmount"
               formControlName="incentiveAmount"
+              placeholder="Incentive Amount"
             />
             <div
               *ngIf="
@@ -525,6 +556,7 @@
               data-cy="remiSendingDate"
               formControlName="remiSendingDate"
               dateFormat="dd/mm/yy"
+              placeholder="DD/MM/YYYY"
               [style]="{ width: '100%' }"
               [showIcon]="true"
               [showButtonBar]="true"
@@ -542,6 +574,7 @@
               id="field_remiFrCurrency"
               data-cy="remiFrCurrency"
               formControlName="remiFrCurrency"
+              placeholder="Amount IN FOREIGN CURRENCY"
             />
             <div
               *ngIf="
@@ -564,7 +597,15 @@
         <div class="row mb-3">
           <div class="col-sm">
             <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.currency" for="field_currency">Currency</label>
-            <input type="text" class="form-control" name="currency" id="field_currency" data-cy="currency" formControlName="currency" />
+            <input
+              type="text"
+              class="form-control"
+              name="currency"
+              id="field_currency"
+              data-cy="currency"
+              formControlName="currency"
+              placeholder="REMITTANCE CURRENCY"
+            />
             <div *ngIf="editForm.get('currency')!.invalid && (editForm.get('currency')!.dirty || editForm.get('currency')!.touched)">
               <small
                 class="form-text text-danger"
@@ -579,7 +620,15 @@
 
           <div class="col-sm">
             <label class="form-label" jhiTranslate="jbdailyApp.frRemittance.country" for="field_country">Country</label>
-            <input type="text" class="form-control" name="country" id="field_country" data-cy="country" formControlName="country" />
+            <input
+              type="text"
+              class="form-control"
+              name="country"
+              id="field_country"
+              data-cy="country"
+              formControlName="country"
+              placeholder="Remiter's Country"
+            />
             <div *ngIf="editForm.get('country')!.invalid && (editForm.get('country')!.dirty || editForm.get('country')!.touched)">
               <small
                 class="form-text text-danger"
@@ -601,6 +650,7 @@
               id="field_exchangeRate"
               data-cy="exchangeRate"
               formControlName="exchangeRate"
+              placeholder="EXCHANGE RATE"
             />
             <div
               *ngIf="
@@ -631,6 +681,7 @@
               data-cy="amountReimDate"
               formControlName="amountReimDate"
               dateFormat="dd/mm/yy"
+              placeholder="DD/MM/YYYY"
               [style]="{ width: '100%' }"
               [showIcon]="true"
               [showButtonBar]="true"
@@ -648,6 +699,7 @@
               data-cy="incAmountReimDate"
               formControlName="incAmountReimDate"
               dateFormat="dd/mm/yy"
+              placeholder="DD/MM/YYYY"
               [style]="{ width: '100%' }"
               [showIcon]="true"
               [showButtonBar]="true"
